@@ -1,0 +1,364 @@
+﻿@model CarGuru.ViewModels.ManagementViewModel
+@inject CarGuru.Services.Interfaces.ISessionManager x;
+@{
+    ViewData["Title"] = "Vendor";
+    Layout = CommonData.GetUserLayoutByRoleId(x.GetUserRoleId()); //"~/Views/Shared/_Layout.cshtml";
+}
+<script>
+        function ArchiveVendor(vendorId) {
+           if (vendorId != null && vendorId > 0) {
+                 $.ajax({
+                     type: "POST",
+                     data: {vendorId :vendorId},
+                    url: '@Url.Action("ArchiveVendor", "Vendor")',
+                    beforeSend: function () {
+                    },
+                         success: function (data) {
+                             $("#VendorList").html(data);
+                             alertG("Vendor Archived Successfully!");
+                    },
+                        error: function (res) {
+                    }
+                });
+            }
+        }    
+        $(document).ready(function () {
+            $('#VendorTable').DataTable({
+                "bSort": false,
+                "searching": false,
+                "responsive": true,
+                dom: 'Bfrtip',
+                buttons: []
+            });
+        });
+        function EditVendor(vendorId) {
+            if (vendorId != null && vendorId > 0) {
+                 $.ajax({
+                    type: "GET",
+                    data: {vendorId :vendorId},
+                    url: '@Url.Action("GetVendorById", "Vendor")',
+                    beforeSend: function () {
+                    },
+                    success: function (data) {
+                        $("#Vendor_Id").val(data.data.id);
+                        $("#Vendor_FirstName").val(data.data.firstName);
+                        $("#Vendor_LastName").val(data.data.lastName);
+                        $("#Vendor_BusinessAddress").val(data.data.businessAddress);
+                        $("#Vendor_PhoneNumber").val(data.data.phoneNumber);
+                        $("#Vendor_CreditCardLimit").val(data.data.creditCardLimit);
+                        $("#Vendor_FirstName-error").text('');
+                        $("#Vendor_LastName-error").text('');
+                        $("#Vendor_BusinessAddress-error").text('');
+                        $("#Vendor_PhoneNumber-error").text('');
+                        $("#Vendor_CreditCardLimit-error").text('');
+                        $("#AddVendorButton").text("Update");
+                        $("#Heading").text("Update Vendor");
+                        $("#modal-addForm").modal('show');
+                    },
+                    error: function (res) {}
+                });
+            }
+        }
+        function ViewVendor(vendorId) {
+            if (vendorId != null && vendorId > 0) {
+                 $.ajax({
+                    type: "GET",
+                    data: {vendorId :vendorId},
+                    url: '@Url.Action("GetVendorById", "Vendor")',
+                    beforeSend: function () {
+                    },
+                     success: function (data) {
+                         
+                            $("#FirstName").val(data.data.firstName);
+                            $("#LastName").val(data.data.lastName);
+                            $("#Address").val(data.data.businessAddress);
+                            $("#Phone").val(data.data.phoneNumber);
+                            $("#Limit").val(data.data.creditCardLimit);
+                            $("#modalView").modal('show');
+                    },
+                    error: function (res) {}
+                });
+            }
+        }
+        function onAddVendor(data) {
+            $("#VendorList").html(data);
+            var AddOrEdit = $("#Vendor_Id").val();
+            if (AddOrEdit == 0) {
+                alertG("Vendor Added Successfully");
+            }
+            else
+            {
+                alertG("Vendor Updated Successfully");
+            }
+            $("#Vendor_Id").val(0);
+            $("#Vendor_FirstName").val("");
+            $("#Vendor_LastName").val("");
+            $("#Vendor_BusinessAddress").val("");
+            $("#Vendor_PhoneNumber").val("");
+            $("#Vendor_CreditCardLimit").val("");
+            $("#AddVendorButton").text("Add");
+            $("#Heading").text("Add Vendor");
+
+            $("#modal-addForm").modal('hide');
+        }
+        function AddVendor()
+        {
+            $("#Vendor_Id").val(0);
+            $("#Vendor_FirstName").val("");
+            $("#Vendor_LastName").val("");
+            $("#Vendor_BusinessAddress").val("");
+            $("#Vendor_PhoneNumber").val("");
+            $("#Vendor_CreditCardLimit").val("");
+            $("#AddVendorButton").text("Add");
+            $("#Heading").text("Add Vendor");
+            $("#Vendor_FirstName-error").text('');
+            $("#Vendor_LastName-error").text('');
+            $("#Vendor_BusinessAddress-error").text('');
+            $("#Vendor_PhoneNumber-error").text('');
+            $("#Vendor_CreditCardLimit-error").text('');
+            $("#modal-addForm").modal('show');
+        }
+</script>
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-md-2">
+                <h1>Vendor</h1>
+            </div>
+            <div class="col-md-8">
+                <form class="form-inline float-right">
+                    @*<div class="input-group bg-white">
+                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-navbar " type="submit">
+                                <i class="fas fa-search "></i>
+                            </button>
+                        </div>
+                    </div>*@
+                </form>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn bg-colorBlack float-right" onclick="AddVendor()">Add Vendor</button>
+
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+
+                    <!-- /.card-header -->
+                    <div class="card-body call table-responsive p-0" id="VendorList">
+                        <table class="table table-striped" id="VendorTable" width="100%">
+                            <thead class="bg-colorBlack">
+                                <tr>
+                                    <th>First name</th>
+                                    <th>Last name</th>
+                                    <th>Business Address</th>
+                                    <th>Contact No</th>
+                                    <th>Crdit Card Limit</th>
+                                    <th class="actionColumn">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (!(Model is null) && Model.Vendors.Any())
+                                {
+                                    foreach (var vendor in Model.Vendors)
+                                    {
+                                        <tr>
+                                            <td>@vendor.FirstName</td>
+                                            <td>@vendor.LastName</td>
+                                            <td>@vendor.BusinessAddress</td>
+                                            <td>@vendor.PhoneNumber</td>
+                                            <td>
+                                                $@vendor.CreditCardLimit
+
+                                            </td>
+                                            <th>
+                                                <div class="row">
+                                                    <div class="col-md-3 viewModal">
+                                                        <button class="btn" type="button" data-toggle="modal" onclick="ViewVendor(@vendor.Id)">
+                                                            View
+                                                        </button>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <div class="dropdown">
+                                                            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            </button>
+                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                <a class="dropdown-item" href="javascript:void(0);" onclick="EditVendor(@vendor.Id)"><i class="fas fa-print" aria-hidden="true" style="margin-right:8px;"></i>Edit</a>
+                                                                <a class="dropdown-item" href="javascript:void(0);" onclick="ArchiveVendor(@vendor.Id)"><i class="fas fa-archive" aria-hidden="true" style="margin-right:8px;"></i>Archive</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr><h1 class="text-center">No Vendor's Available</h1></tr>
+                                }
+
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer clearfix">
+                        <ul class="pagination pagination-sm m-0 float-right">
+                            @*<li class="page-item"><a class="page-link" href="#">«</a></li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">»</a></li>*@
+                        </ul>
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+
+<div class="modal fade" id="modal-addForm">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h4 class="modal-title" id="Heading">Save Vendor</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="AddVendor" asp-controller="Vendor" data-ajax="true" data-ajax-success="onAddVendor(data)" method="post" role="form" id="AddVendorForm">
+
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input type="hidden" asp-for="Vendor.Id">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">First Name</label>
+                                <input type="text" asp-for="Vendor.FirstName" class="form-control" placeholder="Enter vendor First Name">
+                                <span asp-validation-for="Vendor.FirstName" class="text-danger"></span>
+                                @*<input type="text" class="form-control" id="" placeholder="Enter vendor First Name">*@
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Last Name</label>
+                                <input type="text" asp-for="Vendor.LastName" class="form-control" placeholder="Enter vendor Last Name">
+                                <span asp-validation-for="Vendor.LastName" class="text-danger"></span>
+                                @*<input type="text" class="form-control" id="" placeholder="Enter vendor Last Name">*@
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Business Address</label>
+                                <input type="text" asp-for="Vendor.BusinessAddress" class="form-control" placeholder="Enter vendor Business Address">
+                                <span asp-validation-for="Vendor.BusinessAddress" class="text-danger"></span>
+                                @*<input type="text" class="form-control" id="" placeholder="Enter vendor Business Address">*@
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Contact No</label>
+                                <input type="text" asp-for="Vendor.PhoneNumber" class="form-control" placeholder="Enter vendor Contact No">
+                                <span asp-validation-for="Vendor.PhoneNumber" class="text-danger"></span>
+                                @*<input type="text" class="form-control" id="" placeholder="Enter vendor Contact No">*@
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Credit Card Limit</label>
+                                <input type="text" asp-for="Vendor.CreditCardLimit" class="form-control" placeholder="Enter vendor Credit Card Limit">
+                                <span asp-validation-for="Vendor.CreditCardLimit" class="text-danger"></span>
+                                @*<input type="text" class="form-control" id="" placeholder="Enter vendor Credit Card Limit">*@
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- /.card-body -->
+
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" id="AddVendorButton" class="btn btn-secondary">Add</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div class="modal fade" id="modalView">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h4 class="modal-title">View Vendor Information</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form role="form">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">First Name</label>
+                                <input type="text" class="form-control" id="FirstName" value="Jack" disabled>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Last Name</label>
+                                <input type="text" class="form-control" id="LastName" value="Taif" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Business Address</label>
+                                <input type="text" class="form-control" id="Address" value="Fujairah" disabled>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Contact No</label>
+                                <input type="text" class="form-control" id="Phone" value="	+0 326232 9021" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Credit Card Limit</label>
+                                <input type="text" class="form-control" id="Limit" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                </form>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+

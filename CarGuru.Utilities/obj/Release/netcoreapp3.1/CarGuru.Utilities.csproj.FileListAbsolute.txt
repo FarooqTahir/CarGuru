@@ -1,0 +1,11 @@
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Utilities\bin\Release\netcoreapp3.1\CarGuru.Utilities.deps.json
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Utilities\bin\Release\netcoreapp3.1\CarGuru.Utilities.dll
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Utilities\bin\Release\netcoreapp3.1\CarGuru.Utilities.pdb
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Utilities\bin\Release\netcoreapp3.1\CarGuru.Database.dll
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Utilities\bin\Release\netcoreapp3.1\CarGuru.Database.pdb
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Utilities\obj\Release\netcoreapp3.1\CarGuru.Utilities.csprojAssemblyReference.cache
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Utilities\obj\Release\netcoreapp3.1\CarGuru.Utilities.AssemblyInfoInputs.cache
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Utilities\obj\Release\netcoreapp3.1\CarGuru.Utilities.AssemblyInfo.cs
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Utilities\obj\Release\netcoreapp3.1\CarGuru.Utilities.csproj.CopyComplete
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Utilities\obj\Release\netcoreapp3.1\CarGuru.Utilities.dll
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Utilities\obj\Release\netcoreapp3.1\CarGuru.Utilities.pdb

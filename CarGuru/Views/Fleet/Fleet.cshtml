@@ -1,0 +1,244 @@
+﻿@model CarGuru.ViewModels.FleetViewModel
+@{
+    ViewData["Title"] = "Fleets";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            RefreshDataTable();
+        });
+        function AddModal()
+        {
+            $("#Name-error").text("");
+            $("#Code-error").text("");
+            $("#Contact-error").text("");
+            $("#Address-error").text("");
+            $("#Vin-error").text("");
+            $("#PlateNo-error").text(""); 
+            $("#Mulkia-error").text("");   
+
+            $("#Name").val('');
+            $("#Code").val('');
+            $("#Contact").val('');
+            $("#Vin").val('');
+            $("#PlateNo").val('');
+            $("#Address").val('');
+            $("#Mulkia").val('');   
+            $("#Fleet_Id").val(0);
+            $("#AddBtn").text('Save');
+            $("#Add-Fleet-Modal").modal("show");
+        }
+        function EditModal(data)
+        {
+            if (data != null && data > 0) {
+                 $.ajax({
+                    type: "GET",
+                     data: { FleetId :data},
+                    url: '@Url.Action("GetFleetById", "Fleet")',
+                    beforeSend: function () {
+                    },
+                     success: function (data) {
+                         $("#Name-error").text("");
+                         $("#Code-error").text("");
+                         $("#Contact-error").text("");
+                         $("#Address-error").text("");
+                         $("#Vin-error").text("");
+                         $("#PlateNo-error").text("");   
+                         $("#Mulkia-error").text("");   
+                         
+                         $("#Name").val(data.data.name);
+                         $("#Code").val(data.data.code);
+                         $("#Contact").val(data.data.contact);
+                         $("#Address").val(data.data.address);
+                         $("#Fleet_Id").val(data.data.id);
+                         $("#Vin").val(data.data.vin);
+                         $("#PlateNo").val(data.data.plateNo);
+                         $("#Mulkia").val(data.data.mulkia);   
+                         $("#AddBtn").text('Update');
+                        $("#Add-Fleet-Modal").modal("show");
+                    },
+                    error: function (res) {}
+                });
+            }
+        }
+        function OnFleetSuccess(data)
+        {
+            
+            $(".FleetList").html('');
+            $(".FleetList").html(data);
+            RefreshDataTable();
+            
+            $("#Name").val('');
+            $("#Code").val('');
+            $("#Contact").val('');
+            $("#Address").val('');
+            $("#Vin").val('');
+            $("#PlateNo").val('');
+            $("#Mulkia").val('');
+            var Id = $("#Fleet_Id").val();
+            if (Id == 0) {
+                alertG("Point Of Sale Added Successfully");
+            } else { alertG("Point Of Sale Updated Successfully");}
+            $("#Fleet_Id").val(0);
+            $("#AddBtn").text('Save');
+            $("#Add-Fleet-Modal").modal("hide");
+        }
+        function OnDeleteFleetSuccess(data) {
+            
+            $(".FleetList").html('');
+            $(".FleetList").html(data);
+            RefreshDataTable();
+            alertG("Fleet Added successfully");
+            $("#Add-Fleet-Modal").modal("hide");
+        }
+        function DeleteFleet(Id)
+        {
+            $.ajax({
+                url: "../Fleet/DeleteFleet",
+                type: 'Post',
+                data: {
+                    Id: Id
+                },
+                success: function (data) {
+                    
+                    $(".FleetList").html('');
+                    $(".FleetList").html(data);
+                    RefreshDataTable();
+                    alertG("Fleet Delete successfully");
+                    $("#Add-Fleet-Modal").modal("hide");
+                },
+                error: function (request, error) {
+
+                }
+            });
+        }
+        function RefreshDataTable()
+        {
+            $('#FleetTable').DataTable({
+                "bSort": false,
+                "searching": false,
+                "responsive": true,
+                dom: 'Bfrtip',
+                buttons: [
+
+                ]
+            });
+        }
+    </script>
+}
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-8 col-md-10">
+                <h1>Point Of Sale List</h1>
+            </div>
+            <div class="col-sm-4 col-md-2">
+                <a href="javascript:void(0)" onclick="AddModal()" class="btn bg-colorBlack float-right">Add Point Of Sale</a>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+
+                    <!-- /.card-header -->
+                    <div class="card-body leads table-responsive p-0">
+                        <div class="FleetList">
+                            <partial name="~/Views/Fleet/PartialViews/_FleetListing.cshtml" model="Model" />
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer clearfix">
+
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<div class="modal fade" id="Add-Fleet-Modal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h4 class="modal-title">Point Of Sale</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="FleetAddOrEdit" asp-controller="Fleet" method="post" data-ajax="true" data-ajax-success="OnFleetSuccess(data)">
+                    <div class="addFleetForm">
+                        <div class="row">
+                            <input type="hidden" asp-for="Fleet.Id" />
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Name</label>
+                                    <input type="text" class="form-control " id="Name" asp-for="Fleet.Name" placeholder="Enter Name">
+                                    <span asp-validation-for="Fleet.Name" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Code</label>
+                                    <input type="text" class="form-control " id="Code" asp-for="Fleet.Code" placeholder="Enter Code">
+                                    <span asp-validation-for="Fleet.Code" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Vin</label>
+                                    <input type="text" class="form-control " id="Vin" asp-for="Fleet.Vin" placeholder="Enter Vin">
+                                    <span asp-validation-for="Fleet.Vin" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Plate Number</label>
+                                    <input type="text" class="form-control" id="PlateNo" asp-for="Fleet.PlateNo" placeholder="Enter Plate Number">
+                                    <span asp-validation-for="Fleet.PlateNo" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Contact</label>
+                                    <input type="text" class="form-control " id="Contact" asp-for="Fleet.Contact" placeholder="Enter Contact">
+                                    <span asp-validation-for="Fleet.Contact" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Mulkia Number</label>
+                                    <input type="text" class="form-control" id="Mulkia" asp-for="Fleet.Mulkia" placeholder="Enter Address">
+                                    <span asp-validation-for="Fleet.Mulkia" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Address</label>
+                                    <input type="text" class="form-control" id="Address" asp-for="Fleet.Address" placeholder="Enter Address">
+                                    <span asp-validation-for="Fleet.Address" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-secondary float-right" id="AddBtn">Save</button>
+                </form>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>

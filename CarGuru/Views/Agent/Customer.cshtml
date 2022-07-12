@@ -1,0 +1,739 @@
+﻿@inject CarGuru.Services.Interfaces.ISessionManager x;
+@{
+    ViewData["Title"] = "Leads";
+    var role = x.GetUserRoleId();
+    Layout = CommonData.GetUserLayoutByRoleId(role); //"~/Views/Shared/_LayoutCallCenter.cshtml";
+}
+
+
+
+<style>
+    .nav-tabs .nav-item a {
+        color: #fff !important;
+    }
+</style>
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $(".followUp").on("click", function (e) {
+                let statusValue = $(this).parent().parent().parent().parent().find("#status").html();
+                if (statusValue === 'Quote Request') {
+                    $(this).parent().parent().parent().parent().find("#status").text("Followup Done");
+                }
+            });
+        });
+        function SearchCustomers() {
+            
+            var Name = $("#Name").val();
+            $.ajax({
+                url: "../Customer/SearchCustomers",
+                type: 'Post',
+                data: {
+                    name: Name
+                },
+                success: function (data) {
+                    $(".CustomersList").html(data)
+                    $('#CustomerTable').DataTable({
+                        "bSort": false,
+                        "searching": false,
+                        "responsive": true,
+                        dom: 'Bfrtip',
+                        buttons: [
+
+                        ]
+                    });
+                },
+                error: function (request, error) {
+
+                }
+            });
+
+        }
+    </script>
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-2 col-md-2">
+                <h1>Leads</h1>
+            </div>
+            <div class="col-sm-6 col-md-10">
+                <form class="form-inline float-right">
+                    <div class="input-group bg-white">
+                        <input class="form-control" id="Name" type="search" placeholder="Search by name" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-navbar " onclick="SearchCustomers()" type="button">
+                                <i class="fas fa-search "></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+
+                    <!-- /.card-header -->
+                    <div class="card-body leads table-responsive p-0">
+                        <table class="table table-striped">
+                            <thead class="bg-colorBlack">
+                                <tr>
+                                    <th>First name</th>
+                                    <th>Last name</th>
+                                    <th>Address</th>
+                                    <th>Contact No</th>
+                                    <th>Status</th>
+                                    <th class="actionColumn">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Mohammed</td>
+                                    <td>Manar</td>
+                                    <td>
+                                        UAE
+                                    </td>
+                                    <td>+0 122332 1211</td>
+                                    <td id="status">Quote Request</td>
+                                    <th>
+
+                                        <div class="row">
+                                            <div class="col-md-3 viewModal">
+                                                <button class="btn" type="button" data-toggle="modal" data-target="#modal-viewForm">
+                                                    View
+                                                </button>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="dropdown">
+                                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        <a class="dropdown-item followUp" href="#"><i class="fas fa-user-plus" aria-hidden="true" style="margin-right: 8px;"></i>Follow Up</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>Khalid</td>
+                                    <td>Maya</td>
+                                    <td>
+                                        UAE
+                                    </td>
+                                    <td>+0 124322 1231</td>
+                                    <td id="status">New</td>
+                                    <th>
+
+                                        <div class="row">
+                                            <div class="col-md-3 viewModal">
+                                                <button class="btn" type="button" data-toggle="modal" data-target="#modal-viewForm">
+                                                    View
+                                                </button>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="dropdown">
+                                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        <a class="dropdown-item followUp" href="#"><i class="fas fa-user-plus" aria-hidden="true" style="margin-right:8px;"></i>Follow Up</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>Jack</td>
+                                    <td>Taif</td>
+                                    <td>
+                                        Fujairah
+                                    </td>
+                                    <td>+0 326232 9021</td>
+                                    <td id="status">New</td>
+                                    <th>
+
+                                        <div class="row">
+                                            <div class="col-md-3 viewModal">
+                                                <button class="btn" type="button" data-toggle="modal" data-target="#modal-viewForm">
+                                                    View
+                                                </button>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="dropdown">
+                                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        <a class="dropdown-item followUp" href="#"><i class="fas fa-user-plus" aria-hidden="true" style="margin-right:8px;"></i>Follow Up</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>Mustapha</td>
+                                    <td>Maryam</td>
+                                    <td>
+                                        Ajman
+                                    </td>
+                                    <td>+0 426623 1181</td>
+                                    <td id="status">Quote Request</td>
+                                    <th>
+
+                                        <div class="row">
+                                            <div class="col-sm-3 viewModal">
+                                                <button class="btn" type="button" data-toggle="modal" data-target="#modal-viewForm">
+                                                    View
+                                                </button>
+
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="dropdown">
+                                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        <a class="dropdown-item followUp" href="#"><i class="fas fa-user-plus" aria-hidden="true" style="margin-right:8px;"></i>Follow Up</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>Oumar</td>
+                                    <td>Mira</td>
+                                    <td>
+                                        Sharjah
+                                    </td>
+                                    <td>+0 475683 1041</td>
+                                    <td id="status">Quote Request</td>
+                                    <th>
+
+                                        <div class="row">
+                                            <div class="col-md-3 viewModal">
+                                                <button class="btn" type="button" data-toggle="modal" data-target="#modal-viewForm">
+                                                    View
+                                                </button>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="dropdown">
+                                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        <a class="dropdown-item followUp" href="#"><i class="fas fa-user-plus" aria-hidden="true" style="margin-right:8px;"></i>Follow Up</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>Farhad</td>
+                                    <td>Mariam</td>
+                                    <td>
+                                        Dubai
+                                    </td>
+                                    <td>+0 278353 2973</td>
+                                    <td id="status">Quote Request</td>
+                                    <th>
+                                        <div class="row">
+                                            <div class="col-md-3 viewModal">
+                                                <button class="btn" type="button" data-toggle="modal" data-target="#modal-viewForm">
+                                                    View
+                                                </button>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="dropdown">
+                                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        <a class="dropdown-item" href="javascript:void()" data-toggle="modal" data-target="#modal-editForm"><i class="fas fa-edit" aria-hidden="true" style="margin-right:8px;"></i>Edit</a>
+                                                        <a class="dropdown-item" href="javascript:void()" data-toggle="modal" data-target="#modal-warning"><i class="fas fa-tasks" aria-hidden="true" style="margin-right:8px;"></i>Assign</a>
+                                                        <a class="dropdown-item followUp" href="#"><i class="fas fa-user-plus" aria-hidden="true" style="margin-right:8px;"></i>Follow Up</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer clearfix">
+                        <ul class="pagination pagination-sm m-0 float-right">
+                            <li class="page-item"><a class="page-link" href="#">«</a></li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">»</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-md-4">
+                <h1>Leads</h1>
+            </div>
+            <div class="col-md-8">
+                <form class="form-inline float-right">
+                    <div class="input-group bg-white">
+                        <select class="form-control input-lg" style="border:white; width:200px;">
+                            <option value="Kate">Kate</option>
+                            <option value="John">John</option>
+                            <option value="Kate">Kate</option>
+                            <option value="Smith">Smith</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+
+                    <!-- /.card-header -->
+                    <div class="card-body leads table-responsive p-0">
+                        <table class="table table-striped">
+                            <thead class="bg-colorBlack">
+                                <tr>
+                                    <th>First name</th>
+                                    <th>Last name</th>
+                                    <th>Address</th>
+                                    <th>Contact No</th>
+                                    <th>Status</th>
+                                    <th class="actionColumn">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Mohammed</td>
+                                    <td>Manar</td>
+                                    <td>
+                                        UAE
+                                    </td>
+                                    <td>+0 122332 1211</td>
+                                    <td id="status">Quote Request</td>
+                                    <th>
+
+                                        <div class="row">
+                                            <div class="col-md-3 viewModal">
+                                                <button class="btn" type="button" data-toggle="modal" data-target="#modal-viewForm">
+                                                    View
+                                                </button>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="dropdown">
+                                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        <a class="dropdown-item" href="javascript:void()" data-toggle="modal" data-target="#modal-editForm"><i class="fas fa-edit" aria-hidden="true" style="margin-right:8px;"></i>Edit</a>
+                                                        <a class="dropdown-item" href="javascript:void()" data-toggle="modal" data-target="#modal-warning"><i class="fas fa-tasks" aria-hidden="true" style="margin-right:8px;"></i>Assign</a>
+                                                        <a class="dropdown-item followUp" href="#"><i class="fas fa-user-plus" aria-hidden="true" style="margin-right:8px;"></i>Follow Up</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>Khalid</td>
+                                    <td>Maya</td>
+                                    <td>
+                                        UAE
+                                    </td>
+                                    <td>+0 124322 1231</td>
+                                    <td id="status">New</td>
+                                    <th>
+
+                                        <div class="row">
+                                            <div class="col-md-3 viewModal">
+                                                <button class="btn" type="button" data-toggle="modal" data-target="#modal-viewForm">
+                                                    View
+                                                </button>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="dropdown">
+                                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        <a class="dropdown-item" href="javascript:void()" data-toggle="modal" data-target="#modal-editForm"><i class="fas fa-edit" aria-hidden="true" style="margin-right:8px;"></i>Edit</a>
+                                                        <a class="dropdown-item" href="javascript:void()" data-toggle="modal" data-target="#modal-warning"><i class="fas fa-tasks" aria-hidden="true" style="margin-right:8px;"></i>Assign</a>
+                                                        <a class="dropdown-item followUp" href="#"><i class="fas fa-user-plus" aria-hidden="true" style="margin-right:8px;"></i>Follow Up</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>Jack</td>
+                                    <td>Taif</td>
+                                    <td>
+                                        Fujairah
+                                    </td>
+                                    <td>+0 326232 9021</td>
+                                    <td id="status">New</td>
+                                    <th>
+
+                                        <div class="row">
+                                            <div class="col-md-3 viewModal">
+                                                <button class="btn" type="button" data-toggle="modal" data-target="#modal-viewForm">
+                                                    View
+                                                </button>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="dropdown">
+                                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        <a class="dropdown-item" href="javascript:void()" data-toggle="modal" data-target="#modal-editForm"><i class="fas fa-edit" aria-hidden="true" style="margin-right:8px;"></i>Edit</a>
+                                                        <a class="dropdown-item" href="javascript:void()" data-toggle="modal" data-target="#modal-warning"><i class="fas fa-tasks" aria-hidden="true" style="margin-right:8px;"></i>Assign</a>
+                                                        <a class="dropdown-item followUp" href="#"><i class="fas fa-user-plus" aria-hidden="true" style="margin-right:8px;"></i>Follow Up</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>Mustapha</td>
+                                    <td>Maryam</td>
+                                    <td>
+                                        Ajman
+                                    </td>
+                                    <td>+0 426623 1181</td>
+                                    <td id="status">Quote Request</td>
+                                    <th>
+
+                                        <div class="row">
+                                            <div class="col-md-3 viewModal">
+                                                <button class="btn" type="button" data-toggle="modal" data-target="#modal-viewForm">
+                                                    View
+                                                </button>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="dropdown">
+                                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        <a class="dropdown-item" href="javascript:void()" data-toggle="modal" data-target="#modal-editForm"><i class="fas fa-edit" aria-hidden="true" style="margin-right:8px;"></i>Edit</a>
+                                                        <a class="dropdown-item" href="javascript:void()" data-toggle="modal" data-target="#modal-warning"><i class="fas fa-tasks" aria-hidden="true" style="margin-right:8px;"></i>Assign</a>
+                                                        <a class="dropdown-item followUp" href="#"><i class="fas fa-user-plus" aria-hidden="true" style="margin-right:8px;"></i>Follow Up</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>Oumar</td>
+                                    <td>Mira</td>
+                                    <td>
+                                        Sharjah
+                                    </td>
+                                    <td>+0 475683 1041</td>
+                                    <td id="status">Quote Request</td>
+                                    <th>
+
+                                        <div class="row">
+                                            <div class="col-md-3 viewModal">
+                                                <button class="btn" type="button" data-toggle="modal" data-target="#modal-viewForm">
+                                                    View
+                                                </button>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="dropdown">
+                                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        <a class="dropdown-item" href="javascript:void()" data-toggle="modal" data-target="#modal-editForm"><i class="fas fa-edit" aria-hidden="true" style="margin-right:8px;"></i>Edit</a>
+                                                        <a class="dropdown-item" href="javascript:void()" data-toggle="modal" data-target="#modal-warning"><i class="fas fa-tasks" aria-hidden="true" style="margin-right:8px;"></i>Assign</a>
+                                                        <a class="dropdown-item followUp" href="#"><i class="fas fa-user-plus" aria-hidden="true" style="margin-right:8px;"></i>Follow Up</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>Farhad</td>
+                                    <td>Mariam</td>
+                                    <td>
+                                        Dubai
+                                    </td>
+                                    <td>+0 278353 2973</td>
+                                    <td id="status">Quote Request</td>
+                                    <th>
+                                        <div class="row">
+                                            <div class="col-md-3 viewModal">
+                                                <button class="btn" type="button" data-toggle="modal" data-target="#modal-viewForm">
+                                                    View
+                                                </button>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="dropdown">
+                                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        <a class="dropdown-item followUp" href="#"><i class="fas fa-user-plus" aria-hidden="true" style="margin-right:8px;"></i>Follow Up</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer clearfix">
+                        <ul class="pagination pagination-sm m-0 float-right">
+                            <li class="page-item"><a class="page-link" href="#">«</a></li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">»</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<div class="modal fade" id="modal-warning">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h4 class="modal-title">Nearest Technician</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped mt-2" id="showTechnician">
+                    <thead>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Mohammed Manar</td>
+                            <td>1 km</td>
+                            <th>
+                                <button type="button" class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#modal-warning">Assign</button>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>Jack Taif</td>
+                            <td>2 km</td>
+                            <th>
+                                <button type="button" class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#modal-warning">Assign</button>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>Oumar Mira</td>
+                            <td>3 km</td>
+                            <th>
+                                <button type="button" class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#modal-warning">Assign</button>
+                            </th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer ">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div class="modal fade" id="modal-addForm">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h4 class="modal-title">Add Customer</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form role="form">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">First Name</label>
+                                <input type="text" class="form-control" id="" placeholder="Enter First Name">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Last Name</label>
+                                <input type="text" class="form-control" id="" placeholder="Enter Last Name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Address</label>
+                                <input type="text" class="form-control" id="" placeholder="Enter Address">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Contact No</label>
+                                <input type="text" class="form-control" id="" placeholder="Enter Contact No">
+                            </div>
+                        </div>
+                    </div>
+                    <input type="email" class="form-control" id="" value="new" style="visibility:hidden;">
+
+
+                    <!-- /.card-body -->
+                </form>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary">Add</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div class="modal fade" id="modal-viewForm">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h4 class="modal-title">View Customer</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form role="form">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">First Name</label>
+                                <input type="text" class="form-control" id="" value="Mohammed" disabled>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Last Name</label>
+                                <input type="text" class="form-control" id="" value="Manar" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Address</label>
+                                <input type="text" class="form-control" id="" value="UAE" disabled>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Contact No</label>
+                                <input type="text" class="form-control" id="" value="+0 122332 1211" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="email" class="form-control" id="" value="new" style="visibility:hidden;">
+
+
+                    <!-- /.card-body -->
+                </form>
+            </div>
+            <div class="modal-footer ">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                @*<button type="button" class="btn btn-secondary">Edit</button>*@
+
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div class="modal fade" id="modal-editForm">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h4 class="modal-title">Edit Customer</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form role="form">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">First Name</label>
+                                <input type="text" class="form-control" id="" value="Mohammed">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Last Name</label>
+                                <input type="text" class="form-control" id="" value="Manar">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Address</label>
+                                <input type="text" class="form-control" id="" value="UAE">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Contact No</label>
+                                <input type="text" class="form-control" id="" value="+0 122332 1211">
+                            </div>
+                        </div>
+                    </div>
+                    <input type="email" class="form-control" id="" value="new" style="visibility:hidden;">
+
+
+                    <!-- /.card-body -->
+                </form>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary">Save</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+

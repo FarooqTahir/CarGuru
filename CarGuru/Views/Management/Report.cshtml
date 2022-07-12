@@ -1,0 +1,762 @@
+﻿@model CarGuru.ViewModels.ManagementViewModel
+@inject CarGuru.Services.Interfaces.ISessionManager x;
+@{
+    ViewData["Title"] = "Report";
+    Layout = CommonData.GetUserLayoutByRoleId(x.GetUserRoleId());
+
+    //"~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+@section scripts{
+
+    <script>
+        $(function () {
+            //Date range picker
+            $('#reservation').daterangepicker();
+            //Date range as a button
+            $('#daterange-btn').daterangepicker(
+                {
+                    ranges: {
+                        'Daily': [moment(), moment()],
+                        'Weekly': [moment().subtract(6, 'days'), moment()],
+                        'Monthly': [moment().subtract(29, 'days'), moment()],
+                    },
+                    startDate: moment().subtract(29, 'days'),
+                    endDate: moment()
+                },
+                function (start, end) {
+                    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+                }
+            );
+        });
+        $(document).ready(function () {
+            $('#RDataTable').DataTable({
+                "bSort": false,
+                "searching": false,
+                "responsive": true,
+                "autoWidth": true,
+                dom: 'Bfrtip',
+                buttons: [
+                    { extend: 'copy', className: 'btn btn-success float-right mx-1' },
+                    { extend: 'csv', className: 'btn btn-success float-right mx-1' },
+                    { extend: 'excel', className: 'btn btn-success float-right mx-1' },
+                    { extend: 'pdf', className: 'btn btn-success float-right mx-1' },
+                    { extend: 'print', className: 'btn btn-success float-right mx-1' }
+
+                ],
+                initComplete: function () {
+                    var btns = $('.dt-button');
+                    btns.removeClass('dt-button');
+                }
+            });
+            $('#PTable').DataTable({
+                "bSort": false,
+                "searching": false,
+                "responsive": true,
+                "autoWidth": true,
+                dom: 'Bfrtip',
+                buttons: [
+                    { extend: 'copy', className: 'btn btn-success float-right mx-1' },
+                    { extend: 'csv', className: 'btn btn-success float-right mx-1' },
+                    { extend: 'excel', className: 'btn btn-success float-right mx-1' },
+                    { extend: 'pdf', className: 'btn btn-success float-right mx-1' },
+                    { extend: 'print', className: 'btn btn-success float-right mx-1' }
+                ],
+                initComplete: function () {
+                    var btns = $('.dt-button');
+                    btns.removeClass('dt-button');
+                }
+            });
+
+        });
+        $('.techTable').on('shown.bs.collapse', function () {
+            $($.fn.dataTable.tables(true)).DataTable()
+                .columns.adjust();
+        });
+    </script>
+    <script>
+
+        $('#daterange-btn').daterangepicker(
+            {
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                },
+                startDate: moment().subtract(29, 'days'),
+                endDate: moment()
+            },
+            function (start, end) {
+                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+            }
+        )
+        $('#reservation').daterangepicker()
+
+
+        $(document).ready(function () {
+
+            $(".sales").show();
+            $(".salesTable").show();
+            $(".tech").hide();
+            $(".product").hide();
+            $(".location").hide();
+            $(".techTable").hide();
+            $(".productTable").hide();
+            $(".locationTable").hide();
+            $(".leadsEfficiency").hide();
+            $(".leadsEfficiencyTable").hide();
+            $("select.reportDropDown").change(function () {
+                var selectedValue = $(this).children("option:selected").val();
+                if (selectedValue === "Sales Report") {
+                    $(".sales").show();
+                    $(".tech").hide();
+                    $(".product").hide();
+                    $(".location").hide();
+                    $(".salesTable").show();
+                    $(".techTable").hide();
+                    $(".productTable").hide();
+                    $(".locationTable").hide();
+                    $(".leadsEfficiency").hide();
+                    $(".leadsEfficiencyTable").hide();
+
+                } else if (selectedValue === "Technician Report") {
+                    $(".sales").hide();
+                    $(".tech").show();
+                    $(".product").hide();
+                    $(".location").hide();
+                    $(".salesTable").hide();
+                    $(".techTable").show();
+                    $(".productTable").hide();
+                    $(".locationTable").hide();
+
+                    $(".leadsEfficiency").hide();
+                    $(".leadsEfficiencyTable").hide();
+                } else if (selectedValue === "Product Report") {
+                    $(".sales").hide();
+                    $(".tech").hide();
+                    $(".product").show();
+                    $(".location").hide();
+                    $(".salesTable").hide();
+                    $(".techTable").hide();
+                    $(".productTable").show();
+                    $(".locationTable").hide();
+
+                    $(".leadsEfficiency").hide();
+                    $(".leadsEfficiencyTable").hide();
+                } else if (selectedValue === "Location Sales Report") {
+                    $(".sales").hide();
+                    $(".tech").hide();
+                    $(".product").hide();
+                    $(".location").show();
+                    $(".salesTable").hide();
+                    $(".techTable").hide();
+                    $(".productTable").hide();
+                    $(".locationTable").show();
+
+                    $(".leadsEfficiency").hide();
+                    $(".leadsEfficiencyTable").hide();
+                } else if (selectedValue === "Lead Efficiency") {
+                    $(".sales").hide();
+                    $(".tech").hide();
+                    $(".product").hide();
+                    $(".location").hide();
+                    $(".salesTable").hide();
+                    $(".techTable").hide();
+                    $(".productTable").hide();
+                    $(".locationTable").hide();
+
+                    $(".leadsEfficiency").show();
+                    $(".leadsEfficiencyTable").show();
+                }
+
+            });
+        });
+    </script>
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-md-4">
+                <h1>Reports</h1>
+            </div>
+
+            <div class="col-md-5 p-0">
+                <div class="form-group float-right" style="display:none;">
+                    <div class="input-group">
+                        <button type="button" class="btn btn-default float-right" id="daterange-btn">
+                            <i class="far fa-calendar-alt"></i> Date range picker
+                            <i class="fas fa-caret-down"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+
+                <form class="form-inline float-right">
+                    <div class="input-group bg-white">
+                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-navbar " type="submit">
+                                <i class="fas fa-search "></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-colorBlack">
+                        <div class="row">
+                            <div class="col-6">
+
+                                <select class="reportDropDown form-control">
+                                    <option disabled>Select Report</option>
+                                    <option selected>Sales Report</option>
+                                    <option>Technician Report</option>
+                                    <option>Product Report</option>
+                                    <option>Lead Efficiency</option>
+                                    <option>Location Sales Report</option>
+                                </select>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="reportCard card-body" style="display: block;">
+                        <div class="row sales">
+                            <div class="col-md-3 col-4">
+                                <div class="small-box bg-info p-1">
+                                    <div class="description-block">
+                                        <span class="description-percentage"><i class="fas fa-caret-up"></i> 17%</span>
+                                        <h5 class="description-header">$35,210.43</h5>
+                                        <span class="description-text">TOTAL REVENUE</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-md-3 col-4">
+                                <div class="small-box bg-success p-1">
+                                    <div class="description-block">
+                                        <span class="description-percentage"><i class="fas fa-caret-left"></i> 0%</span>
+                                        <h5 class="description-header">$10,390.90</h5>
+                                        <span class="description-text">TOTAL COST</span>
+                                    </div>
+                                </div>
+                                <!-- /.description-block -->
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-md-3 col-4 ">
+                                <div class="small-box bg-warning p-1">
+                                    <div class="description-block">
+                                        <span class="description-percentage"><i class="fas fa-caret-up"></i> 20%</span>
+                                        <h5 class="description-header">$24,813.53</h5>
+                                        <span class="description-text">TOTAL PROFIT</span>
+                                    </div>
+                                </div>
+                                <!-- /.description-block -->
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-md-3 col-4 ">
+                                <div class="small-box bg-danger p-1">
+                                    <div class="description-block">
+                                        <span class="description-percentage"><i class="fas fa-caret-down"></i> 18%</span>
+                                        <h5 class="description-header">1200</h5>
+                                        <span class="description-text">GOAL COMPLETIONS</span>
+                                    </div>
+                                </div>
+                                <!-- /.description-block -->
+                            </div>
+                        </div>
+                        <div class="row tech">
+                            <div class="col-md-3 col-4">
+                                <div class="small-box bg-info p-1">
+                                    <div class="description-block">
+                                        <span class="description-percentage"><i class="fas fa-caret-left"></i> 100%</span>
+                                        <h5 class="description-header">@Model.ReportStat.Data.TechnicianData.NoOfTechnician</h5>
+                                        <span class="description-text">TOTAL Technicians</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-md-3 col-4">
+                                <div class="small-box bg-success p-1">
+                                    <div class="description-block">
+                                        <span class="description-percentage"><i class="fas fa-caret-left"></i> 100%</span>
+                                        <h5 class="description-header">@Model.ReportStat.Data.TechnicianData.AssignedTask</h5>
+                                        <span class="description-text">TOTAL ASSIGNED TASK</span>
+                                    </div>
+                                </div>
+                                <!-- /.description-block -->
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-md-3 col-4 ">
+                                <div class="small-box bg-success p-1">
+                                    <div class="description-block">
+                                        <span class="description-percentage"><i class="fas fa-caret-up"></i> 69%</span>
+                                        <h5 class="description-header">@Model.ReportStat.Data.TechnicianData.CompletedTask</h5>
+                                        <span class="description-text">TOTAL COMPLETE TASK</span>
+                                    </div>
+                                </div>
+                                <!-- /.description-block -->
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-md-3 col-4 ">
+                                <div class="small-box bg-warning p-1">
+                                    <div class="description-block">
+                                        <span class="description-percentage"><i class="fas fa-caret-down"></i> 31%</span>
+                                        <h5 class="description-header">@Model.ReportStat.Data.TechnicianData.PendingTask</h5>
+                                        <span class="description-text">TOTAL PENDING TASK</span>
+                                    </div>
+                                </div>
+                                <!-- /.description-block -->
+                            </div>
+                            <div class="col-md-3 col-4 ">
+                                <div class="small-box bg-danger p-1">
+                                    <div class="description-block">
+                                        <span class="description-percentage"><i class="fas fa-caret-down"></i> 31%</span>
+                                        <h5 class="description-header">@Model.ReportStat.Data.TechnicianData.InCompleteTask</h5>
+                                        <span class="description-text">TOTAL INCOMPLETE TASK</span>
+                                    </div>
+                                </div>
+                                <!-- /.description-block -->
+                            </div>
+                        </div>
+                        <div class="row product">
+                            <div class="col-md-3 col-4">
+                                <div class="small-box bg-info p-1">
+                                    <div class="description-block">
+                                        <span class="description-percentage"><i class="fas fa-caret-up"></i> 100%</span>
+                                        <h5 class="description-header">@Model.ReportStat.Data.ProductStat.TotalProducts</h5>
+                                        <span class="description-text">TOTAL PRODUCTS</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-md-3 col-4">
+                                <div class="small-box bg-success p-1">
+                                    <div class="description-block">
+                                        <span class="description-percentage"><i class="fas fa-caret-left"></i> 40%</span>
+                                        <h5 class="description-header">@Model.ReportStat.Data.ProductStat.StockProducts</h5>
+                                        <span class="description-text">TOTAL PRODUCT IN STOCK</span>
+                                    </div>
+                                </div>
+                                <!-- /.description-block -->
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-md-3 col-4 ">
+                                <div class="small-box bg-warning p-1">
+                                    <div class="description-block">
+                                        <span class="description-percentage"><i class="fas fa-caret-up"></i> 60%</span>
+                                        <h5 class="description-header">@Model.ReportStat.Data.ProductStat.SoldProducts</h5>
+                                        <span class="description-text">TOTAL PRODUCT SOLD</span>
+                                    </div>
+                                </div>
+                                <!-- /.description-block -->
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-md-3 col-4 ">
+                                <div class="small-box bg-danger p-1">
+                                    <div class="description-block">
+                                        <span class="description-percentage"><i class="fas fa-caret-up"></i> 18%</span>
+                                        <h5 class="description-header">@Model.ReportStat.Data.ProductStat.DeadStockProducts</h5>
+                                        <span class="description-text">DEAD STOCK PRODUCTS</span>
+                                    </div>
+                                </div>
+                                <!-- /.description-block -->
+                            </div>
+                        </div>
+                        <div class="row location">
+                            <div class="col-md-3 col-4">
+                                <div class="small-box bg-info p-1">
+                                    <div class="description-block">
+                                        <span class="description-percentage"><i class="fas fa-caret-up"></i> 100%</span>
+                                        <h5 class="description-header">450</h5>
+                                        <span class="description-text">Total Leads</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-md-3 col-4">
+                                <div class="small-box bg-success p-1">
+                                    <div class="description-block">
+                                        <span class="description-percentage"><i class="fas fa-caret-left"></i> 81%</span>
+                                        <h5 class="description-header">365</h5>
+                                        <span class="description-text">Complete Leads</span>
+                                    </div>
+                                </div>
+                                <!-- /.description-block -->
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-md-3 col-4 ">
+                                <div class="small-box bg-warning p-1">
+                                    <div class="description-block">
+                                        <span class="description-percentage"><i class="fas fa-caret-down"></i> 11%</span>
+                                        <h5 class="description-header">53</h5>
+                                        <span class="description-text">Incomplete Leads</span>
+                                    </div>
+                                </div>
+                                <!-- /.description-block -->
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-md-3 col-4 ">
+                                <div class="small-box bg-danger p-1">
+                                    <div class="description-block">
+                                        <span class="description-percentage"><i class="fas fa-caret-down"></i> 8%</span>
+                                        <h5 class="description-header">32</h5>
+                                        <span class="description-text">Failed Leads</span>
+                                    </div>
+                                </div>
+                                <!-- /.description-block -->
+                            </div>
+                        </div>
+                        <div class="row leadsEfficiency">
+                            <div class="col-sm-4">
+                                <div class="small-box bg-info p-1">
+                                    <div class="description-block">
+                                        <h5 class="description-header">150</h5>
+                                        <span class="description-text">Total Technician</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-sm-4">
+                                <div class="small-box bg-success p-1">
+                                    <div class="description-block">
+                                        <h5 class="description-header">0h 25m</h5>
+                                        <span class="description-text">Daily Average Leads Time</span>
+                                    </div>
+                                </div>
+                                <!-- /.description-block -->
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-sm-4 ">
+                                <div class="small-box bg-warning p-1">
+                                    <div class="description-block">
+                                        <h5 class="description-header">9</h5>
+                                        <span class="description-text">Daily Average Leads Complete</span>
+                                    </div>
+                                </div>
+                                <!-- /.description-block -->
+                            </div>
+                            <!-- /.col -->
+                        </div>
+                        <!-- /.row -->
+                    </div>
+                    <!-- ./card-body -->
+                    <div class="card-footer" style="display: block;">
+                        <div class="row">
+                            <div class="col-md-12 salesTable">
+                                <!-- /.card-header -->
+                                <div class="table-responsive p-0">
+                                    <table class="table table-striped">
+                                        <thead class="bg-colorBlack">
+                                            <tr>
+                                                <th>Item Code</th>
+                                                <th>Emp Name</th>
+                                                <th>Product</th>
+                                                <th>QTY</th>
+                                                <th>Amount</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>1002</td>
+
+                                                <td>Mohammed Manar</td>
+
+                                                <td>
+                                                    Lights
+                                                </td>
+                                                <td>10</td>
+                                                <td>$100</td>
+                                                <td>$1000</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1003</td>
+
+                                                <td>Khalid Maya</td>
+
+                                                <td>
+                                                    HeadLight
+                                                </td>
+                                                <td>20</td>
+                                                <td>$100</td>
+                                                <td>$2000</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1004</td>
+
+                                                <td>Jack Taif</td>
+
+                                                <td>
+                                                    Filler Tube
+                                                </td>
+                                                <td>10</td>
+                                                <td>$50</td>
+                                                <td>$500</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1005</td>
+
+                                                <td>Mustapha Maryam</td>
+
+                                                <td>
+                                                    Tail Light
+                                                </td>
+                                                <td>10</td>
+                                                <td>$30</td>
+                                                <td>$300</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- /.card-body -->
+                                <div class="row float-right m-0">
+                                    <ul class="pagination pagination-sm m-0">
+                                        <li class="page-item"><a class="page-link" href="#">«</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">»</a></li>
+                                    </ul>
+                                </div>
+                                <!-- /.card -->
+                            </div>
+                            <div class="col-md-12 techTable">
+                                <!-- /.card-header -->
+                                <div class="table-responsive p-0">
+                                    <table class="table table-striped" id="RDataTable" style="width:100%">
+                                        <thead class="bg-colorBlack">
+                                            <tr>
+                                                <th>Tech Name</th>
+                                                <th>Assigned Task</th>
+                                                <th>Complete Task</th>
+                                                <th>Pending Task</th>
+                                                <th>Rating</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model.ReportStat.Data.TechnicianData.TechnicianDetails != null && Model.ReportStat.Data.TechnicianData.TechnicianDetails.Any())
+                                            {
+                                                foreach (var rec in Model.ReportStat.Data.TechnicianData.TechnicianDetails)
+                                                {
+                                                    <tr>
+                                                        <td>@rec.TechName</td>
+                                                        <td>@rec.Assigned</td>
+                                                        <td>@rec.Completed</td>
+                                                        <td>@rec.Pending</td>
+                                                        <td>@rec.Rating out of 5</td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- /.card-body -->
+                                <!-- /.card -->
+                            </div>
+                            <div class="col-md-12 productTable">
+                                <!-- /.card-header -->
+                                <div class="table-responsive p-0">
+                                    <table class="table table-striped" id="PTable" style="width:100%">
+                                        <thead class="bg-colorBlack">
+                                            <tr>
+                                                <th>Product Id</th>
+                                                <th>Product Name</th>
+                                                <th>Product Category</th>
+                                                <th>Total QTY</th>
+                                                <th>Total Price</th>
+                                                <th>Total Product Sales</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model.ReportStat.Data.ProductStat.ProductDetails != null && Model.ReportStat.Data.ProductStat.ProductDetails.Any())
+                                            {
+                                                foreach (var rec in Model.ReportStat.Data.ProductStat.ProductDetails)
+                                                {
+                                                    <tr>
+                                                        <td>@rec.ProductId</td>
+
+                                                        <td>
+                                                            @rec.ProductName
+                                                        </td>
+                                                        <td>@rec.ProductCategory</td>
+                                                        <td>@rec.Quantity</td>
+                                                        <td>@rec.ProductPrice</td>
+                                                        <td>@rec.SoldProducts</td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 locationTable">
+                                <!-- /.card-header -->
+                                <div class="table-responsive p-0">
+                                    <table class="table table-striped">
+                                        <thead class="bg-colorBlack">
+                                            <tr>
+                                                <th>Loaction</th>
+                                                <th>Total Leads</th>
+                                                <th>Complete</th>
+                                                <th>Incompleye</th>
+                                                <th>Failed</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Fujairah</td>
+
+                                                <td>100</td>
+
+                                                <td>
+                                                    80
+                                                </td>
+                                                <td>15</td>
+                                                <td>5</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Ajman</td>
+
+                                                <td>80</td>
+
+                                                <td>
+                                                    65
+                                                </td>
+                                                <td>8</td>
+                                                <td>7</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Sharjah</td>
+
+                                                <td>120</td>
+
+                                                <td>
+                                                    95
+                                                </td>
+                                                <td>15</td>
+                                                <td>10</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Dubai</td>
+
+                                                <td>150</td>
+
+                                                <td>
+                                                    125
+                                                </td>
+                                                <td>15</td>
+                                                <td>10</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- /.card-body -->
+                                <div class="row float-right m-0">
+                                    <ul class="pagination pagination-sm m-0">
+                                        <li class="page-item"><a class="page-link" href="#">«</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">»</a></li>
+                                    </ul>
+                                </div>
+                                <!-- /.card -->
+                            </div>
+                            <div class="col-sm-12 leadsEfficiencyTable">
+                                <!-- /.card-header -->
+                                <div class="table-responsive p-0">
+                                    <table class="table table-striped">
+                                        <thead class="bg-colorBlack">
+                                            <tr>
+                                                <th>Technician Name</th>
+                                                <th>Avg. Time Per Lead </th>
+                                                <th>Daily Avg. Lead(%)</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Mohammed Manar</td>
+
+                                                <td>0h 25m</td>
+
+                                                <td>
+                                                    5
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Mustapha Maryam</td>
+
+                                                <td>0h 20m</td>
+
+                                                <td>
+                                                    7
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Jack Taif</td>
+
+                                                <td>0h 20m</td>
+
+                                                <td>
+                                                    10
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Khalid Maya</td>
+
+                                                <td>0h 30m</td>
+
+                                                <td>
+                                                    5
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- /.card-body -->
+                                <div class="row float-right m-0">
+                                    <ul class="pagination pagination-sm m-0">
+                                        <li class="page-item"><a class="page-link" href="#">«</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">»</a></li>
+                                    </ul>
+                                </div>
+                                <!-- /.card -->
+                            </div>
+                        </div>
+                        <!-- /.row -->
+                    </div>
+                    <!-- /.card-footer -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+    </div>
+</section>

@@ -1,0 +1,264 @@
+﻿@model CarGuru.ViewModels.ProductViewModel
+@inject CarGuru.Services.Interfaces.ISessionManager x;
+@{
+    ViewData["Title"] = "ProductCategories";
+    Layout = CommonData.GetUserLayoutByRoleId(x.GetUserRoleId());
+    //"~/Views/Shared/_Layout.cshtml";
+    int subCount = 0;
+     if(Model.Category.ProductSubCategories.Count == 0)
+                                {
+                                    subCount = 1;
+                                }
+                                else
+                                {
+                                    subCount = Model.Category.ProductSubCategories.Count;
+                                }
+}
+@section scripts{
+    <script>
+        var subIndex = @Model.Category.ProductSubCategories.Count;
+
+         $(".add-div").on("click", function () {
+        subIndex++;
+        var meanscontent = '<div class="col-md-12">'+
+                            '<div class="form-group">'+
+                                '<input type="text" class="form-control" id="Category.ProductSubCategories['+subIndex+'].Title" name="Category.ProductSubCategories['+subIndex+'].Title" placeholder="Sub Category" data-val="true" data-val-required="Sub Category is required.">'+
+                                '<span class="text-danger field-validation-error" data-valmsg-for="Category.ProductSubCategories['+subIndex+'].Title" data-valmsg-replace="true"></span>'+
+                            '</div>'+
+                        '</div>';
+        
+       
+             $(".addSubContent").append(meanscontent);
+
+    $("form").removeData("validator");
+    $("form").removeData("unobtrusiveValidation");
+    $.validator.unobtrusive.parse("form");
+        return false;
+    });
+    </script>
+    <script>
+
+        function AddModal()
+        {
+            $("#Name-error").text("");
+            $("#Name").val("");
+            $("#Category_Id").val(0);
+            $("#AddBtn").text('Save');
+            $("#TitleHeading").text('Add Category');
+            $("#Add-Category-Modal").modal("show");
+        }
+        function EditModal(data)
+        {
+            if (data != null && data > 0) {
+                 $.ajax({
+                    type: "GET",
+                     data: { CategoryId :data},
+                    url: '@Url.Action("GetCategoryById", "ProductCategory")',
+                    beforeSend: function () {
+                    },
+                     success: function (data) {
+                         
+                         //$("#Name-error").text("");
+                         //$("#Category_Id").val(data.data.id);
+                         //$("#Name").val(data.data.title);
+                         //$("#AddBtn").text('Update');
+                         //$("#TitleHeading").text('Update Category');
+                         $("#Update-Category-Modal-Content").html(data);
+                         $("#Update-Category-Modal").modal("show");
+                    },
+                    error: function (res) {}
+                });
+            }
+        }
+        function OnCategorySuccess(data)
+        {
+           
+            $(".CategoryList").html('');
+            $(".CategoryList").html(data);
+
+            $("#Name").val('');
+            var Id = $("#Category_Id").val();
+            if (Id == 0) {
+                alertG("Category Saved Successfully");
+            } else { alertG("Category Saved Successfully");}
+            $("#Category_Id").val(0);
+            $("#AddBtn").text('Save');
+            $("#TitleHeading").text('Add Category');
+            $("#Update-Category-Modal").modal("hide");
+            $("#Add-Category-Modal").modal("hide");
+        }
+        function OnDeleteFleetSuccess(data) {
+            
+            $(".CategoryList").html('');
+            $(".CategoryList").html(data);
+            alertG("Category Added successfully");
+            $("#Add-Category-Modal").modal("hide");
+        }
+        function DeleteCategory(Id)
+        {
+            $.ajax({
+                url: '@Url.Action("DeleteCategory", "ProductCategory")',
+                type: 'Post',
+                data: {
+                    Id: Id
+                },
+                success: function (data) {
+                    
+                    $(".CategoryList").html('');
+                    $(".CategoryList").html(data);
+                    alertG("Category Delete successfully");
+                    $("#Add-Category-Modal").modal("hide");
+                },
+                error: function (request, error) {
+
+                }
+            });
+        }
+            function deleteSubCategory(subCategoryId) {
+        if (subCategoryId > 0) {
+            $.ajax({
+                    type: "GET",
+                     data: { subCategoryId :subCategoryId},
+                    url: '@Url.Action("DeleteSubCategory", "ProductCategory")',
+                    beforeSend: function () {
+                    },
+                     success: function (data) {
+                         
+                         //$("#Name-error").text("");
+                         //$("#Category_Id").val(data.data.id);
+                         //$("#Name").val(data.data.title);
+                         //$("#AddBtn").text('Update');
+                         //$("#TitleHeading").text('Update Category');
+                         $("#Update-Category-Modal-Content").html(data);
+                         $("#Update-Category-Modal").modal("show");
+                    },
+                    error: function (res) {}
+                });
+        }
+    }
+    </script>
+}
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-8 col-md-10">
+                <h1>Category List</h1>
+            </div>
+            <div class="col-sm-4 col-md-2">
+                <a href="javascript:void(0)" onclick="AddModal()" class="btn bg-colorBlack float-right">Add Category</a>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+
+                    <!-- /.card-header -->
+                    <div class="card-body leads table-responsive p-0">
+                        <div class="CategoryList">
+                            <partial name="~/Views/ProductCategory/_ProductCategoryListing.cshtml" model="Model" />
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer clearfix">
+
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<div class="modal fade" id="Add-Category-Modal">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h4 class="modal-title" id="TitleHeading">Categories</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="CategoryAddOrEdit" asp-controller="ProductCategory" method="post" data-ajax="true" data-ajax-success="OnCategorySuccess(data)">
+                    <div class="addFleetForm">
+                        <div class="row">
+                            <input type="hidden" asp-for="Category.Id" />
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Title</label>
+                                    <input type="text" class="form-control " id="Name" asp-for="Category.Title" placeholder="Enter Name">
+                                    <span asp-validation-for="Category.Title" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="" style="padding:10px;"><label for="exampleInputEmail1">Sub Category</label><span class="btn btn-primary float-right add-div"><i class="fa fa-plus"></i></span></div>
+                                </div>
+                            </div>
+                            @*@{
+            if(Model.Category.SubCategories.Count == 0)
+            {
+                subCount = 1;
+            }
+            else
+            {
+                subCount = Model.Category.SubCategories.Count;
+            }
+        }*@
+                        <div class="addSubContent col-md-12">
+                            @if (Model.Category.ProductSubCategories.Count == 0)
+                            {
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input type="hidden" class="form-control" id="Category.ProductSubCategories[0].Id" name="Category.ProductSubCategories[0].Id">
+                                        <input type="text" class="form-control" id="Category.ProductSubCategories[0].Title" name="Category.ProductSubCategories[0].Title" placeholder="Sub Category" data-val="true" data-val-required="Sub Category is required.">
+                                        <span class="text-danger field-validation-error" data-valmsg-for="Category.ProductSubCategories[0].Title" data-valmsg-replace="true"></span>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                @for (int i = 0; i < Model.Category.ProductSubCategories.Count; i++)
+                                {
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <input type="hidden" class="form-control" asp-for="Category.ProductSubCategories[0].Id">
+                                            <input type="text" class="form-control" asp-for="Category.ProductSubCategories[i].Title" placeholder="Sub Category">
+                                            <span asp-validation-for="Category.ProductSubCategories[i].Title" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-secondary float-right" id="AddBtn">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div class="modal fade" id="Update-Category-Modal">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h4 class="modal-title" id="TitleHeading">Categories</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="Update-Category-Modal-Content">
+                
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>

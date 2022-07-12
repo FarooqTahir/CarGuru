@@ -1,0 +1,341 @@
+﻿@inject CarGuru.Services.Interfaces.ISessionManager x;
+@{
+    ViewData["Title"] = "ReportMonthly";
+    Layout = CommonData.GetUserLayoutByRoleId(x.GetUserRoleId());
+    //"~/Views/Shared/_Layout.cshtml";
+}
+
+@section styles{
+    <style>
+        .table thead th {
+            vertical-align: middle !important;
+            padding: 4px;
+            font-size: 12px;
+        }
+
+        td, th {
+            border: 1px solid #dee2e6 !important;
+        }
+
+        td {
+            padding: 4px !important;
+            font-size: 12px;
+        }
+
+        button {
+            float: right !important;
+            font-size: 19px !important;
+            border: 1px solid !important;
+            color: #67dd65 !important;
+            background-color: #f4f6f9 !important;
+            border-color: #67dd65 !important;
+            margin-top: 4px !important;
+            margin-bottom: -2px !important;
+        }
+
+            button:focus {
+                outline: 0px solid !important;
+                outline: 0px solid !important;
+            }
+
+
+        @@media print {
+
+            @@page {
+                margin: 5px 10px 5px 0;
+            }
+
+            aside #main-sidebar, footer, #comments, #respond {
+                display: none;
+            }
+
+            .table-responsive {
+                overflow: visible !important;
+            }
+        }
+    </style>
+
+}
+
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <h1>Monthly Report</h1>
+            </div>
+            <div class="col-md-6">
+
+                <button type="button" onclick="window.print();return false;">
+                    <i class="fas fa-print"></i>
+                </button>
+
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <!-- /.card-header -->
+                    <div class="reportCard card-body p-0" style="display: block;">
+                        <div class="row">
+                            <div class="col-md-12 salesTable">
+                                <!-- /.card-header -->
+                                <div class="table-responsive p-0">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="22">
+                                                    Monthly Repair & Maintenance Report
+                                                </th>
+                                            </tr>
+
+                                            <tr>
+                                                <th rowspan="2"> Sr.No.</th>
+                                                <th rowspan="2"> Plate Number</th>
+                                                <th colspan="2">Technician</th>
+                                                <th colspan="5">Spare Parts</th>
+                                                <th colspan="2">Labour</th>
+                                                <th rowspan="2">Oil Change</th>
+                                                <th rowspan="2">Tyres</th>
+                                                <th rowspan="2">Recovery</th>
+                                                <th rowspan="2">Total</th>
+                                                <th colspan="7">Variables</th>
+                                            </tr>
+                                            <tr>
+                                                <th>Allocation</th>
+                                                <th>Current</th>
+                                                <th>Registration</th>
+                                                <th>Insurance</th>
+                                                <th>Branding</th>
+                                                <th>Description</th>
+                                                <th>Amount</th>
+                                                <th>Description</th>
+                                                <th>Amount</th>
+                                                <th>Fuel</th>
+                                                <th>Sallk</th>
+                                                <th>Parking</th>
+                                                <th>Total</th>
+                                                <th>G. Total</th>
+                                                <th>Km In</th>
+                                                <th>Km out</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>G-15847</td>
+                                                <td>Ismail</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>G-15847</td>
+                                                <td>Ismail</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>G-15847</td>
+                                                <td>Ismail</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>G-15847</td>
+                                                <td>Ismail</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>G-15847</td>
+                                                <td>Ismail</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>G-15847</td>
+                                                <td>Ismail</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>G-15847</td>
+                                                <td>Ismail</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+
+                                            <tr>
+                                                <th>Total</th>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <!-- /.card-body -->
+                                <!-- /.card -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ./card-body -->
+
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+    </div>
+</section>

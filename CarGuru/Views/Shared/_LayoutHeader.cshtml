@@ -1,0 +1,216 @@
+﻿@using CarGuru.Services.Interfaces
+@inject ISessionManager _sessionManager;
+@{
+    var userName = _sessionManager.GetUsername();
+    var ProfilePic = _sessionManager.GetProfilePicture();
+}
+<style>
+    .header {
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+        background-color: #ffffff;
+        padding: 10px 10px;
+        border-bottom: 1px solid #f4f4f4;
+        color: #444444;
+        font-size: 14px;
+        height:60px;
+    }
+
+    .menu {
+        max-height: 200px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        overflow-x: hidden;
+    }
+
+    .custom-message .dropdown-toggle::after {
+        display: none;
+    }
+
+    .notification-content {
+        left: inherit;
+        right: 0px;
+        width: 300px;
+        overflow: auto;
+        height: 100%;
+        min-height: 400px !important;
+    }
+
+.timeZ {
+    float: right;
+    max-width: 60px;
+    font-size: 11px;
+    font-weight: 400;
+    opacity: .5;
+    filter: alpha(opacity=70);
+    text-align: right;
+    /* margin: -10px 0; */
+    margin-top: -15px;
+    padding: 5px;
+}
+</style>
+<nav class="main-header navbar navbar-expand backgroundGreen">
+
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+    </ul>
+    <ul class="navbar-nav ml-auto" style="        position: relative;
+">
+        <li class="nav-item custom-message">
+            <a href="javascript:void()" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" onclick="ReadNotifications(@_sessionManager.GetUserId());">
+                <i class="fa fa-envelope"></i>
+                <span class="label label-success notification-count"></span>
+            </a>
+            <ul class="dropdown-menu notification-content">
+                <li class="header text-center"> &nbsp; No New Notifications</li>
+                @*<li class="header"><i class="fa fa-book"></i> &nbsp; New Message Recieved</li>
+                    <li class="header"><i class="fa fa-book"></i> &nbsp; New Message Recieved</li>*@
+            </ul>
+        </li>
+        @*<li class="nav-item">
+                <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
+                    <i class="far fa-envelope-o" style="font-size:22px; font-weight:bold;"></i>
+                </a>
+            </li>*@
+        <li class="nav-item">
+            <a class="nav-link OpenChat" data-widget="control-sidebar" data-slide="true" href="#" role="button">
+                <i class="far fa-comments" style="font-size:22px; font-weight:bold;"></i>
+                <span class="label label-success message-count"></span>
+            </a>
+        </li>
+        <li class="dropdown user user-menu" style="margin-top:8px;">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="color:#fff;">
+                @if (ProfilePic != "")
+                {
+                    <img src="@ProfilePic" class="user-image" alt="User Image">
+                }
+                else
+                {
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQI6CdHtq-xjvMwNj4TYhC7YmRX2056trL5L45aHyAwFeMJTDF3" class="user-image" alt="User Image">
+                }
+                @*<span class="hidden-xs">John Smith</span>*@
+            </a>
+            <ul class="loginProfile dropdown-menu" style="left: inherit; right: 0px;">
+                <!-- User image -->
+                <li class="user-header">
+                    @if (ProfilePic != "")
+                    {
+                        <img src="@ProfilePic" class="user-image" alt="User Image">
+                    }
+                    else
+                    {
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQI6CdHtq-xjvMwNj4TYhC7YmRX2056trL5L45aHyAwFeMJTDF3" class="user-image" alt="User Image">
+                    }
+                    <p>@userName</p>
+                </li>
+                <!-- Menu Body -->
+                <li class="user-body">
+                </li>
+                <!-- Menu Footer-->
+                <li class="user-footer">
+                    <div class="row" style="flex-wrap:inherit;">
+                        <div class=" col-md-6 pull-left">
+                            <a href="@Url.Action("Profile", "UserProfile")" class="btn btn-default btn-flat">Profile</a>
+                        </div>
+                        <div class=" col-md-6 text-right">
+                            <a href="@Url.Action("Logout", "Login")" class="btn btn-default btn-flat">Sign out</a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</nav>
+<script>
+    $(document).ready(function () {
+        GetNotifications(@_sessionManager.GetUserId());
+    });
+    function GetNotifications(userId) {
+        if (userId != null && userId > 0) {
+            $.ajax({
+                url: "../Login/GetNotification",
+                type: 'Post',
+                data: {
+                    userId: userId
+                },
+                success: function (data) {
+                    if (data.data.length != null && data.data.length > 0) {
+                        var count = 0;
+                        $(".notification-content").empty();
+                        for (var i = 0; i < data.data.length; i++) {
+                            if (data.data[i].isRead == false) {
+                                count++;
+                            }
+                            if (count != 0) {
+                                $(".notification-count").text(count);
+                            }
+                            else {
+                                $(".notification-count").text("");
+                            }
+                            if(data.data[i].typeId == 2017)
+                                $(".notification-content").append('<li class="header" onclick="OpenChat(' + data.data[i].notificationTo + ',' + data.data[i].notificationFrom + ',' + true + ')"><i class="fa fa-comment"></i> &nbsp;' + data.data[i].message + '<span class="timeZ">' + moment(data.data[i].createdDate).format('DD MMMM hh:mm A') + '</span></li>');
+                            else if (data.data[i].typeId == 2025)
+                                $(".notification-content").append('<li class="header" onclick="OpenChat(' + data.data[i].notificationTo + ',' + data.data[i].notificationFrom + ',' + true + ')"><i class="fas fa-file-invoice-dollar"></i> &nbsp;' + data.data[i].message + '<span class="timeZ">' + moment(data.data[i].createdDate).format('DD MMMM hh:mm A') + '</span></li>');
+                            else
+                                $(".notification-content").append('<li class="header" onclick="OpenChat('+data.data[i].notificationTo+','+data.data[i].notificationFrom+','+true+')"><i class="fa fa-message"></i> &nbsp;' + data.data[i].message + '<span class="timeZ">'+moment(data.data[i].createdDate).format('DD MMMM hh:mm A')+'</span></li>');
+                        }
+                    }
+                },
+                error: function (request, error) {
+
+                }
+            });
+        }
+    }
+    function OpenChat(userId, otherUserId,IsOpen) {
+        $.ajax({
+                url: "../Conversation/GetRoleByUserId",
+                type: 'Post',
+                data: {
+                    userId: otherUserId
+                },
+             success: function (data) {
+                 if (data > 0) {
+                     if (IsOpen) {
+                         $(".OpenChat").click();
+                     } else {
+                         $(".new-arrived-messages").click();
+                     }
+                     $("#userType").val(data);
+                     SelectContactType(data);
+                     //$("#contact-user").val(otherUserId);
+                     setTimeout(function () {
+                         $("#contact-user").val(otherUserId);
+                         $("#contact-user").select2().trigger('change');
+                     }, 1000);
+                 }
+                    },
+                error: function (request, error) {
+
+                }
+            });
+    }
+    function ReadNotifications(userId) {
+        if (userId != null && userId > 0) {
+            $.ajax({
+                url: "../Login/ReadNotification",
+                type: 'Post',
+                data: {
+                    userId: userId
+                },
+                success: function (data) {
+                    if(data === true) $(".notification-count").text('');
+                },
+                error: function (request, error) {
+
+                }
+            });
+        }
+    }
+</script>

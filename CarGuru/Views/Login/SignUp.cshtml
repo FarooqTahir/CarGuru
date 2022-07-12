@@ -1,0 +1,304 @@
+﻿@model CarGuru.ViewModels.SignUpViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+
+    <script src="~/plugins/jquery/jquery.min.js"></script>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <meta name="viewport" content="width=device-width" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js" integrity="sha256-+BEKmIvQ6IsL8sHcvidtDrNOdZO3C9LtFPtF2H0dOHI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js" integrity="sha256-9GycpJnliUjJDVDqP0UEu/bsm9U+3dnQUH8+3W10vkY=" crossorigin="anonymous"></script>
+
+    <title>SignUp</title>
+    <style>
+        .register {
+            background: -webkit-linear-gradient(left, #67dd65, #67dd65);
+            margin-top: 3%;
+            padding: 3%;
+        }
+
+        .register-left {
+            text-align: center;
+            color: #fff;
+            margin-top: 4%;
+        }
+
+            .register-left .signIn {
+                border: none;
+                border-radius: 1.5rem;
+                padding: 2%;
+                width: 60%;
+                background: #f8f9fa;
+                font-weight: bold;
+                color: #383d41;
+                margin-top: 30%;
+                margin-bottom: 3%;
+                cursor: pointer;
+            }
+
+        .register-right {
+            background: #f8f9fa;
+            border-top-left-radius: 10% 50%;
+            border-bottom-left-radius: 10% 50%;
+        }
+
+        .register-left img {
+            margin-top: 15%;
+            margin-bottom: 5%;
+            width: 25%;
+            -webkit-animation: mover 2s infinite alternate;
+            animation: mover 1s infinite alternate;
+        }
+
+        .register-left p {
+            font-weight: lighter;
+            padding: 12%;
+            margin-top: -9%;
+            color: black;
+        }
+
+        .register-left h3 {
+            color: black;
+        }
+
+        .register .register-form {
+            padding: 10%;
+            margin-top: 10%;
+        }
+
+        .btnRegister {
+            float: right;
+            margin-top: 10%;
+            border: none;
+            border-radius: 1.5rem;
+            padding: 2%;
+            background: #67dd65;
+            color: white;
+            font-weight: 600;
+            width: 50%;
+            cursor: pointer;
+        }
+
+        .register .nav-tabs {
+            margin-top: 3%;
+            border: none;
+            background: #67dd65;
+            border-radius: 1.5rem;
+            width: 28%;
+            float: right;
+        }
+
+        @@-webkit-keyframes mover {
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @@keyframes mover {
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .register .nav-tabs .nav-link {
+            padding: 2%;
+            height: 34px;
+            font-weight: 600;
+            color: white;
+            border-top-right-radius: 1.5rem;
+            border-bottom-right-radius: 1.5rem;
+        }
+
+            .register .nav-tabs .nav-link:hover {
+                border: none;
+            }
+
+            .register .nav-tabs .nav-link.active {
+                width: 100px;
+                color: #495057;
+                border: 2px solid white;
+                border-top-left-radius: 1.5rem;
+                border-bottom-left-radius: 1.5rem;
+            }
+
+        .register-heading {
+            text-align: center;
+            margin-top: 8%;
+            margin-bottom: -15%;
+            color: #495057;
+        }
+    </style>
+</head>
+<body>
+    <div class="container register">
+        <div class="row">
+            <div class="col-md-3 register-left">
+
+                <h3>Welcome</h3>
+                <p>CarGuru is a Site for an online vehicle marketplace!</p>
+                <a href="@Url.Action("Login","Login")" class=" btn signIn">Sign In</a><br />
+            </div>
+            <div class="col-md-9 register-right">
+                <ul class="nav nav-tabs nav-justified" role="tablist">
+                    <li class=" nav-item ">
+                        <a class="nav-link active" data-toggle="tab" href="#Customer" role="tab" aria-controls="home" aria-selected="true">Customer</a>
+                    </li>
+                    <li class=" nav-item">
+                        <a class=" nav-link" data-toggle="tab" href="#Technician" role="tab" style="width:110px;" aria-controls="profile" aria-selected="false">Technician</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="Customer" role="tabpanel" aria-labelledby="home-tab">
+                        <h3 class="register-heading">Apply as a Customer</h3>
+                        <form method="post" asp-action="SignUp">
+
+                            <div class="row register-form">
+                                <input type="hidden" asp-for="IsCustomer" value="true" />
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input type="text" asp-for="Customer.FirstName" class="form-control" placeholder="First Name *" />
+                                        <span class="text-danger" asp-validation-for="Customer.FirstName"></span>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" asp-for="Customer.LastName" class="form-control" placeholder="Last Name *" />
+                                        <span class="text-danger" asp-validation-for="Customer.LastName"></span>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" asp-for="Customer.Password" class="form-control" placeholder="Password *" />
+                                        <span class="text-danger" asp-validation-for="Customer.Password"></span>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" asp-for="Customer.ConfirmPassword" class="form-control" placeholder="Confirm Password *" />
+                                        <span class="text-danger" asp-validation-for="Customer.ConfirmPassword"></span>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="maxl">
+                                            <label class="radio inline">
+                                                <input type="radio" asp-for="Customer.GenderId" value="4" checked>
+                                                <span> Male </span>
+                                            </label>
+                                            <label class="radio inline">
+                                                <input type="radio" asp-for="Customer.GenderId" value="5">
+                                                <span>Female </span>
+                                            </label>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input type="email" asp-for="Customer.Email" class="form-control" placeholder="Your Email *" />
+                                        <span class="text-danger" asp-validation-for="Customer.Email"></span>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" asp-for="Customer.PhoneNumber" minlength="10" maxlength="10" class="form-control" placeholder="Your Phone *" />
+                                        <span class="text-danger" asp-validation-for="Customer.PhoneNumber"></span>
+
+</div>
+                                    <div class="form-group">
+                                        <select asp-for="Customer.SecurityQuestionId" asp-items="Model.SecurityQuestions" class="form-control">
+                                            <option class="hidden" selected disabled>Please select your Sequrity Question</option>
+
+                                        </select>
+                                        <span class="text-danger" asp-validation-for="Customer.SecurityQuestionId"></span>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" asp-for="Customer.Answer" placeholder="Enter Your Answer *" value="" />
+                                        <span class="text-danger" asp-validation-for="Customer.Answer"></span>
+
+                                    </div>
+                                    <input type="submit" class="btnRegister" value="Register" />
+                                </div>
+
+                            </div>
+                        </form>
+
+                    </div>
+                    <div class="tab-pane fade show" id="Technician" role="tabpanel" aria-labelledby="profile-tab">
+                        <h3 class="register-heading">Apply as a Technician</h3>
+                        <form method="post" asp-action="SignUp">
+
+                            <div class="row register-form">
+                                <input type="hidden" asp-for="IsCustomer" value="false" />
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input type="text" asp-for="Technician.FirstName" class="form-control" placeholder="First Name *" />
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" asp-for="Technician.LastName" class="form-control" placeholder="Last Name *" />
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" asp-for="Technician.Password" class="form-control" placeholder="Password *" />
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" asp-for="Technician.ConfirmPassword" class="form-control" placeholder="Confirm Password *" />
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="maxl">
+                                            <label class="radio inline">
+                                                <input type="radio" asp-for="Technician.GenderId" value="4" checked>
+                                                <span> Male </span>
+                                            </label>
+                                            <label class="radio inline">
+                                                <input type="radio" asp-for="Technician.GenderId" value="5">
+                                                <span>Female </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input type="email" asp-for="Technician.Email" class="form-control" placeholder="Your Email *" />
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" asp-for="Technician.PhoneNumber" minlength="10" maxlength="10" class="form-control" placeholder="Your Phone *" />
+                                    </div>
+                                    <div class="form-group">
+                                        <select asp-for="Technician.SecurityQuestionId" asp-items="Model.SecurityQuestions" class="form-control">
+                                            <option class="hidden" selected disabled>Please select your Sequrity Question</option>
+
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" asp-for="Technician.Answer" placeholder="Enter Your Answer *" />
+                                    </div>
+                                    <input type="submit" class="btnRegister" value="Register" />
+                                </div>
+
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+ 
+
+
+
+
+
+</body>
+</html>

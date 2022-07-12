@@ -1,0 +1,143 @@
+﻿@model CarGuru.ViewModels.UserViewModel
+@inject CarGuru.Services.Interfaces.ISessionManager x;
+@{
+    ViewData["Title"] = "Customers";
+    Layout = CommonData.GetUserLayoutByRoleId(x.GetUserRoleId());
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-8 col-md-8">
+                <h1>Update Profile</h1>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body ">
+                <form asp-action="Profile" asp-controller="UserProfile" method="post" data-ajax="true" data-ajax-success="OnProfileSuccess(data)" enctype="multipart/form-data">
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">First Name</label>
+                                <input type="text" class="form-control" asp-for="User.FirstName" placeholder="Enter First Name">
+                                <span class="text-danger" asp-validation-for="User.FirstName"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Last Name</label>
+                                <input type="text" class="form-control" asp-for="User.LastName" placeholder="Enter First Name">
+                                <span class="text-danger" asp-validation-for="User.LastName"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Phone</label>
+                                <input type="text" class="form-control" asp-for="User.PhoneNumber" placeholder="Enter Last Name">
+                                <span class="text-danger" asp-validation-for="User.PhoneNumber"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 individualAddress">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Email</label>
+                                <input type="text" class="form-control" asp-for="User.Email" placeholder="Enter Email">
+                                <span class="text-danger" asp-validation-for="User.Email"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 individualAddress">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Address</label>
+                                <input type="text" class="form-control" asp-for="User.Address" placeholder="Enter Address">
+                                <span class="text-danger" asp-validation-for="User.Address"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Customer Type</label>
+                                <select class="form-control" asp-for="User.GenderId" asp-items="@(new SelectList(Model.Genders, "Value", "Text"))">
+                                    <option value="" disabled selected>Please Select Gender</option>
+                                </select>
+                                <span class="text-danger" asp-validation-for="User.GenderId"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Password</label>
+                                <input type="number" class="form-control" asp-for="User.Password" placeholder="">
+                                <span class="text-danger" asp-validation-for="User.Password"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Confirm Password</label>
+                                <input type="number" class="form-control" asp-for="User.ConfirmPassword" placeholder="">
+                                <span class="text-danger" asp-validation-for="User.ConfirmPassword"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Product Image:</label>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="btn btn-default btn-file">
+                                        Browse… <input asp-for="User.ProfileUrl" type="file" id="imgInp">
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Display Picture:</label>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    @if (Model.User.ProfileUrl != null)
+                                    {
+                                        <img src="@Model.User.ProfileUrl" id="profileImg" width="100" height="100">
+                                    }
+                                    else
+                                    {
+                                        <img src="" style="display:none" id="profileImg" width="100" height="100">
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-secondary float-right">Update</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+@section scripts{
+    @*<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>*@
+
+    <script>
+        $(document).ready(function () {
+
+
+        });
+
+        function OnProfileSuccess(data) {
+
+            alertG("Profile updated successfully");
+            $('#profileImg').attr('src', data);
+            $('#profileImg').css('display', 'block');
+
+        }
+
+    </script>
+
+}

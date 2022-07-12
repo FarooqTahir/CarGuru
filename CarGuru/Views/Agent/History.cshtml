@@ -1,0 +1,306 @@
+﻿
+@{
+    ViewData["Title"] = "History";
+    Layout = "~/Views/Shared/_LayoutCallCenter.cshtml";
+}
+
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-md-2">
+                <h1>History</h1>
+            </div>
+            <div class="col-md-10">
+                <form class="form-inline float-right">
+                    <div class="input-group bg-white">
+                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-navbar " type="submit">
+                                <i class="fas fa-search "></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body leads table-responsive p-0">
+                        <table class="table table-striped">
+                            <thead class="bg-colorBlack">
+                                <tr>
+                                    <th>Customer Name</th>
+                                    <th>Email</th>
+                                    <th>Product</th>
+                                    <th>Type</th>
+                                    <th>Date Receive</th>
+                                    <th class="actionColumn">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+
+                                    <td>John</td>
+                                    <td>John@gmail.com</td>
+                                    <td>Tyre</td>
+                                    <td>Service</td>
+                                    <td>28 feb 2020</td>
+                                    <th>
+                                        <div class="row">
+                                            <div class="col-md-3 viewModal">
+                                                <button class="btn" type="button" data-toggle="modal" data-target="#modal-viewForm">
+                                                    View
+                                                </button>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="dropdown">
+                                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        <a class="dropdown-item" href="javascript:void()" data-toggle="modal" data-target="#modal-editForm"><i class="fas fa-edit" aria-hidden="true" style="margin-right:8px;"></i>Edit</a>
+                                                        <a class="dropdown-item" href="javascript:void()"><i class="fas fa-print" aria-hidden="true" style="margin-right:8px;"></i>Print</a>
+                                                        <a class="dropdown-item" href="javascript:void()"><i class="fa fa-file" aria-hidden="true" style="margin-right:8px;"></i>Download</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    
+                                </tr>
+                                <tr>
+
+                                    <td>John</td>
+                                    <td>John@gmail.com</td>
+                                    <td>Dashboard Cover</td>
+                                    <td>Product</td>
+                                    <td>28 feb 2020</td>
+                                    <th>
+                                        <div class="row">
+                                            <div class="col-md-3 viewModal">
+                                                <button class="btn" type="button" data-toggle="modal" data-target="#modal-viewForm">
+                                                    View
+                                                </button>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="dropdown">
+                                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        <a class="dropdown-item" href="javascript:void()" data-toggle="modal" data-target="#modal-editForm"><i class="fas fa-edit" aria-hidden="true" style="margin-right:8px;"></i>Edit</a>
+                                                        <a class="dropdown-item" href="javascript:void()"><i class="fas fa-print" aria-hidden="true" style="margin-right:8px;"></i>Print</a>
+                                                        <a class="dropdown-item" href="javascript:void()"><i class="fa fa-file" aria-hidden="true" style="margin-right:8px;"></i>Download</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                   
+                                </tr>
+                                <tr>
+
+                                    <td>John</td>
+                                    <td>John@gmail.com</td>
+                                    <td>Air fitter</td>
+                                    <td>Service</td>
+                                    <td>28 feb 2020</td>
+                                    <th>
+                                        <div class="row">
+                                            <div class="col-md-3 viewModal">
+                                                <button class="btn" type="button" data-toggle="modal" data-target="#modal-viewForm">
+                                                    View
+                                                </button>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="dropdown">
+                                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        <a class="dropdown-item" href="javascript:void()" data-toggle="modal" data-target="#modal-editForm"><i class="fas fa-edit" aria-hidden="true" style="margin-right:8px;"></i>Edit</a>
+                                                        <a class="dropdown-item" href="javascript:void()"><i class="fas fa-print" aria-hidden="true" style="margin-right:8px;"></i>Print</a>
+                                                        <a class="dropdown-item" href="javascript:void()"><i class="fa fa-file" aria-hidden="true" style="margin-right:8px;"></i>Download</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                   
+                                </tr>
+                                <tr>
+
+                                    <td>John</td>
+                                    <td>John@gmail.com</td>
+                                    <td>Denso Wiper Blade</td>
+                                    <td>Product</td>
+                                    <td>28 feb 2020</td>
+                                    <th>
+                                        <div class="row">
+                                            <div class="col-md-3 viewModal">
+                                                <button class="btn" type="button" data-toggle="modal" data-target="#modal-viewForm">
+                                                    View
+                                                </button>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="dropdown">
+                                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        <a class="dropdown-item" href="javascript:void()" data-toggle="modal" data-target="#modal-editForm"><i class="fas fa-edit" aria-hidden="true" style="margin-right:8px;"></i>Edit</a>
+                                                        <a class="dropdown-item" href="javascript:void()"><i class="fas fa-print" aria-hidden="true" style="margin-right:8px;"></i>Print</a>
+                                                        <a class="dropdown-item" href="javascript:void()"><i class="fa fa-file" aria-hidden="true" style="margin-right:8px;"></i>Download</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                   
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+
+                        <div class="card-footer clearfix">
+                            <ul class="pagination pagination-sm m-0 float-right">
+                                <li class="page-item"><a class="page-link" href="#">«</a></li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#">»</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<div class="modal fade" id="modal-editForm">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Product</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form role="form">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Customer Name</label>
+                                <input type="text" class="form-control" id="" value="John	">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Customer Email</label>
+                                <input type="text" class="form-control" id="" value="John@gmail.com">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Product</label>
+                                <input type="text" class="form-control" id="" value="Tyre">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Product Type</label>
+                                <input type="text" class="form-control" id="" value="Service">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Date Receive</label>
+                                <input type="text" class="form-control" id="" value="28 feb 2020">
+                            </div>
+                        </div>
+
+                    </div>
+                    <input type="email" class="form-control" id="" value="new" style="visibility:hidden;">
+
+
+                    <!-- /.card-body -->
+                </form>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary">Save</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div class="modal fade" id="modal-viewForm">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">View Product</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form role="form">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Customer Name</label>
+                                <input type="text" class="form-control" id="" value="John" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Customer Email</label>
+                                <input type="text" class="form-control" id="" value="John@gmail.com" disabled>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>Product</label>
+                                <input type="text" class="form-control" id="" value="Tyre" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Product Type</label>
+                                <input type="text" class="form-control" id="" value="Service" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Date Receive</label>
+                                <input type="text" class="form-control" id="" value="28 feb 2020" disabled>
+                            </div>
+                        </div>
+
+                    </div>
+                    <input type="email" class="form-control" id="" value="new" style="visibility:hidden;">
+
+
+                    <!-- /.card-body -->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>

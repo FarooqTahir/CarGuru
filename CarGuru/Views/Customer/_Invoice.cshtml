@@ -1,0 +1,120 @@
+﻿@model CarGuru.ViewModels.CustomerViewModel
+    <section class="content mt-2">
+        <div class="row contacts">
+            <div class="col invoice-details">
+                <h4 class="invoice-id">INVOICE-@Model.Invoice.ServiceOrderNo</h4>
+                <div class="date"><strong>Customer: </strong>@Model.Invoice.CustomerName</div>
+                <div class="phone"><strong>Phone: </strong>@Model.Invoice.CustomerPhone</div>
+                <div class="email"><strong>Email: </strong>@Model.Invoice.CustomerEmail</div>
+            </div>
+            <div class="col invoice-to mt-4">
+                <div class="date"><strong>Technician: </strong>@Model.Invoice.Technician</div>
+                @if (Model.Invoice.VehicleMake!=null)
+                {
+                    <div class="date"><strong>Vehicle: </strong>@Model.Invoice.VehicleMake-@Model.Invoice.VehicleModel-@Model.Invoice.VehicleYear</div>
+                }
+
+                <div class="date"><strong>Date Received: </strong>@Model.Invoice.ReceivedDate.ToShortDateString()</div>
+            </div>
+            
+        </div>
+        <div class="order">
+            <h4>Services</h4>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table id="serviceTable" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Service</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody id="serviceTableBody">
+                            @if (Model.Invoice.Services != null)
+                            {
+                                @foreach (var item in Model.Invoice.Services)
+                                {
+                                    <tr>
+                                        <td>@item.ServiceName</td>
+                                        <td>@item.Price</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+<section class="content mt-2">
+    <div class="order">
+        <h4>Products</h4>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table id="productTable" class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productTableBody">
+                        @if (Model.Invoice.Products!=null)
+                        {
+                            @foreach (var item in Model.Invoice.Products)
+                            {
+                                var unit = item.Price / item.Quantity;
+                                <tr>
+                                    <td>@item.Name</td>
+                                    <td>@item.Quantity</td>
+                                    <td>@unit</td>
+                                    <td>@item.Price</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+
+                <div class="col-md-12">
+
+                    <div class="row">
+                        <div class="col-md-10">
+                            <span class="float-right">Product Cost:</span>
+                        </div>
+                        <div class="col-md-2">
+                            <span class="float-right" id="totalProductPrice">@Model.TotalCost</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-10">
+                            <span class="float-right">Service Charges:</span>
+                        </div>
+                        <div class="col-md-2">
+                            <span class="float-right" id="totalServiceCharges">@Model.ServiceCharges</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-10">
+                            <span class="font-weight-bold float-right">Total Price:</span>
+                        </div>
+                        <div class="col-md-2">
+                            <span class="float-right" id="totalPrice">@Model.TotalPrice</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>

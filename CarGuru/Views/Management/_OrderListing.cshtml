@@ -1,0 +1,88 @@
+﻿@model CarGuru.ViewModels.CustomerViewModel
+@{
+    ViewData["Title"] = "ServiceOrderList";
+}
+@if (!(Model.CustomerOrders == null))
+{
+    @if (!(Model.CustomerOrders.Count == 0))
+    {
+
+        <table class="table table-striped" id="OrderTable" style="width:100%">
+            <thead class="bg-colorBlack">
+                <tr>
+                    <th>Order No</th>
+                    <th>Customer</th>
+                    <th>Agent</th>
+                    <th>Technician</th>
+                    <th>Source</th>
+                    <th>Status</th>
+                    <th>Received Date</th>
+                    <th>Total Price</th>
+                    <th class="actionColumn">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.CustomerOrders)
+                {
+                    <tr>
+                        @if (item.ServiceOrderNo > 0)
+                        {
+                            <td>@item.ServiceOrderNo</td>
+                        }
+                        else
+                        {
+                            <td>N/A</td>
+                        }
+                        @if (@item.Customer != null)
+                        {
+                            <td>@item.Customer</td>
+                        }
+                        else
+                        {
+                            <td>N/A</td>
+                        }
+                        @if (@item.Agent != null)
+                        {
+                            <td>@item.Agent</td>
+                        }
+                        else
+                        {
+                            <td>N/A</td>
+                        }
+                        @if (@item.Agent != null)
+                        {
+                            <td>@item.Technician</td>
+                        }
+                        else
+                        {
+                            <td>N/A</td>
+                        }
+                        <td>@item.Source</td>
+                        <td>@item.OrderStatus</td>
+                        <td>@item.ReceivedDate.ToShortDateString()</td>
+                        <td>@item.TotalPrice</td>
+                        <th>
+
+                            <div class="row">
+                                <div class="col-sm-1"></div>
+                                <div class="col-sm-3 viewModal">
+                                    <a class="btn" href="javascript:void(0)" onclick="ShowInvoice(@item.CustomerId,@item.Id)">
+                                        View
+                                    </a>
+                                </div>
+                            </div>
+                        </th>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <h3>No Record Found</h3>
+    }
+}
+else
+{
+    <h3>No Record Found</h3>
+}

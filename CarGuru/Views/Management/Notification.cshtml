@@ -1,0 +1,109 @@
+﻿
+@{
+    ViewData["Title"] = "Notification";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-md-2">
+                <h1>Notifications</h1>
+            </div>
+            <div class="col-md-10">
+                <form class="form-inline float-right">
+                    <div class="input-group bg-white">
+                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-navbar " type="submit">
+                                <i class="fas fa-search "></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+        </div>
+    </div>
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-colorBlack">
+                        <h3>Select Notification Option.</h3>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div>
+                                    <p>Select notification for Customer and Technician below.(Leave blank to not send any notification).</p>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <a class="dropdown-item" href="#" style="margin-left:-15px;"><i class="fas fa-user" aria-hidden="true" style="margin-right:8px;"></i>Customer(Optional)</a>
+
+
+                                        <div class="custom-control custom-switch" style="margin-top:10px;">
+                                            <input type="checkbox" class="custom-control-input" id="customSwitch1" unchecked>
+                                            <label class="custom-control-label" for="customSwitch1">Email</label>
+                                        </div>
+                                        <div class="custom-control custom-switch" style="margin-top:10px;">
+                                            <input type="checkbox" class="custom-control-input" id="customSwitch2" unchecked>
+                                            <label class="custom-control-label" for="customSwitch2">SMS</label>
+                                        </div>
+                                        <div class="custom-control custom-switch" style="margin-top:10px;">
+                                            <input type="checkbox" class="custom-control-input" id="customSwitch21" unchecked>
+                                            <label class="custom-control-label" for="customSwitch21">InApp</label>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        <a class="dropdown-item" href="#" style="margin-left:-15px;"><i class="fas fa-user" aria-hidden="true" style="margin-right:8px;"></i>Technician(Optional)</a>
+
+                                        <div class="custom-control custom-switch" style="margin-top:10px;">
+                                            <input type="checkbox" class="custom-control-input" id="customSwitch3" unchecked>
+                                            <label class="custom-control-label" for="customSwitch3">Email</label>
+                                        </div>
+                                        <div class="custom-control custom-switch" style="margin-top:10px;">
+                                            <input type="checkbox" class="custom-control-input" id="customSwitch4" unchecked>
+                                            <label class="custom-control-label" for="customSwitch4">SMS</label>
+                                        </div>
+                                        <div class="custom-control custom-switch" style="margin-top:10px;">
+                                            <input type="checkbox" class="custom-control-input" id="customSwitch22" unchecked>
+                                            <label class="custom-control-label" for="customSwitch22">InApp</label>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        <a class="dropdown-item" href="#" style="margin-left:-15px;"><i class="fas fa-user" aria-hidden="true" style="margin-right:8px;"></i>Call Center(Optional)</a>
+
+                                        <div class="custom-control custom-switch" style="margin-top:10px;">
+                                            <input type="checkbox" class="custom-control-input" id="customSwitch17" unchecked>
+                                            <label class="custom-control-label" for="customSwitch17">Email</label>
+                                        </div>
+                                        <div class="custom-control custom-switch" style="margin-top:10px;">
+                                            <input type="checkbox" class="custom-control-input" id="customSwitch18" unchecked>
+                                            <label class="custom-control-label" for="customSwitch18">SMS</label>
+                                        </div>
+                                        <div class="custom-control custom-switch" style="margin-top:10px;">
+                                            <input type="checkbox" class="custom-control-input" id="customSwitch23" unchecked>
+                                            <label class="custom-control-label" for="customSwitch23">InApp</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer clearfix" style="margin-top:10px;">
+                        <button type="button" class="btn btn-secondary">Save</button>
+                    </div>
+                
+                </div>
+                </div>
+            </div>
+        </div>
+</section>

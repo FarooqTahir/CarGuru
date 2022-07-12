@@ -1,0 +1,205 @@
+﻿@model CarGuru.ViewModels.ManagementViewModel
+@inject CarGuru.Services.Interfaces.ISessionManager x;
+@{
+    ViewData["Title"] = "Dashboard";
+    var role = x.GetUserRoleId();
+    Layout = CommonData.GetUserLayoutByRoleId(role); //"~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts{
+    <script>
+
+        $('#daterange-btn').daterangepicker(
+            {
+                ranges: {
+                    'Daily': [moment(), moment()],
+                    'Weekly': [moment().subtract(6, 'days'), moment()],
+                    'Monthly': [moment().startOf('month'), moment().endOf('month')],
+                },
+                startDate: moment().subtract(29, 'days'),
+                endDate: moment()
+            },
+            function (start, end) {
+                ApplyManagementFilter(start.format('YYYY-MM-DD'),end.format('YYYY-MM-DD'))
+                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+            }
+        )
+
+    </script>
+    <script>
+        $(document).ready(function () {
+
+            $(".sales").show();
+            $(".tech").hide();
+            $(".product").hide();
+            $(".location").hide();
+            $(".jobs").hide();
+            $(".leadsEfficiency").hide();
+
+            $("select.reportDropDown").change(function () {
+                var selectedValue = $(this).children("option:selected").val();
+                if (selectedValue === "Sales Report") {
+                    $(".sales").show();
+                    $(".tech").hide();
+                    $(".product").hide();
+                    $(".location").hide();
+                    $(".jobs").hide();
+                    $(".leadsEfficiency").hide();
+
+
+                } else if (selectedValue === "Technician Report") {
+                    $(".sales").hide();
+                    $(".tech").show();
+                    $(".product").hide();
+                    $(".location").hide();
+                    $(".jobs").hide();
+
+                    $(".leadsEfficiency").hide();
+
+                } else if (selectedValue === "Product Report") {
+                    $(".sales").hide();
+                    $(".tech").hide();
+                    $(".product").show();
+                    $(".location").hide();
+                    $(".jobs").hide();
+                    $(".leadsEfficiency").hide();
+
+                } else if (selectedValue === "Location Sales Report") {
+                    $(".sales").hide();
+                    $(".tech").hide();
+                    $(".product").hide();
+                    $(".location").show();
+                    $(".jobs").hide();
+
+                    $(".leadsEfficiency").hide();
+
+                } else if (selectedValue === "Lead Efficiency") {
+                    $(".sales").hide();
+                    $(".tech").hide();
+                    $(".product").hide();
+                    $(".location").hide();
+
+
+                    $(".leadsEfficiency").show();
+
+                }
+
+            });
+        });
+        $("select.reportDropDown").change(function () {
+            var selectedValue = $(this).children("option:selected").val();
+            if (selectedValue === "Sales Report") {
+                $(".sales").show();
+                $(".tech").hide();
+                $(".product").hide();
+                $(".location").hide();
+                $(".jobs").hide();
+                $(".leadsEfficiency").hide();
+
+
+            } else if (selectedValue === "Technician Report") {
+                $(".sales").hide();
+                $(".tech").show();
+                $(".product").hide();
+                $(".location").hide();
+                $(".jobs").hide();
+
+                $(".leadsEfficiency").hide();
+
+            } else if (selectedValue === "Product Report") {
+                $(".sales").hide();
+                $(".tech").hide();
+                $(".product").show();
+                $(".location").hide();
+                $(".jobs").hide();
+                $(".leadsEfficiency").hide();
+
+            } else if (selectedValue === "Location Sales Report") {
+                $(".sales").hide();
+                $(".tech").hide();
+                $(".product").hide();
+                $(".location").show();
+                $(".jobs").hide();
+
+                $(".leadsEfficiency").hide();
+
+            } else if (selectedValue === "Lead Efficiency") {
+                $(".sales").hide();
+                $(".tech").hide();
+                $(".product").hide();
+                $(".location").hide();
+
+
+                $(".leadsEfficiency").show();
+
+            }
+
+        });
+    </script>
+    <script>
+        function SelectTechnician(technicianId) {
+            //if (technicianId != null && technicianId > 0) {
+                 $.ajax({
+                url: "../Management/GetTechnicianStat",
+                type: 'Post',
+                data: {
+                    technicianId: technicianId
+                },
+                success: function (data) {
+                    $("#technician-content").html(data);
+                },
+                error: function (request, error) {
+                }
+            });
+            //}
+        }
+    </script>
+    <script>
+        function ApplyManagementFilter(startDate, endDate) {
+            
+            $.ajax({
+                type: "POST",
+                url: '../Management/DashboardManagementFilter',
+                data: { startDate: startDate, endDate: endDate },
+                success: function (data) {
+
+                    
+
+                    $("#management-dashboard-stat-content").html('');
+                    $("#management-dashboard-stat-content").html(data);
+                    $(".sales").show();
+                    $(".tech").hide();
+                    $(".product").hide();
+                    $(".location").hide();
+                    $(".jobs").hide();
+                    $(".leadsEfficiency").hide();
+                },
+                error: function (res) {
+                    AjaxFailure(res);
+                }
+            });
+        }
+    </script>
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-md-2">
+                <h1>Dashboard</h1>
+            </div>
+
+            <div class="col-md-10">
+                <div class="input-group float-right" style="width:200px;">
+                    <button type="button" class="btn btn-default form-control" id="daterange-btn">
+                        <i class="far fa-calendar-alt"></i> Date range picker
+                        <i class="fas fa-caret-down"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div id="management-dashboard-stat-content">
+    <partial name="~/Views/Management/_ManagementDashboardStat.cshtml" model="Model" />
+</div>

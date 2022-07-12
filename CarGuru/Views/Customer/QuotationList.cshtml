@@ -1,0 +1,258 @@
+﻿@model CarGuru.ViewModels.CustomerViewModel
+@inject CarGuru.Services.Interfaces.ISessionManager x;
+@{
+    ViewData["Title"] = "Scheduler";
+    Layout = CommonData.GetUserLayoutByRoleId(x.GetUserRoleId());
+
+    decimal Latitude = 0;
+    decimal Longitude = 0;
+}
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-8 col-md-8">
+                @if (!(Model.CustomerUpdate == null))
+                {
+                    var Name = Model.CustomerUpdate.User.FirstName + " " + Model.CustomerUpdate.User.LastName;
+                    <h1>@Name - Quotations</h1>
+                }
+                else
+                {
+                    <h1>Quotations</h1>
+                }
+
+            </div>
+            <div class="col-sm-2 col-md-2">
+
+            </div>
+            @*<div class="col-sm-4 col-md-2">
+                    <a href="@Url.Action("ServiceOrders", "Customer",new { CustomerId = Model.CustomerId })" class="btn bg-colorBlack float-right">Add Order</a>
+                </div>*@
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body leads table-responsive p-0" id="Table">
+                        <table class="table table-striped" id="QTable" width="100%" min-height="350px">
+                            <thead class="bg-colorBlack">
+                                <tr>
+                                    <th>Quotation Id</th>
+                                    <th>Customer Name</th>
+                                    <th>Received Date</th>
+                                    <th>Customer Email</th>
+                                    <th>Total Price</th>
+                                    <th class="actionColumn">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (!(Model.Quotations is null) && Model.Quotations.Any())
+                                {
+                                    foreach (var request in Model.Quotations)
+                                    {
+                                    <tr>
+                                        <td>@request.QuotationId</td>
+                                        <td>@request.CustomerName</td>
+                                        <td>@request.CreatedDate</td>
+                                        <td>
+                                            @request.CustomerEmail
+                                        </td>
+                                        <td>$@request.TotalPrice</td>
+                                        <th>
+                                            <div class="row">
+                                                <div class="col-md-3 viewModal">
+                                                    <button class="btn" type="button" onclick="ViewQuotation(@request.QuotationId,@request.CustomerUserId)">
+                                                        View
+                                                    </button>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="dropdown">
+                                                        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        </button>
+                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                            <a class="dropdown-item" href="javascript:void()" onclick="EditQuotation(@request.QuotationId,@request.CustomerUserId)"><i class="fas fa-edit" aria-hidden="true" style="margin-right:8px;"></i>Edit</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<div class="modal fade" id="modal-detailForm">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h4 class="modal-title">Quotation Detail</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="Quotation-detail-dataa">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="QCustomerId">
+                <input type="hidden" id="QId">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="forward" class="btn btn-secondary" onclick="ForwardToClient()" data-dismiss="modal">Forward to Client</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+<div class="modal fade" id="modal-EditForm">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h4 class="modal-title">Quotation Edit</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="Quotation-detail-dataa">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Add</button>
+
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('#QTable').DataTable({
+                "bSort": false,
+                "searching": false,
+                "responsive": true,
+                dom: 'Bfrtip',
+                buttons: []
+            });
+        });
+        function SelectProduct(quotationId, quotationDetailId, productId) {
+            UpdateProduct(quotationId, quotationDetailId, productId);
+        }
+
+        function ForwardToClient() {
+            var customerId = $("#QCustomerId").val();
+            var qoutationId = $("#QId").val();
+            var description = $("#QuotationDescription").val();
+            OpenChat(@x.GetUserId(), customerId, true)
+            $("#modal-detailForm").modal('hide');
+            $.ajax({
+                url: "../Management/ForwardQuotationToClient",
+                type: 'Post',
+                data: {
+                    UserId: customerId, Description: description, QoutationId: qoutationId
+                },
+                success: function (data) {
+                    
+                    var customerId = $("#QCustomerId").val();
+                    OpenChat(@x.GetUserId(), customerId,false)
+                    $("#QuotationTable").html(data);
+                    $("#QCustomerId").val(customerId);
+                    $("#modal-detailForm").modal('hide');
+                    $('#Qtable').DataTable({
+                        "bSort": false,
+                        "searching": false,
+                        "responsive": true,
+                        dom: 'Bfrtip',
+                        buttons: [
+
+                        ]
+                    });
+                },
+                error: function (request, error) {
+
+                }
+            });
+        }
+        function ViewQuotation(quotationId, customerId) {
+            $("#QCustomerId").val(customerId);
+            $("#QId").val(quotationId);
+            if (quotationId > 0) {
+                $.ajax({
+                    url: "../Management/GetQuotationInfoById",
+                    type: 'Post',
+                    data: {
+                        quotationId: quotationId, isView: true
+                    },
+                    success: function (data) {
+                        $("#Quotation-detail-dataa").html(data);
+                        $("#QCustomerId").val(customerId);
+                        $("#modal-detailForm").modal('show');
+                    },
+                    error: function (request, error){}
+                });
+            }
+        }
+        function EditQuotation(quotationId, customerId) {
+            $("#QCustomerId").val(customerId);
+            $("#QId").val(quotationId);
+            if (quotationId > 0) {
+                $.ajax({
+                    url: "../Management/GetQuotationInfoById",
+                    type: 'Post',
+                    data: {
+                        quotationId: quotationId, isView: false
+                    },
+                    success: function (data) {
+                        $("#Quotation-detail-dataa").html(data);
+                        $("#modal-detailForm").modal('show');
+                    },
+                    error: function (request, error) {
+
+                    }
+                });
+            }
+        }
+        function UpdateProduct(quotationId, quotationDetailId, productId) {
+            if (quotationId > 0 && quotationDetailId > 0 && productId > 0) {
+                $.ajax({
+                    url: "../Management/UpdateQuotationProduct",
+                    type: 'Post',
+                    data: {
+                        quotationDetailId: quotationDetailId, productId: productId, quotationId: quotationId
+                    },
+                    success: function (data) {
+                        
+                        if (data.status == 1) {
+                            
+                            $("#PP_" + quotationDetailId).text(data.data.salePrice);
+                            $("#TotalPrice").val(data.data.totalPrice);
+                            $("#TotalMargin").val(data.data.margin);
+                            $("#TotalDiscount").val(data.data.discountPrice);
+
+                        }
+                        else {
+
+                        }
+                    },
+                    error: function (request, error) {
+
+                    }
+                });
+            }
+        }
+    </script>
+}

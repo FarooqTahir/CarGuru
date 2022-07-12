@@ -1,0 +1,15 @@
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Services\obj\Release\netcoreapp3.1\CarGuru.Services.csprojAssemblyReference.cache
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Services\obj\Release\netcoreapp3.1\CarGuru.Services.AssemblyInfoInputs.cache
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Services\obj\Release\netcoreapp3.1\CarGuru.Services.AssemblyInfo.cs
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Services\bin\Release\netcoreapp3.1\CarGuru.Services.deps.json
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Services\bin\Release\netcoreapp3.1\CarGuru.Services.dll
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Services\bin\Release\netcoreapp3.1\CarGuru.Services.pdb
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Services\bin\Release\netcoreapp3.1\CarGuru.Database.dll
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Services\bin\Release\netcoreapp3.1\CarGuru.Utilities.dll
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Services\bin\Release\netcoreapp3.1\CarGuru.Database.pdb
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Services\bin\Release\netcoreapp3.1\CarGuru.Utilities.pdb
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Services\obj\Release\netcoreapp3.1\CarGuru.Services.csproj.CopyComplete
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Services\obj\Release\netcoreapp3.1\CarGuru.Services.dll
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Services\obj\Release\netcoreapp3.1\CarGuru.Services.pdb
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Services\bin\Release\netcoreapp3.1\CarGuru.Services.runtimeconfig.json
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Services\bin\Release\netcoreapp3.1\CarGuru.Services.runtimeconfig.dev.json

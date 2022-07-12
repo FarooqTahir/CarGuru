@@ -1,0 +1,147 @@
+﻿@using CarGuru.Utilities;
+@inject CarGuru.Services.Interfaces.ISessionManager x;
+<style>
+    .select2-container--default .select2-selection--single {
+        border: 1px solid #ced4da;
+        padding: 7px 5px;
+        height: 40px !important;
+    }
+</style>
+<aside class="control-sidebar control-sidebar-dark" style="background: #28a745 !important;">
+    <div class="col-sm-2">
+        <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button" style="color:#fff">
+            <i class="fas fa-times"></i>
+        </a>
+    </div>
+    <div class="p-3 control-sidebar-content">
+            <audio controls="controls" id="MessageAudio" style="display:none;">
+                <source src="~/dist/music/skype_message.mp3" type="audio/mpeg" />
+            </audio>
+        <div class="card direct-chat direct-chat-primary" style="position: relative; left: 0px; top: 0px;">
+            <div class="card-header ui-sortable-handle">
+                <form role="form">
+                    <div class="form-group row">
+                        <label class="col-sm-5 text-black-50">Contact</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" id="userType" onchange="SelectContactType(this.value)" data-val="true" data-val-required="The Contact Type is required.">
+                                <option>Please select Contact</option>
+                                <option value="@Convert.ToInt32(UserRoles.Management)">Management</option>
+                                <option value="@Convert.ToInt32(UserRoles.Agent)">Agent</option>
+                                <option value="@Convert.ToInt32(UserRoles.Supervisor)">Supervisor</option>
+                                <option value="@Convert.ToInt32(UserRoles.Customer)">Customer</option>
+                                <option value="@Convert.ToInt32(UserRoles.Technician)">Technician</option>
+                            </select>
+                            @*<select class=" form-control ">
+                                <option>Technician</option>
+                                <option>Customer</option>
+                            </select>*@
+                            <input type="hidden" id="my-login-id" value="@x.GetUserId()" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-5 text-black-50">Person Name</label>
+                        <div class="col-sm-7" id="user-contact-type">
+
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+            <div id="Chat-Messages-Content">
+
+            </div>
+
+        </div>
+    </div>
+</aside>
+
+<script src="https://static.opentok.com/v2/js/opentok.js"></script>
+<script src="~/dist/js/Opentok.js"></script>
+<script>
+    connect('@x.GetSessionId()', '@x.GetTokenSession()');
+</script>
+<script>
+        function SelectContactType(roleId) {
+            if (roleId != null && roleId > 0) {
+                $.ajax({
+                url: "../Common/GetContactsByRoleId",
+                type: 'Post',
+                data: {
+                    roleId: roleId
+                },
+                success: function (data) {
+                    $("#user-contact-type").html(data);
+                    $("#contact-user").select2();
+                },
+                error: function (request, error) {
+
+                }
+            });
+            }
+        }
+    function GetUserChat(userId, otherUserId) {
+       
+            if (otherUserId != null && otherUserId > 0) {
+                $.ajax({
+                url: "../Conversation/GetChatMessages",
+                type: 'Post',
+                data: {
+                    userId: userId,otherUserId:otherUserId
+                },
+                success: function (data) {
+                    $("#Chat-Messages-Content").html(data);
+                    SrollMessages();
+                },
+                error: function (request, error) {
+
+                }
+            });
+            }
+    }
+    
+        function alertR(Text) {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 4500
+            });
+            Toast.fire({
+                type: 'warning',
+                title: Text,
+            });
+        }
+        function alertG(Text) {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 4500
+            });
+            Toast.fire({
+                type: 'success',
+                title: Text,
+            });
+    }
+//    function AjaxFailure(xhr, status, error) {
+//    
+//    //alert(error);
+//    if (xhr.status === 401) {
+//        $.get("/Login/AjaxLogin", function (data) {
+//            $(".sessionExpBody").html(data);
+//            $("form").removeData("validator");
+//            $("form").removeData("unobtrusiveValidation");
+//            $.validator.unobtrusive.parse("form");
+//        });
+//        //$('.SessionExpierModal').modal('show');
+//    }
+//    else if (xhr.status === 400) {
+
+//    }
+//    else {
+//        //$('.exceptionModel').modal('show');
+//    }
+//    $("#loadingScreen").css("display", "none");
+//}
+</script>

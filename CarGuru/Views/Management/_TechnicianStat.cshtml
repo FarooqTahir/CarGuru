@@ -1,0 +1,72 @@
+﻿@model CarGuru.ViewModels.ManagementViewModel
+<script>
+     var barChartTechData = {
+                labels: ['Tecnician'],
+                datasets: [
+                    {
+                        label: 'Job Failed',
+                        backgroundColor: 'rgba(111,205,152,0.7)',
+                        borderColor: 'rgba(117,209,218,0.9)',
+                        pointRadius: false,
+                        pointColor: 'rgba(117,209,218,0.9)',
+                        pointStrokeColor: 'rgba(117,209,218,0.9)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(117,209,218,0.9)',
+                        data: [@Convert.ToInt32(Model.TechnicianStat.Data.Technicians.JobFailed)]
+
+
+                    },
+                    {
+                        label: 'Late Job',
+                        backgroundColor: 'rgba(111,205,152,0.7)',
+                        borderColor: 'rgba(117,209,218,0.9)',
+                        pointRadius: false,
+                        pointColor: 'rgba(117,209,218,0.9)',
+                        pointStrokeColor: 'rgba(117,209,218,0.9)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(117,209,218,0.9)',
+                        data: [@Convert.ToInt32(Model.TechnicianStat.Data.Technicians.LateJob)]
+                    },
+                    {
+                        label: 'Complete Job',
+                        backgroundColor: 'rgba(111,205,152,0.7)',
+                        borderColor: 'rgba(117,209,218,0.9)',
+                        pointRadius: false,
+                        pointColor: 'rgba(117,209,218,0.9)',
+                        pointStrokeColor: 'rgba(117,209,218,0.9)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(117,209,218,0.9)',
+                        data: [@Convert.ToInt32(Model.TechnicianStat.Data.Technicians.CompleteJobs)]
+                    },
+                ]
+            }
+            var barChartCanvas3 = $('#Technician').get(0).getContext('2d')
+            var barChartData3 = jQuery.extend(true, {}, barChartTechData)
+            var temp0 = barChartTechData.datasets[0]
+            var temp1 = barChartTechData.datasets[1]
+            var temp2 = barChartTechData.datasets[2]
+            barChartData3.datasets[0] = temp2
+            barChartData3.datasets[1] = temp1
+            barChartData3.datasets[2] = temp0
+
+            var barChartOptions3 = {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                datasetFill: false
+            }
+
+            var barChart2 = new Chart(barChartCanvas3, {
+                type: 'bar',
+                data: barChartData3,
+                options: barChartOptions3
+            });
+</script>
+<div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+<canvas id="Technician" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 487px;" width="487" height="250" class="chartjs-render-monitor"></canvas>

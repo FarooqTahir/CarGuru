@@ -1,0 +1,216 @@
+﻿@model CarGuru.ViewModels.CustomerViewModel
+@inject CarGuru.Services.Interfaces.ISessionManager x;
+@{
+    ViewData["Title"] = "Vehicles";
+    Layout = CommonData.GetUserLayoutByRoleId(x.GetUserRoleId());//"~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts{
+    <script>
+        function AddModal() {
+            $("#LicencePlateNo-error").text("");
+            $("#Make-error").text("");
+            $("#Model-error").text("");
+            $("#Year-error").text("");
+            $("#Vin-error").text("");
+
+            $("#AddVehicle_Id").val(0);
+            $("#LicencePlateNo").val('');
+            $("#Make").val('');
+            $("#Model").val('');
+            $("#Year").val('');
+            $("#Vin").val('');
+            $("#Mulkia").val('');
+            $("#Heading").text("Add Vehicle");
+            $("#AddBtn").text("Add");
+            $("#Add-Vehicle-Modal").modal("show");
+        }
+        function EditModal(Id) {
+            $.ajax({
+                type: "POST",
+                url: '/Customer/GetVehiclesById',
+                data: { Id: Id },
+                success: function (data) {
+                    if (data !== null) {
+                        
+                        $("#LicencePlateNo-error").text("");
+                        $("#Make-error").text("");
+                        $("#Model-error").text("");
+                        $("#Year-error").text("");
+                        $("#Vin-error").text("");
+                        $("#Mulkia-error").text("");
+
+                        $("#LicencePlateNo").val(data.data.licensePlateNumber);
+                        $("#AddVehicle_Id").val(data.data.id);
+                        $("#Make").val(data.data.make);
+                        $("#Model").val(data.data.model);
+                        $("#Year").val(data.data.year);
+                        $("#Vin").val(data.data.vin);
+                        $("#Mulkia").val(data.data.mulkia);
+
+                        $("#Heading").text("Update Vehicle");
+                        $("#AddBtn").text("Update");
+                        $("#Add-Vehicle-Modal").modal('show');
+                    }
+                },
+
+                error: function () {
+
+                }
+            });
+        }
+        function OnVehicleSuccess(data) {
+
+            $(".VehiclesList").html('');
+            $(".VehiclesList").html(data);
+            var VId = $("#AddVehicle_Id").val();
+            if (VId == 0) {
+                alertG("Vehicle Added successfully");
+            }
+            else {
+                alertG("Vehicle Updated successfully");
+            }
+
+            $("#Add-Vehicle-Modal").modal("hide");
+        }
+        function OnDeleteVehicleSuccess(data) {
+           
+            $(".VehiclesList").html('');
+            $(".VehiclesList").html(data);
+            alertG("Vehicle Added successfully");
+            $("#Add-Vehicle-Modal").modal("hide");
+        }
+        function DeleteVehicle(Id) {
+            $.ajax({
+                url: "../Customer/DeleteVehicles",
+                type: 'Post',
+                data: {
+                    Id: Id
+                },
+                success: function (data) {
+                    
+                    $(".VehiclesList").html('');
+                    $(".VehiclesList").html(data);
+                    alertG("Vehicle Delete successfully");
+                },
+                error: function (request, error) {
+
+                }
+            });
+        }
+    </script>
+}
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-8 col-md-10">
+                @if (Model.CustomerName.Length > 0)
+                {
+                    <h1>@Model.CustomerName Vehicles List</h1>
+                }
+                else
+                {
+                    <h1> Vehicles List</h1>
+                }
+            </div>
+            <div class="col-sm-4 col-md-2">
+                <a href="javascript:void(0)" onclick="AddModal()" class="btn bg-colorBlack float-right">Add Vehicle</a>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+
+                    <!-- /.card-header -->
+                    <div class="card-body leads table-responsive p-0">
+                        <div class="VehiclesList">
+                            <partial name="~/Views/Customer/_VehiclesList.cshtml" model="Model" />
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer clearfix">
+
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<div class="modal fade" id="Add-Vehicle-Modal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h4 class="modal-title" id="Heading">Vehicle</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="AddVehicles" asp-controller="Customer" method="post" data-ajax="true" data-ajax-success="OnVehicleSuccess(data)">
+                    <div class="addVehicleForm">
+                        <div class="row">
+                            <input type="hidden" asp-for="CustomerId" />
+                            <input type="hidden" asp-for="AddVehicle.Id" />
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Licence Plate No.</label>
+                                    <input type="text" class="form-control vehicleLicense" id="LicencePlateNo" asp-for="AddVehicle.LicensePlateNumber" placeholder="Enter Licence Plate No.">
+                                    <span class="text-danger" asp-validation-for="AddVehicle.LicensePlateNumber"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Make</label>
+                                    <input type="text" class="form-control vehicleBrand" id="Make" asp-for="AddVehicle.Make" placeholder="Enter Manufacturer">
+                                    <span class="text-danger" asp-validation-for="AddVehicle.Make"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Model</label>
+                                    <input type="text" class="form-control vehicleModel" id="Model" asp-for="AddVehicle.Model" placeholder="Enter Model">
+                                    <span class="text-danger" asp-validation-for="AddVehicle.Model"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Year</label>
+                                    <input type="text" class="form-control vehicleYear" id="Year" asp-for="AddVehicle.Year" placeholder="Enter Year">
+                                    <span class="text-danger" asp-validation-for="AddVehicle.Year"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">VIN No.</label>
+                                    <input type="text" class="form-control vehicleVinNo" id="Vin" asp-for="AddVehicle.VIN" placeholder="Enter VIN No.">
+                                    <span class="text-danger" asp-validation-for="AddVehicle.VIN"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Mulkia No.</label>
+                                    <input type="text" class="form-control vehicleVinNo" id="Mulkia" asp-for="AddVehicle.Mulkia" placeholder="Enter Mulkia.">
+                                    <span class="text-danger" asp-validation-for="AddVehicle.Mulkia"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-secondary float-right" id="AddBtn">Save</button>
+                </form>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>

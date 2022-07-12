@@ -1,0 +1,55 @@
+﻿@model CarGuru.ViewModels.FleetViewModel
+@if (!(Model.FleetList == null))
+{
+    @if (Model.FleetList.Count > 0)
+    {
+
+        <table class="table table-striped" id="FleetTable" style="width:100%">
+            <thead class="bg-colorBlack">
+                <tr>
+                    <th>Name</th>
+                    <th>Code</th>
+                    <th>Contact</th>
+                    <th>Address</th>
+                    <th class="actionColumn">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.FleetList)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.Code</td>
+                        <td>@item.Contact</td>
+                        <td>@item.Address</td>
+                        <th>
+
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <div class="dropdown">
+                                        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                                            <a class="dropdown-item" href="javascript:void()" onclick="EditModal(@item.Id)" data-toggle="modal" data-target="#modal-warning"><i class="fa fa-edit" aria-hidden="true" style="margin-right:8px;"></i>Edit</a>
+                                            <a class="dropdown-item followUp" href="javascript:void()" onclick="DeleteFleet(@item.Id)"><i class="fa fa-trash" aria-hidden="true" style="margin-right:8px;"></i>Delete</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </th>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <h3>No Record Found</h3>
+    }
+}
+else
+{
+    <h3>No Record Found</h3>
+}

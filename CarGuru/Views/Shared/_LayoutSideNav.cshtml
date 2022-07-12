@@ -1,0 +1,188 @@
+﻿@inject CarGuru.Services.Interfaces.ISessionManager x;
+@{
+    var UserName = x.GetUsername();
+    var ProfilePic = x.GetProfilePicture();
+    var ProfilePics = x.GetProfilePicture();
+}
+@section styles{
+    <style>
+        .control-sidebar, .control-sidebar::before {
+            bottom: calc(3.5rem + 1px);
+            display: none;
+            right: -500px !important;
+            width: 250px;
+            transition: right .5s ease-in-out,display .5s ease-in-out !important;
+        }
+    </style>
+
+}
+
+
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    @*<a href="javascript:void()" class="brand-link">
+            <img src="/dist/img/Logo-PNG.png" alt=" Logo" style="width: 100px;height: 100px;" class="rounded mx-auto d-block">
+
+        </a>*@
+    <a href="javascript:void()" class="brand-link">
+        <img src="~/dist/img/Logo-PNG.png" alt="AdminLTE Logo" class="levation-3" style="opacity: .8; height:65px">
+        <span class="brand-text font-weight-light">
+            <b>
+                Carguru
+            </b>
+        </span>
+    </a>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="image">
+                @if (ProfilePic != "")
+                {
+                    <img src="@ProfilePic" class="img-circle elevation-2" alt="User Image">
+                }
+                else
+                {
+                    <img src="~/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                }
+            </div>
+            <div class="info">
+                <a href="#" class="d-block">@UserName</a>
+            </div>
+        </div>
+
+        <!-- Sidebar user panel (optional) -->
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <!-- Add icons to the links using the .nav-icon class
+    with font-awesome or any other icon font library -->
+                <li class="nav-item ">
+                    <a href="@Url.Action("Dashboard", "Management")" class="nav-link @ViewBag.Dashboard">
+
+                        <i class="nav-icon fas fa-chart-line"></i>
+
+                        <p>
+                            Dashboard
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a href="@Url.Action("Customers", "Customer")" class="nav-link @ViewBag.Leads">
+                        <i class="nav-icon fas fa-funnel-dollar"></i>
+                        <p>
+                            Customer
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a href="@Url.Action("Report", "Management")" class="nav-link @ViewBag.Report">
+                        <i class="nav-icon fas fa-chart-bar"></i>
+                        <p>
+                            Reports
+                        </p>
+                    </a>
+                </li>
+               
+                <li class="nav-item">
+                    <a href="@Url.Action("Inventory", "Management")" class="nav-link @ViewBag.Inventory">
+                        <i class="nav-icon fas fa-cubes"></i>
+                        <p>
+                            Inventory
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="@Url.Action("ProductCategories", "ProductCategory")" class="nav-link @ViewBag.ProductCategories">
+                        <i class="nav-icon fas fa-file-alt"></i>
+                        <p>
+                            Product Categories
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="@Url.Action("Fleet", "Fleet")" class="nav-link @ViewBag.Fleet">
+                        <i class="nav-icon fas fa-truck"></i>
+                        <p>
+                            Point Of Sale
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="@Url.Action("Quotations", "Management")" class="nav-link @ViewBag.Quotations">
+                        <i class="nav-icon fas fa-file-invoice-dollar"></i>
+                        <p>
+                            Quotations
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="@Url.Action("ProductDashboard","Product")" class="nav-link @ViewBag.ProductDashboard">
+                        <i class="nav-icon fas fa-coins"></i>
+                        <p>
+                            Product Dashboard
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="@Url.Action("Orders","Management")" class="nav-link @ViewBag.Orders">
+                        <i class="nav-icon far fa-calendar-alt"></i>
+                        <p>
+                            Service Orders
+
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="@Url.Action("Employees","Employee")" class="nav-link @ViewBag.Employee">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>
+                            Employee
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item has-treeview">
+                    <a href="@Url.Action("Vendor","Management")" class="nav-link @ViewBag.Vendor">
+                        <i class="nav-icon fas fa-shipping-fast"></i>
+                        <p>
+                            Vendor
+                        </p>
+                    </a>
+
+                </li>
+                <li class="nav-item has-treeview">
+                    <a href="@Url.Action("Scheduler","Management")" class="nav-link @ViewBag.Scheduler">
+                        <i class="nav-icon far fa-calendar"></i>
+                        <p>
+                            Scheduler
+
+                        </p>
+                    </a>
+
+                </li>
+                @*<li class="nav-item has-treeview">
+            <a href="@Url.Action("Notification","Management")" class="nav-link @ViewBag.Notification">
+                <i class="nav-icon fas fa-book"></i>
+                <p>
+                    Notification
+
+                </p>
+            </a>
+
+        </li>*@
+                <li class="nav-item ">
+                    <a href="@Url.Action("ReportMonthly", "Management")" class="nav-link @ViewBag.ReportMonthly">
+                        <i class="nav-icon fas fa-chart-bar"></i>
+                        <p>
+                            Monthly Reports
+                        </p>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+</aside>
+

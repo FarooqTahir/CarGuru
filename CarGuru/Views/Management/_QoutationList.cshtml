@@ -1,0 +1,50 @@
+﻿@model CarGuru.Models.QuotationViewModel
+
+<table class="table table-striped" id="QuotationTable" width="100%">
+    <thead class="bg-colorBlack">
+        <tr>
+            <th>Quotation Id</th>
+            <th>Customer Name</th>
+            <th>Customer Phone</th>
+            <th>Customer Email</th>
+            <th>Vehicle</th>
+            <th>Total Price</th>
+            <th class="actionColumn">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!(Model.QuotationRequests.Data is null) && Model.QuotationRequests.Data.Any())
+        {
+            foreach (var request in Model.QuotationRequests.Data)
+            {
+                <tr>
+                    <td>@request.QuotationId</td>
+                    <td>@request.CustomerName</td>
+                    <td>@request.CustomerPhone</td>
+                    <td>@request.CustomerEmail</td>
+                    <td>@request.Make-@request.Model-@request.year</td>
+                    <td>$@request.TotalPrice</td>
+                    <th>
+                        <div class="row">
+                            <div class="col-md-3 viewModal">
+                                <button class="btn" type="button" onclick="ViewQuotation(@request.QuotationId,@request.CustomerUserId)">
+                                    View
+                                </button>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="dropdown">
+                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        @*<a class="dropdown-item followUp" href="javascript:void()"><i class="fas fa-print" aria-hidden="true" style="margin-right:8px;"></i>Print</a>*@
+                                        <a class="dropdown-item" href="javascript:void()" onclick="EditQuotation(@request.QuotationId,@request.CustomerUserId)"><i class="fas fa-edit" aria-hidden="true" style="margin-right:8px;"></i>Edit</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </th>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

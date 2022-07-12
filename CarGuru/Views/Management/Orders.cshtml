@@ -1,0 +1,122 @@
+﻿@model CarGuru.ViewModels.CustomerViewModel
+@inject CarGuru.Services.Interfaces.ISessionManager x;
+@{
+    ViewData["Title"] = "Service Orders";
+    Layout = CommonData.GetUserLayoutByRoleId(x.GetUserRoleId());//"~/Views/Shared/_Layout.cshtml";
+}
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#OrderTable').DataTable({
+                "bSort": false,
+                "searching": false,
+                "responsive": true,
+                dom: 'Bfrtip',
+                buttons: [
+                    
+                ]
+            });
+        });
+        function ShowInvoice(cId, Id) {
+            $.ajax({
+                url: "../Customer/Invoice",
+                type: 'Post',
+                data: {
+                    CustomerId: cId, ServiceOrderId: Id
+                },
+                success: function (data) {
+                    $("#modal-Invoice").modal('show');
+                    $(".Tables").html(data);
+                }
+            });
+        }
+        $(document).on('keypress', function (e) {
+            if (e.which == 13) {
+                SearchOrder();
+            }
+        });
+        function SearchOrder() {
+            var Name = $("#Name").val();
+            $.ajax({
+                url: "../ServiceOrder/SearchOrders",
+                type: 'Post',
+                data: {
+                    name: Name
+                },
+                success: function (data) {
+                    $("#OrdersList").html(data)
+                    $('#OrderTable').DataTable({
+                        "bSort": false,
+                        "searching": false,
+                        "responsive": true,
+                        dom: 'Bfrtip',
+                        buttons: []
+                    });
+                },
+                error: function (request, error) {
+
+                }
+            });
+        }
+    </script>
+}
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-4 col-md-4">
+                <h1>Service Orders</h1>
+            </div>
+            <div class="col-sm-6 col-md-8">
+                <form class="form-inline float-right">
+                    <div class="input-group bg-white">
+                        <input class="form-control" id="Name" type="search" placeholder="Search by Name or Number" aria-label="Search"style="width: 230px;">
+                        <div class="input-group-append">
+                            <button class="btn btn-navbar " onclick="SearchOrder()" type="button">
+                                <i class="fas fa-search "></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+    </div><!-- /.container-fluid -->
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card ">
+                    <div class="card-body p-0 table-responsive" id="OrdersList">
+                        <partial name="_OrderListing" model="Model" />
+                    </div>
+                    <div class="card-footer clearfix">
+                 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="modal fade" id="modal-Invoice">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h4 class="modal-title">Invoice</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="Tables"></div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>

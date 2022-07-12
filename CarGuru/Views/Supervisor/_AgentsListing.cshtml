@@ -1,0 +1,61 @@
+﻿@model CarGuru.ViewModels.SupervisorViewModel
+@if (!(Model.Agents == null))
+{
+    @if (!(Model.Agents.Count == 0))
+    {
+        <table class="table table-striped" id="AgentTable" style="width:100%">
+            <thead class="bg-colorBlack">
+                <tr>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Address</th>
+                    <th>Contact No</th>
+                    <th>Email</th>
+                    <th class="actionColumn">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in @Model.Agents)
+                {
+                    <tr>
+                        <td>@item.User.FirstName</td>
+                        <td>@item.User.LastName</td>
+                        <td>@item.User.Address</td>
+                        <td>@item.User.PhoneNumber</td>
+                        <td>@item.User.Email</td>
+                        <th>
+                            <div class="row">
+                                <div class="col-sm-3 viewModal">
+                                    <button class="btn" type="button" onclick="ViewAgent(@item.UserId)">
+                                        View
+                                    </button>
+                                </div>
+                                <div class="col-sm-2">
+
+                                    <div class="dropdown">
+                                        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" href="@Url.Action("ServiceOrderList", "Supervisor", new { AgentId = item.UserId })"><i class="fas fa-print" aria-hidden="true" style="margin-right:8px;"></i>Orders</a>
+                                            <a class="dropdown-item" href="@Url.Action("Leads", "Supervisor", new { AgentId = item.UserId })"><i class="fas fa-bullseye" aria-hidden="true" style="margin-right:8px;"></i>Leads</a>
+                                            <a class="dropdown-item" href="javascript:void()" onclick="GetAgentById(@item.UserId)"><i class="fa fa-edit" aria-hidden="true" style="margin-right:8px;"></i>Edit</a>
+                                            <a class="dropdown-item" href="javascript:void()" onclick="DeleteAgent(@item.UserId)"><i class="fas fa-archive" aria-hidden="true" style="margin-right:8px;"></i>Archive</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </th>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <h3>No Record Found</h3>
+    }
+}
+else
+{
+    <h3>No Record Found</h3>
+}

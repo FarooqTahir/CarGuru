@@ -1,0 +1,54 @@
+﻿@model CarGuru.ViewModels.CustomerViewModel
+@if (!(Model.CustomerList == null))
+{
+    <table class="table table-striped" id="CustomerTable" style="width:100%">
+        <thead class="bg-colorBlack">
+            <tr>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Address</th>
+                <th>Contact No</th>
+                <th>Email</th>
+                <th class="actionColumn">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.CustomerList)
+            {
+                <tr>
+                    <td>@item.FirstName</td>
+                    <td>@item.LastName</td>
+                    <td>@item.Address</td>
+                    <td>@item.PhoneNumber</td>
+                    <td>@item.Email</td>
+
+                    <th>
+                        <div class="row">
+                            <div class="col-sm-3 viewModal">
+                                <button class="btn" type="button" onclick="ViewCustomer(@item.UserId)">
+                                    View
+                                </button>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="dropdown">
+                                    <button class="btn dropdown-toggle" data-flip="false" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a href="javascript:void(0);" class="dropdown-item" onclick="EditCustomer(@item.UserId)"><i class="fa fa-edit"> Edit</i></a>
+                                        <a href="@Url.Action("Vehicles", "Customer", new { UserId = item.UserId })" class="dropdown-item"><i class="fas fa-car"> Vehicles</i></a>
+                                        <a href="@Url.Action("ServiceOrderList", "Customer", new { UserId = item.UserId })" class="dropdown-item"><i class="fas fa-folder-open"> Orders</i></a>
+                                        <a href="@Url.Action("QuotationList", "Customer", new { UserId = item.UserId })" class="dropdown-item"><i class="fas fa-dollar-sign"> Quotations</i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </th>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h3>No Record Found</h3>
+}

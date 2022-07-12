@@ -1,0 +1,339 @@
+﻿@model CarGuru.ViewModels.CustomerViewModel
+@if (Model.Analytics != null)
+{
+    <script>
+        $(function () {
+
+
+
+
+            //-------------
+            //- BAR CHART -
+            //-------------
+
+            var barChartLeadData = {
+                labels: ['Total Lead'],
+                datasets: [
+                    {
+                        label: 'Quotation',
+                        backgroundColor: 'rgba(105,205,250,0.7)',
+                        borderColor: 'rgba(60,141,188,0.8)',
+                        pointRadius: false,
+                        pointColor: '#3b8bba',
+                        pointStrokeColor: 'rgba(60,141,188,1)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(60,141,188,1)',
+                        data: [@Convert.ToInt32(Model.Analytics.Leads.QuotationRequest)]
+                    },
+                    {
+                        label: 'Converted Lead',
+                        backgroundColor: 'rgba(105,205,250,0.7)',
+                        borderColor: 'rgba(210, 214, 222, 1)',
+                        pointRadius: false,
+                        pointColor: 'rgba(210, 214, 222, 1)',
+                        pointStrokeColor: '#c1c7d1',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(2ss20,220,220,1)',
+                        data: [@Convert.ToInt32(Model.Analytics.Leads.ServiceRequest)]
+                    },
+                    {
+                        label: 'Total Leads',
+                        backgroundColor: 'rgba(105,205,250,0.7)',
+                        borderColor: '#2da44a',
+                        pointRadius: false,
+                        pointColor: '#f39c12',
+                        pointStrokeColor: '#c1c7d1',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: '#f39c12',
+                        data: [@Convert.ToInt32(Model.Analytics.Leads.NewLeads)]
+                    },
+                ]
+            }
+            var barChartCanvas = $('#barChart').get(0).getContext('2d')
+            var barChartData = jQuery.extend(true, {}, barChartLeadData)
+            var temp0 = barChartLeadData.datasets[0]
+            var temp1 = barChartLeadData.datasets[1]
+            var temp2 = barChartLeadData.datasets[2]
+            barChartData.datasets[0] = temp2
+            barChartData.datasets[1] = temp1
+            barChartData.datasets[2] = temp0
+
+            var barChartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                datasetFill: false
+            }
+
+            var barChart = new Chart(barChartCanvas, {
+                type: 'bar',
+                data: barChartData,
+                options: barChartOptions
+            })
+            //---------------
+            var barChartLeadData = {
+                labels: ['Pending Orders'],
+                datasets: [
+                    {
+                        label: 'Technician Name',
+                        backgroundColor: 'rgba(117,209,218,0.7)',
+                        borderColor: 'rgba(60,141,188,0.8)',
+                        pointRadius: false,
+                        pointColor: '#3b8bba',
+                        pointStrokeColor: 'rgba(60,141,188,1)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(60,141,188,1)',
+                        data: [28]
+                    },
+                    {
+                        label: 'No. OF Technician',
+                        backgroundColor: 'rgba(117,209,218,0.7)',
+                        borderColor: 'rgba(210, 214, 222, 1)',
+                        pointRadius: false,
+                        pointColor: 'rgba(210, 214, 222, 1)',
+                        pointStrokeColor: '#c1c7d1',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(220,220,220,1)',
+                        data: [65]
+                    },
+                    {
+                        label: 'Technicians on duty',
+                        backgroundColor: 'rgba(117,209,218,0.7)',
+                        borderColor: '#2da44a',
+                        pointRadius: false,
+                        pointColor: '#f39c12',
+                        pointStrokeColor: '#c1c7d1',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: '#f39c12',
+                        data: [70]
+                    },
+                ]
+            }
+            var barChartCanvas = $('#PendingOrders').get(0).getContext('2d')
+            var barChartData = jQuery.extend(true, {}, barChartLeadData)
+            var temp0 = barChartLeadData.datasets[0]
+            var temp1 = barChartLeadData.datasets[1]
+            var temp2 = barChartLeadData.datasets[2]
+            barChartData.datasets[0] = temp2
+            barChartData.datasets[1] = temp1
+            barChartData.datasets[2] = temp0
+
+            var barChartOptions = {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                datasetFill: false
+            }
+
+            var barChart = new Chart(barChartCanvas, {
+                type: 'bar',
+                data: barChartData,
+                options: barChartOptions
+            })
+
+            //---------------
+
+            var barChartProductData = {
+                labels: ['Service Order'],
+                datasets: [
+                    {
+                        label: 'Total Service Order',
+                        backgroundColor: 'rgba(111,205,152,0.7)',
+                        borderColor: 'rgba(210, 214, 222, 1)',
+                        pointRadius: false,
+                        pointColor: 'rgb(13, 90, 135)',
+                        pointStrokeColor: '#c1c7d1',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgb(13, 90, 135)',
+                        data: [@Convert.ToInt32(Model.Analytics.ServiceOrder.TotalServiceOrder)]
+
+                    },
+                    {
+                        label: 'Complete Service Order',
+                        backgroundColor: 'rgba(111,205,152,0.7)',
+                        borderColor: 'rgba(210, 214, 222, 1)',
+                        pointRadius: false,
+                        pointColor: 'rgba(210, 214, 222, 1)',
+                        pointStrokeColor: '#c1c7d1',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(220,220,220,1)',
+                        data: [@Convert.ToInt32(Model.Analytics.ServiceOrder.CompleteServiceOrder)]
+                    },
+                    {
+                        label: 'Incomplete Service Order',
+                        backgroundColor: 'rgba(111,205,152,0.7)',
+                        borderColor: '#2da44a',
+                        pointRadius: false,
+                        pointColor: '#3b8bba',
+                        pointStrokeColor: '#f39c12',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: '#f39c12',
+                        data: [@Convert.ToInt32(Model.Analytics.ServiceOrder.IncompleteServiceOrder)]
+                    },
+                ]
+            }
+            var barChartCanvas2 = $('#barChart2').get(0).getContext('2d')
+            var barChartData2 = jQuery.extend(true, {}, barChartProductData)
+            var temp0 = barChartProductData.datasets[0]
+            var temp1 = barChartProductData.datasets[1]
+            var temp2 = barChartProductData.datasets[2]
+            barChartData2.datasets[0] = temp2
+            barChartData2.datasets[1] = temp1
+            barChartData2.datasets[2] = temp0
+
+            var barChartOptions2 = {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                datasetFill: false
+            }
+
+            var barChart2 = new Chart(barChartCanvas2, {
+                type: 'bar',
+                data: barChartData2,
+                options: barChartOptions2
+            })
+
+            //----------------------------------
+
+            var barChartTechData = {
+                labels: ['Tecnician'],
+                datasets: [
+                    {
+                        label: 'Job Failed',
+                        backgroundColor: 'rgba(111,205,152,0.7)',
+                        borderColor: 'rgba(210, 214, 222, 1)',
+                        pointRadius: false,
+                        pointColor: 'rgb(13, 90, 135)',
+                        pointStrokeColor: '#c1c7d1',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgb(13, 90, 135)',
+                        data: [@Convert.ToInt32(Model.Analytics.Technicians.JobFailed)]
+                    },
+                    {
+                        label: 'Late Job',
+                        backgroundColor: 'rgba(111,205,152,0.7)',
+                        borderColor: 'rgba(210, 214, 222, 1)',
+                        pointRadius: false,
+                        pointColor: 'rgba(210, 214, 222, 1)',
+                        pointStrokeColor: '#c1c7d1',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(220,220,220,1)',
+                        data: [@Convert.ToInt32(Model.Analytics.Technicians.LateJob)]
+                    },
+                    {
+                        label: 'Complete Job',
+                        backgroundColor: 'rgba(111,205,152,0.7)',
+                        borderColor: '#2da44a',
+                        pointRadius: false,
+                        pointColor: '#3b8bba',
+                        pointStrokeColor: '#f39c12',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: '#f39c12',
+                        data: [@Convert.ToInt32(Model.Analytics.Technicians.CompleteJobs)]
+                    },
+                ]
+            }
+            var barChartCanvas3 = $('#tech').get(0).getContext('2d')
+            var barChartData3 = jQuery.extend(true, {}, barChartTechData)
+            var temp0 = barChartTechData.datasets[0]
+            var temp1 = barChartTechData.datasets[1]
+            var temp2 = barChartTechData.datasets[2]
+            barChartData3.datasets[0] = temp2
+            barChartData3.datasets[1] = temp1
+            barChartData3.datasets[2] = temp0
+
+            var barChartOptions3 = {
+                responsive: true,
+                maintainAspectRatio: false,
+                datasetFill: false
+            }
+
+            var barChart2 = new Chart(barChartCanvas3, {
+                type: 'bar',
+                data: barChartData3,
+                options: barChartOptions3
+            })
+        })
+    </script>
+}
+
+
+<div class="row">
+    <!-- BAR CHART -->
+    <div class="col-md-6">
+        <div class="card card-success">
+            <div class="card-header bg-colorBlack">
+                <h3 class="card-title">Leads</h3>
+            </div>
+            <div class="card-body">
+                <div class="chart">
+                    <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                    <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 487px;" width="487" height="250" class="chartjs-render-monitor"></canvas>
+                </div>
+            </div>
+            <!-- /.card-body -->
+        </div>
+    </div>
+    <!-- /.card -->
+    <div class="col-md-6">
+        <div class="card card-success">
+            <div class="card-header bg-colorBlack">
+                <h3 class="card-title">Service Orders</h3>
+            </div>
+            <div class="card-body">
+                <div class="chart">
+                    <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                    <canvas id="barChart2" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 487px;" width="487" height="250" class="chartjs-render-monitor"></canvas>
+                </div>
+            </div>
+            <!-- /.card-body -->
+        </div>
+    </div>
+</div>
+<div class="row">
+    <!-- BAR CHART -->
+    <!-- /.card -->
+    <div class="col-md-6">
+        <div class="card card-success ">
+            <div class="card-header bg-colorBlack">
+                <h3 class="card-title">Technician</h3>
+
+            </div>
+            <div class="card-body">
+                <div class="chart">
+                    <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                    <canvas id="tech" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 487px;" width="487" height="250" class="chartjs-render-monitor"></canvas>
+                </div>
+            </div>
+            <!-- /.card-body -->
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card card-success" style="display:none;">
+            <div class="card-header bg-colorBlack">
+                <h3 class="card-title">Pending Orders</h3>
+
+
+            </div>
+            <div class="card-body">
+                <div class="chart">
+                    <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                    <canvas id="PendingOrders" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 487px;" width="487" height="250" class="chartjs-render-monitor"></canvas>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

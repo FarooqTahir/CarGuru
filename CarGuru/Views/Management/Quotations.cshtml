@@ -1,0 +1,310 @@
+﻿@model CarGuru.Models.QuotationViewModel
+@inject CarGuru.Services.Interfaces.ISessionManager x;
+@{
+    ViewData["Title"] = "Quotations";
+    Layout = CommonData.GetUserLayoutByRoleId(x.GetUserRoleId());
+
+    decimal Latitude = 0;
+    decimal Longitude = 0;
+
+    //"~/Views/Shared/_LayoutCallCenter.cshtml";
+}
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+
+
+            $(".followUp").on("click", function (e) {
+                let statusValue = $(this).parent().parent().parent().parent().find("#status").html();
+                if (statusValue === 'Quote Request') {
+                    $(this).parent().parent().parent().parent().find("#status").text("Followup Done");
+                }
+            });
+
+            $(".marginPrice").on('click', function () {
+                $(this).html();
+            });
+        });
+        function SearchQuotation() {
+            var name = $("#Name").val();
+            $.ajax({
+                url: "../Management/SearchQuotation",
+                type: 'Post',
+                data: {
+                    Name: name
+                },
+                success: function (data) {
+                    
+                    $("#Qtable").html(data)
+                    $('#QuotationTable').DataTable({
+                        "bSort": false,
+                        "searching": false,
+                        "responsive": true,
+                        dom: 'Bfrtip',
+                        buttons: []
+                    });
+                },
+                error: function (request, error) {
+                }
+            });
+        }
+    </script>
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-md-2">
+                <h1>Quotations</h1>
+            </div>
+            <div class="col-md-10">
+                <form class="form-inline float-right">
+                    <div class="input-group bg-white">
+                        <input class="form-control" type="search" placeholder="Search" id="Name" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-navbar " onclick="SearchQuotation()" type="button">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body leads table-responsive p-0" id="Qtable">
+                        <partial name="~/Views/Management/_QoutationList.cshtml" model="Model" />
+                    </div>
+                    <div class="card-footer clearfix">
+
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<div class="modal fade" id="modal-warning">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h4 class="modal-title">Nearest Technician</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped mt-2" id="showTechnician">
+                    <thead>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Mustfa Maryam </td>
+                            <td>1 km</td>
+                            <th>
+                                <button type="button" class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#modal-warning">Assign</button>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>Jack Taif</td>
+                            <td>2 km</td>
+                            <th>
+                                <button type="button" class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#modal-warning">Assign</button>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>Khalid Maya</td>
+                            <td>3 km</td>
+                            <th>
+                                <button type="button" class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#modal-warning">Assign</button>
+                            </th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer ">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div class="modal fade" id="modal-detailForm">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h4 class="modal-title">Quotation Detail</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="Quotation-detail-dataa">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="QCustomerId">
+                <input type="hidden" id="QId">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" onclick="ForwardToClient()" data-dismiss="modal">Forward to Client</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+<div class="modal fade" id="modal-EditForm">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h4 class="modal-title">Quotation Edit</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="Quotation-detail-dataa">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Add</button>
+
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#QuotationTable').DataTable({
+            "bSort": false,
+            "searching": false,
+            "responsive": true,
+            dom: 'Bfrtip',
+            buttons: [
+
+            ]
+        });
+    });
+    function SelectProduct(quotationId,quotationDetailId, productId) {
+        UpdateProduct(quotationId,quotationDetailId, productId);
+    }
+    function ForwardToClient() {
+            
+            var customerId = $("#QCustomerId").val();
+            var qoutationId = $("#QId").val();
+            var description = $("#QuotationDescription").val();
+            OpenChat(@x.GetUserId(), customerId, true)
+            $("#modal-detailForm").modal('hide');
+            $.ajax({
+                url: "../Management/ForwardQuotationToClient",
+                type: 'Post',
+                data: {
+                    UserId: customerId, Description: description, QoutationId: qoutationId
+                },
+                success: function (data) {
+                    var customerId = $("#QCustomerId").val();
+
+                    $("#Qtable").html(data);
+                    $("#QCustomerId").val(data);
+
+                    $('#QuotationTable').DataTable({
+                        "bSort": false,
+                        "searching": false,
+                        "responsive": true,
+                        dom: 'Bfrtip',
+                        buttons: [
+
+                        ]
+                    });
+                },
+                error: function (request, error) {
+
+                }
+            });
+    }
+    function ViewQuotation(quotationId, customerId) {
+        
+        if (quotationId > 0) {
+            $.ajax({
+                url: "../Management/GetQuotationInfoById",
+                type: 'Post',
+                data: {
+                    quotationId: quotationId, isView: true
+                },
+                success: function (data) {
+                   
+                    $("#Quotation-detail-dataa").html(data);
+                    $("#QCustomerId").val(customerId);
+                    $("#QId").val(quotationId);
+                    $("#modal-detailForm").modal('show');
+                },
+                error: function (request, error) {
+
+                }
+            });
+        }
+    }
+    function EditQuotation(quotationId, customerId) {
+        $("#QCustomerId").val(customerId);
+        $("#QId").val(quotationId);
+        if (quotationId > 0) {
+            $.ajax({
+                url: "../Management/GetQuotationInfoById",
+                type: 'Post',
+                data: {
+                    quotationId: quotationId, isView: false
+                },
+                success: function (data) {
+                    $("#Quotation-detail-dataa").html(data);
+                    $("#modal-detailForm").modal('show');
+
+                },
+                error: function (request, error) {
+
+                }
+            });
+        }
+    }
+    function UpdateProduct(quotationId,quotationDetailId, productId) {
+        if (quotationId>0 && quotationDetailId > 0 && productId > 0) {
+            $.ajax({
+                url: "../Management/UpdateQuotationProduct",
+                type: 'Post',
+                data: {
+                    quotationDetailId: quotationDetailId, productId: productId, quotationId: quotationId
+                },
+                success: function (data) {
+                   
+                    if (data.status == 1) {
+                        
+                        $("#PP_" + quotationDetailId).text(data.data.salePrice);
+                        $("#TotalPrice").val(data.data.totalPrice);
+                        $("#TotalMargin").val(data.data.margin);
+                        $("#TotalDiscount").val(data.data.discountPrice);
+
+                    }
+                    else {
+
+                    }
+                },
+                error: function (request, error) {
+
+                }
+            });
+        }
+    }
+</script>
+

@@ -1,0 +1,703 @@
+﻿@model CarGuru.ViewModels.ProductViewModel
+@inject CarGuru.Services.Interfaces.ISessionManager x;
+@{
+    ViewData["Title"] = "Inventory";
+    Layout = CommonData.GetUserLayoutByRoleId(x.GetUserRoleId());//"~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top',
+                showConfirmButton: false,
+                timer: 3000
+            });
+
+            $.fn.myFunction = function () {
+                Toast.fire({
+                    type: 'success',
+                    title: 'added in Product Category'
+                });
+            }
+
+            $(".followUp").on("click", function (e) {
+                let statusValue = $(this).parent().parent().parent().parent().parent().parent().find("#status").html();
+                if (statusValue <= '200') {
+                    $(this).parent().parent().parent().parent().parent().parent().find("#status").text("Order Placed");
+                }
+            });
+
+        });
+        $('#add-Product-Form').submit(function () {
+            if ($("#FormOrder").valid()) {  
+                $("#FormOrder").submit();
+                $('#FormBtn').prop('disabled', true);
+            }
+            else {
+                $("#FormOrder").submit();
+            }         
+        });
+        
+        $(document).ready(function () {
+            $('#inventTable').DataTable({
+                "bSort": false,
+                "searching": false,
+                "responsive": true,
+                dom: 'Bfrtip',
+                buttons: []
+            });
+        });
+        function onAddProductSuccess(data) {
+            
+            if (data != null) {
+                var id = $("#ProductRequestDto_Id").val();
+                if (id == 0) {
+                    alertG("Inventory Added Successfully!");
+                }
+                else {
+                    alertG("Inventory Updated Successfully!");
+                }
+                $("#ProductRequestDto_Name").val("");
+                $("#ProductRequestDto_SkuNo").val("");
+                $("#ProductRequestDto_SalePrice").val("");
+                $("#ProductRequestDto_RegularPrice").val("");
+                $("#ProductRequestDto_StockStatus").val("");
+                $("#ProductRequestDto_VendorId").val("");
+                $("#ProductRequestDto_ProductMargin").val("");
+                $("#ProductRequestDto_LeastPrice").val("");
+                $("#ProductRequestDto_ProductCategoryId").val("");
+                $("#ProductRequestDto_Description").val("");
+                $("#ProductRequestDto_Id").val(0);
+                $("#AddProductModal").modal('hide');
+                $("#InventoryList").html(data);
+            }
+        }
+        function deleteProduct(Id) {
+            $.ajax({
+                type: "POST",
+                url: '/Product/DeleteProduct',
+                data: { productId: Id },
+                success: function (data) {
+                   
+                    $("#InventoryList").html(data);
+                    alertG("Inventory Archived Successfully")
+                },
+                error: function () {
+
+                }
+            });
+        }
+        function ShowModal() {
+            $("#ProductRequestDto_Name-error").text("");
+            $("#ProductRequestDto_SkuNo-error").text("");
+            $("#ProductRequestDto_RegularPrice-error").text("");
+            $("#ProductRequestDto_StockStatus-error").text("");
+            $("#ProductRequestDto_SalePrice-error").text("");
+            $("#ProductRequestDto_StockStatus-error").text("");
+            $("#ProductRequestDto_VendorId-error").text("");
+            $("#ProductRequestDto_ProductCategoryId-error").text("");
+            $("#ProductRequestDto_ProductMargin-error").text("");
+            $("#ProductRequestDto_QrCode-error").text("");
+            $("#ProductRequestDto_FleetId-error").text("");
+            $("#ProductRequestDto_DeadStock-error").text("");
+            $("#ProductRequestDto_Manufacturer-error").text("");
+
+            $("#ProductRequestDto_Manufacturer").val("");
+            $("#ProductRequestDto_Name").val("");
+            $("#ProductRequestDto_QrCode").val("");
+            $("#ProductRequestDto_FleetId").val("");
+            $("#ProductRequestDto_DeadStock").val("");
+            $("#ProductRequestDto_SkuNo").val("");
+            $("#ProductRequestDto_SalePrice").val("");
+            $("#ProductRequestDto_RegularPrice").val("");
+            $("#ProductRequestDto_StockStatus").val("");
+            $("#ProductRequestDto_VendorId").val("");
+            $("#ProductRequestDto_ProductMargin").val("");
+            $("#ProductRequestDto_LeastPrice").val("");
+            $("#ProductRequestDto_ProductCategoryId").val("");
+            $("#ProductRequestDto_Description").val("");
+            $('#FleetDropdown').val("");
+            $("#ProductRequestDto_QrCode").val("");
+            $("#ProductRequestDto_Id").val(0);
+
+            $("#Heading").text("Add Inventory");
+            $("#AddBtn").text("Add");
+            $("#AddProductModal").modal('show');
+
+        }
+        function fetchSubCategories(categoryId) {
+            debugger;
+            if (categoryId > 0) {
+
+            GetSubCategoriesByCategoryId(categoryId);
+
+            }
+        }
+        function editProductDetail(productId) {
+            $.ajax({
+                type: "POST",
+                url: '/Product/GetProductById',
+                data: { productId: productId },
+                success: function (data) {
+                    if (data !== null) {
+                        debugger;
+                        $("#ProductRequestDto_Name-error").text("");
+                        $("#ProductRequestDto_SkuNo-error").text("");
+                        $("#ProductRequestDto_RegularPrice-error").text("");
+                        $("#ProductRequestDto_StockStatus-error").text("");
+                        $("#ProductRequestDto_SalePrice-error").text("");
+                        $("#ProductRequestDto_StockStatus-error").text("");
+                        $("#ProductRequestDto_VendorId-error").text("");
+                        $("#ProductRequestDto_ProductCategoryId-error").text("");
+                        $("#ProductRequestDto_ProductMargin-error").text("");
+                        $("#ProductRequestDto_Manufacturer-error").text("");
+
+                        var listData = '';
+                        //for (var i = 0; i < data.subCategories.length; i++) {
+                        //    listData += '<option value="' + subCategories[i].id + '">' + subCategories[i].title + '</option>';
+                        //}
+                             $.each(data.subCategories, function(key, value) {
+                            listData += '<option value="' + value.id + '">' + value.title + '</option>';
+                            });
+                        $("#ProductRequestDto_ProductSubCategoryId").html(listData);
+                        $("#ProductRequestDto_Manufacturer").val(data.manufacturer);
+                        $("#ProductRequestDto_Name").val(data.name);
+                        $("#ProductRequestDto_SkuNo").val(data.skuNo);
+                        $("#ProductRequestDto_SalePrice").val(data.salePrice);
+                        $("#ProductRequestDto_RegularPrice").val(data.regularPrice);
+                        $("#ProductRequestDto_StockStatus").val(data.stockStatus);
+                        $("#ProductRequestDto_VendorId").val(data.vendorId);
+                        $("#ProductRequestDto_ProductMargin").val(data.productMargin);
+                        $("#ProductRequestDto_LeastPrice").val(data.leastPrice);
+                        $("#ProductRequestDto_ProductCategoryId").val(data.productCategoryId);
+                        $("#ProductRequestDto_ProductSubCategoryId").val(data.productSubCategoryId);
+                        $("#ProductRequestDto_Description").val(data.description);
+                        $('#FleetDropdown').val(data.fleetId);
+                        $("#ProductRequestDto_QrCode").val(data.qrCode);
+                        $("#ProductRequestDto_Id").val(data.id);
+
+                        $("#Heading").text("Update Inventory");
+                        $("#AddBtn").text("Update");
+                        $("#AddProductModal").modal('show');
+                    }
+                },
+                error: function () {
+
+                }
+            });
+        }
+        function GetSubCategoriesByCategoryId(categoryId) {
+            $.ajax({
+                type: "POST",
+                url: '/Management/GetSubCategories',
+                data: { categoryId: categoryId },
+                success: function (data) {
+                    $("#ProductRequestDto_ProductSubCategoryId").html(data);
+                    $("form").removeData("validator");
+    $("form").removeData("unobtrusiveValidation");
+    $.validator.unobtrusive.parse("form");
+                },
+                error: function () {
+
+                }
+            });
+        }
+        function showProductDetail(productId) {
+            $.ajax({
+                type: "POST",
+                url: '/Product/GetProductById',
+                data: { productId: productId },
+                success: function (data) {
+                    
+                        $("#mainImage").attr("src", data.imageUrl);
+                        $("#productName").text(data.name);
+                        $("#productManufacturer").text(data.manufacturer);
+                        $("#productSalingPrice").text(data.salePrice);
+                        $("#productLeastPrice").text(data.leastPrice);
+                        $("#productMargin").text(data.productMargin);
+                        $("#productqrCode").text(data.qrCode);
+                        $("#productRagular").text(data.regularPrice);
+                        $("#productSale").text(data.salePrice);
+                        if (data.vendor != null)
+                        {
+                            $("#productVendor").text(data.vendor.firstName + " " + data.vendor.lastName);
+                        }
+    
+                        $("#modalProduct").modal("show");
+                    
+                },
+                error: function () {
+
+                }
+            });
+        }
+        function FleetChange() {
+            var Fleet = $("#FleetDropdown option:selected").text();
+
+            try {
+                var Random = Math.random() * 10001;
+                var Maths = Math.floor(Random);
+            }
+            catch (e) {
+                console.log(e.message);
+            }
+            var SkUNO = Fleet + "-" + Maths;
+            $("#ProductRequestDto_SkuNo").val(SkUNO);
+        }
+        function SearchInventory() {
+            
+            var Name = $("#Name").val();
+            $.ajax({
+                url: "../Management/SearchInventory",
+                type: 'Post',
+                data: {
+                    name: Name
+                },
+                success: function (data) {
+                    $("#InventoryList").html(data)
+                    $('#inventTable').DataTable({
+                        "bSort": false,
+                        "searching": false,
+                        "responsive": true,
+                        dom: 'Bfrtip',
+                        buttons: [
+
+                        ]
+                    });
+                },
+                error: function (request, error) {
+
+                }
+            });
+        }
+    </script>
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-md-2">
+                <h1>Inventory</h1>
+            </div>
+            <div class="col-sm-6 col-md-8">
+                <form class="form-inline float-right">
+                    <div class="input-group bg-white">
+                        <input class="form-control" id="Name" type="search" placeholder="Search by name" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-navbar " onclick="SearchInventory()" type="button">
+                                <i class="fas fa-search "></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn bg-colorBlack float-right" data-toggle="modal" onclick="ShowModal()">Add New Inventory</button>
+
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+
+                    <!-- /.card-header -->
+                    <div class="card-body leads table-responsive p-0" id="InventoryList">
+                        <partial name="~/Views/Management/_InventoryList.cshtml" model="Model" />
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer clearfix">
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<div class="modal fade" id="AddProductModal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h5 class="modal-title" id="Heading">Inventory</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="add-Product-Form" role="form" method="post" asp-action="AddProduct" asp-controller="Product" data-ajax="true" data-ajax-success="onAddProductSuccess(data)" enctype="multipart/form-data">
+                <input asp-for="ProductRequestDto.Id" type="hidden" />
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>Name:</label>
+                                <input asp-for="ProductRequestDto.Name" type="text" class="form-control" placeholder="Name">
+                                <span class="text-danger" asp-validation-for="ProductRequestDto.Name"></span>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>SKU#:</label>
+                                <input type="text" asp-for="ProductRequestDto.SkuNo" class="form-control" placeholder="SKU#">
+                                <span class="text-danger" asp-validation-for="ProductRequestDto.SkuNo"></span>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Stock Status:</label>
+                                <input type="number" asp-for="ProductRequestDto.StockStatus" class="form-control" placeholder="Stock Status">
+                                <span class="text-danger" asp-validation-for="ProductRequestDto.StockStatus"></span>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Dead Stocks</label>
+                                <input type="number" asp-for="ProductRequestDto.DeadStock" class="form-control" placeholder="Stock Status">
+                                <span class="text-danger" asp-validation-for="ProductRequestDto.DeadStock"></span>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Category</label>
+                                <select asp-for="ProductRequestDto.ProductCategoryId" onchange="fetchSubCategories(this.value)" asp-items="Model.ProductCategories" class=" form-control">
+                                    <option selected="">Select Category</option>
+                                </select>
+                            </div>
+                            <span class="text-danger" asp-validation-for="ProductRequestDto.ProductCategoryId"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Sub Category</label>
+                                <select asp-for="ProductRequestDto.ProductSubCategoryId"  asp-items="Model.ProductSubCategories" class=" form-control">
+                                    <option selected="">Select Sub Category</option>
+                                </select>
+                            </div>
+                            <span class="text-danger" asp-validation-for="ProductRequestDto.ProductCategoryId"></span>
+                        </div>
+                       
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Vendor</label>
+                                <select asp-for="ProductRequestDto.VendorId" asp-items="Model.Vendors" class=" form-control">
+                                    <option selected="">Select Vendor</option>
+                                </select>
+                            </div>
+                            <span class="text-danger" asp-validation-for="ProductRequestDto.VendorId"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Manufacturer</label>
+                                <input type="text" asp-for="ProductRequestDto.Manufacturer" class="form-control" placeholder="Manufacturer">
+                                <span class="text-danger" asp-validation-for="ProductRequestDto.Manufacturer"></span>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Bar Code</label>
+                                <input type="text" asp-for="ProductRequestDto.QrCode" class="form-control" placeholder="Bar Code">
+                                <span class="text-danger" asp-validation-for="ProductRequestDto.QrCode"></span>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Point Of Sale</label>
+                                <select asp-for="ProductRequestDto.FleetId" asp-items="Model.Fleets" id="FleetDropdown" class=" form-control" onchange="FleetChange()">
+                                    <option selected="">Select Fleet</option>
+
+                                </select>
+                            </div>
+                            <span class="text-danger" asp-validation-for="ProductRequestDto.FleetId"></span>
+
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Description:</label>
+                                <textarea class="form-control" asp-for="ProductRequestDto.Description" rows="3" placeholder="Description"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Product Cost:</label>
+                                <input type="text" asp-for="ProductRequestDto.RegularPrice" class="form-control" placeholder="Product Cost">
+                                <span class="text-danger" asp-validation-for="ProductRequestDto.RegularPrice"></span>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>Sale Price:</label>
+                                <input type="text" asp-for="ProductRequestDto.SalePrice" class="form-control" placeholder="Sale Price">
+                                <span class="text-danger" asp-validation-for="ProductRequestDto.SalePrice"></span>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Product Discount</label>
+                                <select asp-for="ProductRequestDto.ProductMargin" class=" form-control">
+                                    <option selected="">Select Product Discount</option>
+                                    <option value="5">5%</option>
+                                    <option value="10">10%</option>
+                                    <option value="15">15%</option>
+                                    <option value="20">20%</option>
+                                    <option value="25">25%</option>
+                                    <option value="30">30%</option>
+                                    <option value="35">35%</option>
+                                    <option value="40">40%</option>
+                                    <option value="45">45%</option>
+                                    <option value="50">50%</option>
+                                </select>
+                            </div>
+                            <span class="text-danger" asp-validation-for="ProductRequestDto.ProductMargin"></span>
+                        </div>
+
+
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Least Price:</label>
+                                <input type="text" asp-for="ProductRequestDto.LeastPrice" class="form-control" placeholder="80$">
+                                <span class="text-danger" asp-validation-for="ProductRequestDto.LeastPrice"></span>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label>Product Image:</label>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="btn btn-default btn-file">
+                                        Browse… <input asp-for="ProductRequestDto.ImageUrl" type="file" id="imgInp">
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn btn-secondary" id="AddBtn">Add</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalProduct">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h4 class="modal-title">Product Detail</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <section class="contnt">
+                    <div class="card m-0">
+                        <div class="container">
+                            <div class="row">
+                                <div class="preview col-md-6">
+                                    <div class="preview-pic tab-content">
+                                        <div class="tab-pane active" id="pic-1"><img id="mainImage" src="" style=" height: 60%;width: 65%;" /></div>
+                                    </div>
+                                </div>
+                                <div class="details col-md-6">
+                                    <h3 class="product-title" id="productName"></h3>
+                                    <p class="product-description" id="productDescription">
+                                    </p>
+                                    <h4 class="price">current price: <span id="productSalingPrice"></span></h4>
+                                    <h4 class="price">Least price: <span id="productLeastPrice"></span></h4>
+                                    <h4 class="price">Manufacturer: <span id="productManufacturer"></span></h4>
+                                    <h4 class="price">QrCode: <span id="productqrCode"></span></h4>
+                                    <h4 class="price">Ragular Price: <span id="productRagular"></span></h4>
+                                    <h4 class="price">Sale Price: <span id="productSale"></span></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+            </div>
+
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <style>
+
+        .preview {
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .preview-pic {
+            display: block;
+        }
+
+        .preview-thumbnail.nav-tabs {
+            border: none;
+            margin-top: 15px;
+        }
+
+            .preview-thumbnail.nav-tabs li {
+                width: 18%;
+                margin-right: 2.5%;
+            }
+
+                .preview-thumbnail.nav-tabs li img {
+                    max-width: 100%;
+                    display: block;
+                }
+
+                .preview-thumbnail.nav-tabs li a {
+                    padding: 0;
+                    margin: 0;
+                }
+
+                .preview-thumbnail.nav-tabs li:last-of-type {
+                    margin-right: 0;
+                }
+
+        .tab-content {
+            overflow: hidden;
+        }
+
+            .tab-content > .active {
+                display: block;
+                visibility: visible;
+            }
+
+            .tab-content img {
+                width: 327px;
+                animation-name: opacity;
+            }
+
+        .img {
+            vertical-align: middle;
+            border: 0px;
+            box-sizing: border-box;
+        }
+
+        .tab-content > .tab-pane {
+            display: block;
+        }
+
+        .contnt .card {
+            margin-top: 50px;
+            background: #eee;
+            padding: 3em;
+            line-height: 1.5em;
+        }
+
+        .details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-title, .price, .colors {
+            text-transform: UPPERCASE;
+            font-weight: bold;
+        }
+
+            .checked, .price span {
+                color: #ff9f1a;
+            }
+
+        .product-title, .rating, .product-description, .price, .vote {
+            margin-bottom: 15px;
+        }
+
+        .product-title {
+            margin-top: 0;
+        }
+
+        .color {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 10px;
+            height: 2em;
+            width: 2em;
+            border-radius: 2px;
+        }
+
+            .color:first-of-type {
+                margin-left: 20px;
+            }
+
+        .add-to-cart, .like {
+            background: #ff9f1a;
+            padding: 1.2em 1.5em;
+            border: none;
+            text-transform: UPPERCASE;
+            font-weight: bold;
+            color: #fff;
+            transition: background .3s ease;
+        }
+
+            .add-to-cart:hover, .like:hover {
+                background: #b36800;
+                color: #fff;
+            }
+
+        .not-available {
+            text-align: center;
+            line-height: 2em;
+        }
+
+            .not-available:before {
+                font-family: fontawesome;
+                content: "\f00d";
+                color: #fff;
+            }
+
+        .orange {
+            background: #ff9f1a;
+        }
+
+        .green {
+            background: #85ad00;
+        }
+
+        .blue {
+            background: #0076ad;
+        }
+
+        .tooltip-inner {
+            padding: 1.3em;
+        }
+    </style>
+
+</div>

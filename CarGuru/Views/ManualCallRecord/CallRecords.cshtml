@@ -1,0 +1,230 @@
+﻿@model CarGuru.ViewModels.CallRecordsViewModel
+@inject CarGuru.Services.Interfaces.ISessionManager x;
+@{
+    ViewData["Title"] = "Call Records";
+    Layout = CommonData.GetUserLayoutByRoleId(x.GetUserRoleId());
+    //"~/Views/Shared/_Layout.cshtml";
+}
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#RecordTable').DataTable({
+               "bSort": false,
+                "searching": false,
+                "responsive": true,
+                dom: 'Bfrtip',
+                buttons: []
+            });
+        });
+        function onAddEditRecordSuccess(data) {
+            
+            if (!(data == null)) {
+                var btnText = $("#AddRecordBtn").text();
+                if (btnText == "Save") {
+                    alertG("Record Added Successfully!");
+                }
+                else
+                {
+                    alertG("Record Updated Successfully!");
+                }
+                $("#modal-addForm").modal("hide");
+                $("#AddRecordBtn").text("Save");
+                $(".RecordList").html('');
+                $(".RecordList").html(data);
+                
+            }
+            else {
+                alertR("Something went wrong!");
+            }
+        }
+        function DeleteRecord(Id) {
+            $.ajax({
+                url: "../ManualCallRecord/DeleteRecord",
+                type: 'Post',
+                data: {
+                    Id: Id
+                },
+                success: function (data) {
+                   
+                    $(".RecordList").html('');
+                    $(".RecordList").html(data);
+                    alertG("Record Archived Successfully!");
+                },
+                error: function (request, error) {
+
+                }
+            });
+        }
+        function GetRecordById(Id) {
+            if (Id != null && Id > 0) {
+                 $.ajax({
+                     type: "GET",
+                     data: {Id :Id},
+                     url: '@Url.Action("GetRecordById", "ManualCallRecord")',
+                     beforeSend: function () {
+                     },
+                    success: function (data) {
+                       
+                        $("#Record_Id").val(data.data.id);
+                        $("#Record_CustomerName").val(data.data.customerName);
+                        $("#Record_PhoneNumber").val(data.data.phoneNumber);
+                        $("#Record_CarModel").val(data.data.carModel);
+                        $("#Record_Make").val(data.data.make);
+                        $("#Record_Year").val(data.data.year);
+                       // $("#Record_ReceivedDate")..datepicker("setDate", date.data.receivedDate);
+
+                        $("#Record_CustomerName-error").text("");
+                        $("#Record_PhoneNumber-error").text("");
+                        $("#Record_CarModel-error").text("");
+                        $("#Record_Make-error").text("");
+                        $("#Record_Year-error").text("");
+                        $("#Record_ReceivedDate-error").text("");
+
+                        $("#Heading").text("Update Record");
+                        $("#AddRecordBtn").text("Update");
+                        $("#modal-addForm").modal('show');
+
+                    },
+                        error: function (res) {
+                    }
+                });
+            }
+        }
+        function ShowModal() {
+            $("#Record_CustomerName").val('');
+            $("#Record_PhoneNumber").val('');
+            $("#Record_CarModel").val('');
+            $("#Record_Make").val('');
+            $("#Record_Year").val('');
+            $("#Record_ReceivedDate").val('');
+
+            $("#Record_CustomerName-error").text("");
+            $("#Record_PhoneNumber-error").text("");
+            $("#Record_CarModel-error").text("");
+            $("#Record_Make-error").text("");
+            $("#Record_Year-error").text("");
+            $("#Record_ReceivedDate-error").text("");
+
+            $("#AddRecordBtn").prop('disabled', false);
+            $("#Heading").text("Add Record");
+            $("#AddRecordBtn").text("Add");
+
+            $("#modal-addForm").modal('show');
+        }
+    </script>
+}
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-2">
+                <h1>Call Records</h1>
+            </div>
+            <div class="col-sm-8">
+            </div>
+            <div class="col-sm-2">
+                <button type="submit" class="btn bg-colorBlack float-right" data-toggle="modal" onclick="ShowModal()">Add Record</button>
+
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <!-- /.card-header -->
+                    <div class="card-body call table-responsive p-0">
+                        <div class="RecordList">
+                            <partial name="~/Views/ManualCallRecord/_RecordsList.cshtml" model="Model" />
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer clearfix">
+                        <ul class="pagination pagination-sm m-0 float-right">
+                        </ul>
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+
+<div class="modal fade" id="modal-addForm">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h4 class="modal-title" id="Heading">Add New Call Record </h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" id="addRecordForm" asp-action="RecordAddOrEdit" asp-controller="ManualCallRecord" data-ajax="true" data-ajax-success="onAddEditRecordSuccess(data)">
+                <input type="hidden" asp-for="Record.Id" />
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label asp-for="Record.CustomerName">Customer Name</label>
+                                <input asp-for="Record.CustomerName" type="text" class="form-control" placeholder="Enter Customer Name">
+                                <span class="text-danger" asp-validation-for="Record.CustomerName"></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label asp-for="Record.PhoneNumber">Phone Number</label>
+                                <input type="text" asp-for="Record.PhoneNumber" class="form-control" placeholder="Enter Customer Phone">
+                                <span class="text-danger" asp-validation-for="Record.PhoneNumber"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label asp-for="Record.CarModel">Vehicle Model</label>
+                                <input type="text" asp-for="Record.CarModel" class="form-control" placeholder="Enter Model">
+                                <span class="text-danger" asp-validation-for="Record.CarModel"></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label asp-for="Record.Make">Make</label>
+                                <input type="text" asp-for="Record.Make" class="form-control" placeholder="Enter Make" />
+                                <span class="text-danger" asp-validation-for="Record.Make"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label asp-for="Record.Year">Year</label>
+                                <input type="text" asp-for="Record.Year" class="form-control" placeholder="Enter Year">
+                                <span class="text-danger" asp-validation-for="Record.Year"></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label asp-for="Record.ReceivedDate">Received Date</label>
+                                <input type="date" asp-for="Record.ReceivedDate" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask="" im-insert="false">
+                                <span class="text-danger" asp-validation-for="Record.ReceivedDate"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-secondary" id="AddRecordBtn">Save</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>

@@ -1,0 +1,354 @@
+﻿@model CarGuru.ViewModels.CustomerViewModel
+@inject CarGuru.Services.Interfaces.ISessionManager x;
+@{
+    ViewData["Title"] = "Customers";
+    Layout = CommonData.GetUserLayoutByRoleId(x.GetUserRoleId());
+}
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+
+            $(".followUp").on("click", function (e) {
+                let statusValue = $(this).parent().parent().parent().parent().find("#status").html();
+                if (statusValue === 'Quote Request') {
+                    $(this).parent().parent().parent().parent().find("#status").text("Followup Done");
+                }
+            });
+        });
+        $(document).ready(function () {
+            $('#CustomerTable').DataTable({
+                
+                "bSort": false,
+                "searching": false,
+                "responsive": true,
+                dom: 'Bfrtip',
+                buttons: [
+                   
+                ]
+            });
+            $('#CustomerTable').on('show.bs.dropdown', function () {
+                $('.dataTables_scrollBody').addClass('dropdown-visible');
+            })
+            .on('hide.bs.dropdown', function () {
+                $('.dataTables_scrollBody').removeClass('dropdown-visible');
+            });
+        });
+        function EditCustomer(Id) {
+
+            $.ajax({
+                url: "../Customer/GetCustomerInfoById",
+                type: 'Post',
+                data: {
+                    UserId: Id
+                },
+                success: function (data) {
+                    $("#Customer_UserId").val(data.userId);
+                    $("#Customer_CustomerTypeId").val(data.customerTypeId);
+                    $("#Customer_User_FirstName").val(data.user.firstName);
+                    $("#Customer_User_LastName").val(data.user.lastName);
+                    $("#Customer_User_Email").val(data.user.email);
+                    $("#Customer_User_Address").val(data.user.address);
+                    $("#Customer_User_PhoneNumber").val(data.user.phoneNumber);
+                    $("#Customer_NoOfVehicles").val(data.noOfVehicles);
+                    $("#Customer_User_GenderId").val(data.user.genderId);
+                    $("#modal-editForm").modal('show');
+                },
+                error: function (request, error) {
+
+                }
+            });
+        }
+        function OnCustomerSuccess(data) {
+            $("#modal-editForm").modal('hide');
+            alertG("Customer Updated Successfully");
+            $(".CustomersList").html(data)
+            $('#CustomerTable').DataTable({
+                "bSort": false,
+                "searching": false,
+                "responsive": true,
+                dom: 'Bfrtip',
+                buttons: [
+
+                ]
+            });
+        }
+        function ViewCustomer(Id)
+        {
+            $.ajax({
+                url: "../Customer/GetCustomerInfoById",
+                type: 'Post',
+                data: {
+                    UserId: Id
+                },
+                success: function (data) {
+                    $("#VCustomerTypeId").val(data.customerTypeId);
+                    $("#VFirstName").val(data.user.firstName);
+                    $("#VLastName").val(data.user.lastName);
+                    $("#VEmail").val(data.user.email);
+                    $("#VAddress").val(data.user.address);
+                    $("#VPhoneNumber").val(data.user.phoneNumber);
+                    $("#VNoOfVehicles").val(data.noOfVehicles);
+                    $("#VGenderId").val(data.user.genderId);
+                    $("#modal-View").modal('show');
+                },
+                error: function (request, error) {
+
+                }
+            });
+        }
+        function SearchCustomers()
+        {
+            var Name = $("#Name").val();
+            $.ajax({
+                url: "../Customer/SearchCustomers",
+                type: 'Post',
+                data: {
+                    name: Name
+                },
+                success: function (data) {
+                    $(".CustomersList").html(data)
+                    $('#CustomerTable').DataTable({
+                        "bSort": false,
+                        "searching": false,
+                        "responsive": true,
+                        dom: 'Bfrtip',
+                        buttons: [
+
+                        ]
+                    });
+                },
+                error: function (request, error) {
+
+                }
+            });
+        }
+       
+    </script>
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-2 col-md-2">
+                <h1>Customers</h1>
+            </div>
+            <div class="col-sm-6 col-md-8">
+                <form class="form-inline float-right">
+                    <div class="input-group bg-white">
+                        <input class="form-control" id="Name" type="search" placeholder="Search by name" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-navbar " onclick="SearchCustomers()" type="button">
+                                <i class="fas fa-search "></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-4 col-md-2">
+                <a href="@Url.Action("AddNewCustomer", "Customer")" class="btn bg-colorBlack float-right">Add New Customer</a>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body leads table-responsive p-0">
+                        <div class="CustomersList">
+                            <partial name="~/Views/Customer/_CustomerListing.cshtml" model="Model" />
+                        </div>
+                    </div>
+                    <div class="card-footer clearfix">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="modal fade" id="modal-editForm">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h4 class="modal-title">Edit Customer</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="UpdateCustomers" asp-controller="Customer" method="post" data-ajax="true" data-ajax-success="OnCustomerSuccess(data)">
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="hidden" asp-for="Customer.UserId" />
+                                <label>Customer Type</label>
+                                <select class="form-control" asp-for="Customer.CustomerTypeId" asp-items="@(new SelectList(Model.CustomerTypes, "Value", "Text"))">
+                                    <option value="" disabled selected>Please Select Cuetomer Type</option>
+                                </select>
+                                <span class="text-danger" asp-validation-for="Customer.CustomerTypeId"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">First Name</label>
+                                <input type="text" class="form-control" asp-for="Customer.User.FirstName" placeholder="Enter First Name">
+                                <span class="text-danger" asp-validation-for="Customer.User.FirstName"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Last Name</label>
+                                <input type="text" class="form-control" asp-for="Customer.User.LastName" placeholder="Enter Last Name">
+                                <span class="text-danger" asp-validation-for="Customer.User.LastName"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 individualAddress">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Email</label>
+                                <input type="text" class="form-control" asp-for="Customer.User.Email" placeholder="Enter Email">
+                                <span class="text-danger" asp-validation-for="Customer.User.Email"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 individualAddress">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Address</label>
+                                <input type="text" class="form-control" asp-for="Customer.User.Address" placeholder="Enter Address">
+                                <span class="text-danger" asp-validation-for="Customer.User.Address"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Contact No</label>
+                                <input type="text" class="form-control" asp-for="Customer.User.PhoneNumber" placeholder="Enter Contact No">
+                                <span class="text-danger" asp-validation-for="Customer.User.PhoneNumber"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">No. of Vehicle</label>
+                                <input type="number" class="form-control" asp-for="Customer.NoOfVehicles" placeholder="Enter No. of Vehicle">
+                                <span class="text-danger" asp-validation-for="Customer.NoOfVehicles"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="genderLable">Gender</label>
+                                <select class="form-control" asp-for="Customer.User.GenderId" asp-items="@( new List<SelectListItem>{
+                                                                new SelectListItem() {Text = "Male", Value="4"},
+                                                                new SelectListItem() {Text = "Female", Value="5"},
+                                                                })">
+                                    <option value="" disabled selected>Please Select Gender</option>
+                                </select>
+                                <span class="text-danger" asp-validation-for="Customer.User.GenderId"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-secondary float-right">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-View">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h4 class="modal-title">View Customer</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="UpdateCustomers" asp-controller="Customer" method="post" data-ajax="true" data-ajax-success="OnCustomerSuccess(data)">
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="hidden" asp-for="Customer.UserId" />
+                                <label>Customer Type</label>
+                                <select class="form-control" asp-items="@(new SelectList(Model.CustomerTypes, "Value", "Text"))" id="VCustomerTypeId" disabled>
+                                    <option value="" disabled selected>Please Select Cuetomer Type</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">First Name</label>
+                                <input type="text" class="form-control" placeholder="Enter First Name" id="VFirstName" disabled>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Last Name</label>
+                                <input type="text" class="form-control" placeholder="Enter Last Name" id="VLastName" disabled>
+
+                            </div>
+                        </div>
+                        <div class="col-md-6 individualAddress">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Email</label>
+                                <input type="text" class="form-control" placeholder="Enter Email"  id="VEmail" disabled>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 individualAddress">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Address</label>
+                                <input type="text" class="form-control" placeholder="Enter Address" id="VAddress" disabled>
+
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Contact No</label>
+                                <input type="text" class="form-control"placeholder="Enter Contact No" id="VPhoneNumber" disabled>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">No. of Vehicle</label>
+                                <input type="number" class="form-control" placeholder="Enter No. of Vehicle" id="VNoOfVehicles" disabled>
+
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="genderLable">Gender</label>
+                                <select class="form-control" asp-items="@( new List<SelectListItem>{
+                                                                new SelectListItem() {Text = "Male", Value="4"},
+                                                                new SelectListItem() {Text = "Female", Value="5"},
+                                                                })" id="VGenderId" disabled>
+                                    <option value="" disabled selected>Please Select Gender</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

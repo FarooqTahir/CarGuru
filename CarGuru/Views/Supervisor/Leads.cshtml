@@ -1,0 +1,126 @@
+﻿@model CarGuru.ViewModels.SupervisorViewModel
+@inject CarGuru.Services.Interfaces.ISessionManager x;
+@{
+    ViewData["Title"] = "ServiceOrderList";
+    var role = x.GetUserRoleId();
+    Layout = CommonData.GetUserLayoutByRoleId(role);
+}
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#LeadsTable').DataTable({
+                "bSort": false,
+                "searching": false,
+                "responsive": true,
+                dom: 'Bfrtip',
+                buttons: []
+            });
+        });
+    </script>
+}
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-8 col-md-8">
+                @if (!(Model.AgentName == null))
+                {
+
+                    <h1>@Model.AgentName - Leads</h1>
+                }
+                else
+                {
+            <h1>Leads</h1>
+                }
+
+            </div>
+            <div class="col-sm-4 col-md-6">
+
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body leads table-responsive p-0">
+                        @if (!(@Model.Leads == null))
+                        {
+                            @if (!(@Model.Leads.Count == 0))
+                            {
+                                <table class="table table-striped"  id="LeadsTable" style="width:100%">
+                                    <thead class="bg-colorBlack">
+                                        <tr>
+                                            <th>Customer</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Address</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in @Model.Leads)
+                                        {
+                                            <tr>
+                                                <td>@item.CustomerName</td>
+                                                <td>@item.Email</td>
+                                                <td>@item.PhoneNumber</td>
+                                                <td>@item.CustomerAddress</td>
+                                                <td id="status">@item.LeadStatus</td>
+
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                            else
+                            {
+                                <h3>No Record Found</h3>
+                            }
+                        }
+                        else
+                        {
+                            <h3>No Record Found</h3>
+                        }
+
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer clearfix">
+                        <ul class="pagination pagination-sm m-0 float-right">
+                           
+                        </ul>
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<div class="modal fade" id="modal-Invoice">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h4 class="modal-title">Invoice</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row invoice-info">
+                    <div class="col-sm-2"></div>
+
+                    <h1>Service Orders</h1>
+
+                </div>
+
+                <div class="Tables"></div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

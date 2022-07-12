@@ -1,0 +1,47 @@
+﻿@model CarGuru.ViewModels.CallRecordsViewModel
+<table class="table table-striped" id="RecordTable" width="100%">
+    <thead class="bg-colorBlack">
+        <tr>
+            <th>Customer</th>
+            <th>Phone</th>
+            <th>Received Date</th>
+            <th>Vechicle</th>
+            <th class="actionColumn">Action</th>
+        </tr>
+    </thead>
+    <tbody id="recordTableBody">
+
+        @foreach (var item in Model.Records)
+        {
+            string Vechicle = item.CarModel + "-" + item.Make + "-" + item.Year;
+            <tr>
+                <td>@item.CustomerName</td>
+                <td>@item.PhoneNumber</td>
+                <td>
+                    @item.ReceivedDate.ToString("MM/dd/yyyy")
+                </td>
+                <td>@Vechicle</td>
+                <td>
+                    <div class="row">
+                        <div class="col-sm-3 viewModal">
+                            <button class="btn" type="button" onclick="ViewRecord(@item.Id)">
+                                View
+                            </button>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="dropdown">
+                                <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="javascript:void()" onclick="GetRecordById('@item.Id')"><i class="fas fa-print" aria-hidden="true" style="margin-right:8px;"></i>Edit</a>
+                                    <a class="dropdown-item" href="javascript:void()" onclick="DeleteRecord('@item.Id')"><i class="fas fa-archive" aria-hidden="true" style="margin-right:8px;"></i>Archive</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>

@@ -1,0 +1,1141 @@
+﻿@model CarGuru.ViewModels.CustomerViewModel
+@inject CarGuru.Services.Interfaces.ISessionManager x;
+@{
+    ViewData["Title"] = "_AddNewCustomer";
+    var Role = x.GetUserRoleId();
+    var fas = CommonData.GetUserLayoutByRoleId(Role);
+    Layout = fas;//"~/Views/Shared/_Layout.cshtml";
+
+    decimal Latitude = 0;
+    decimal Longitude = 0;
+}
+@*@section styles {
+    <link href="~/ChooseLocation/ChooseLocation.css" rel="stylesheet" />
+}*@
+@section scripts{
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCQcmSvCH5unhfQij4tZg5qKwnVqcIv7ME&libraries=places&callback=initMap" async defer></script>
+    <script src="~/ChooseLocation/ChooseLocation.js"></script>
+   
+    <script>
+        $(document).ready(function () {
+            //$("#vert-tabs-profile-tab").addClass("disabled");
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+
+            $.fn.serviceTypeFunction = function () {
+                Toast.fire({
+                    type: 'warning',
+                    title: 'Please select service type'
+                });
+            }
+
+
+            $.fn.marginFunction = function () {
+                Toast.fire({
+                    type: 'warning',
+                    title: 'Please Fill all fields'
+                });
+            }
+
+            $.fn.calculateMarginFunction = function (margin, productPrice) {
+                let marginCalculate = margin * productPrice;
+                return marginCalculate.toFixed(2);
+            }
+
+        });
+        $(document).ready(function () {
+            $('.js-example-basic-single').select2();
+            $('.js-example-basic-singles').select2();
+        });
+        var Products = [];
+        var TotalPrice = 0;
+        $(".addProductInList").on('click', function () {
+            if (ValidateProducts()) {
+                var productName = $('#ServiceOrder_Product :selected').text();
+                var ProductId = $('#ServiceOrder_Product :selected').val();
+                var ProductQuantity = parseFloat($("#ProductQuantity").val());
+                var UnitPrice = parseFloat($("#ProductPrice").val());
+                var ProductPrice = parseFloat($("#ProductPrice").val() * $("#ProductQuantity").val());
+
+                var tableRow = "<tr><td class='PId' style='display:none'>" + ProductId + "</td><td class='Pname'>" + productName + "</td><td class='quantity'>" + ProductQuantity + "</td><td>" + UnitPrice +
+                    "</td><td class='productprice'>" + ProductPrice + "</td><td><a><i class='fa fa-edit' id='EdP' style='color:#28a745'></i></a><a><i class='fa fa-trash' id='Del' style='color:#28a745'></i></a></td ></tr>";
+                $("#productTableBody").append(tableRow);
+                InvoiceSetup();
+                $("#ProductQuantity").val('');
+                $("#ProductPrice").val('');
+            }
+        });
+
+        function ChangeServiceCharges() {
+            var val = $('#ServiceCharges').val();
+            $('#totalServiceCharges').text(val);
+            InvoiceSetup();
+        }
+        function ValidateProducts() {
+            var productName = $('#ServiceOrder_Product :selected').text();
+            var ProductQuantity = parseFloat($("#ProductQuantity").val());
+            var ProductPrice = parseFloat($("#ProductPrice").val());
+            if (productName == null || productName == "") {
+                alertR("Please Enter the Product Name");
+                return false;
+            }
+            if (ProductQuantity == null || ProductQuantity == "" || isNaN(ProductQuantity)) {
+                alertR("Please Enter the Product Quantity");
+                return false;
+            }
+            if (ProductPrice == null || ProductPrice == "" || isNaN(ProductPrice)) {
+                alertR("Please Enter the Product Price");
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+
+        $(".addVehicle").on('click', function () {
+            if (validate()) {
+                var Li = $("#LicencePlateNo").val();
+                var Make = $("#Make").val();
+                var Model = $("#Model").val();
+                var Year = $("#Year").val();
+                var Vin = $("#Vin").val();
+                var Mulika = $("#Mulkia").val();
+                var markup = "<tr><td class='li'>" + Li + "</td><td class='make'>" + Make + "</td><td class='model'>" + Model + "</td><td class='year'>" + Year + "</td><td class='vin'>" + Vin+ "</td><td class='mulkia'>" + Mulika + "</td></tr>";
+                $("#vehicleTableBody").append(markup);
+                $("#LicencePlateNo").val('');
+                $("#Make").val('');
+                $("#Model").val('');
+                $("#Year").val('');
+                $("#Vin").val('');
+                $("#Mulkia").val();     
+            }
+            else {
+                //VehicleErrorFunction();
+            }
+
+        });
+        function validate() {
+            var Li = $("#LicencePlateNo").val();
+            var Make = $("#Make").val();
+            var Model = $("#Model").val();
+            var Year = $("#Year").val();
+            var Vin = $("#Vin").val();
+            var Mulkia = $("#Mulkia").val();
+            if (Li == null || Li == "") {
+                alertR("Please Enter The Licence Plate No");
+                return false
+            }
+            if (Make == null || Make == "") {
+                alertR("Please Enter The Make");
+                return false
+            }
+            if (Model == null || Model == "") {
+                alertR("Please Enter The Model");
+                return false
+            }
+            if (Year == null || Year == "") {
+                alertR("Please Enter The Year");
+                return false
+            }
+            if (Vin == null || Vin == "") {
+                alertR("Please Enter The VIN");
+                return false
+            }
+            if (Mulkia == null || Mulkia == "") {
+                alertR("Please Enter The Mulkia");
+                return false
+            }
+            else {
+                return true;
+            }
+
+        }
+
+        var CustomerServices = [];
+        $(".addServiceList").on('click', function () {
+            if (validateServices()) {
+                var type = $("#ServiceOrder_ServiceTypeId").val();
+                var ServiceName = $("#ServiceOrder_ServiceTypeId option:selected").text();
+                var charges = $("#ServiceCharges").val();
+                var tableRow = "<tr><td style='display:none' class='SId'>" + type + "</td><td class='name'>" + ServiceName + "</td><td class='charges'>" + charges + "</td><td><a><i class='fa fa-edit' id='Ed' style='color:#28a745'></i></a><a><i class='fa fa-trash' id='Del' style='color:#28a745'></i></a></td ></tr>";
+
+                $("#serviceTableBody").append(tableRow);
+                InvoiceSetup();
+                $("#ServicesList").val('');
+                $("#ServiceOrder_ServiceTypeId").val('');
+                $("#ServiceCharges").val('');
+            }
+        });
+        
+        $("#AddCustomerBtn").on('click', function () {
+            
+            var CustomerVehicles = [];
+            var Vehicles = {
+                LicensePlateNumber: "",
+                Make: "",
+                Model: "",
+                VIN: "",
+                Year: "",
+                Mulkia: "",
+            };
+            $('#vehicleTable tr').each(function () {
+                if ($(this).find(".li").html() == "" || $(this).find(".li").html() == null) {
+                } else {
+                    Vehicles.LicensePlateNumber = $(this).find(".li").html();
+                    Vehicles.Make = $(this).find(".make").html();
+                    Vehicles.Model = $(this).find(".model").html();
+                    Vehicles.VIN = $(this).find(".vin").html();
+                    Vehicles.Year = $(this).find(".year").html();
+                    Vehicles.Mulkia = $(this).find(".mulkia").html();
+                    CustomerVehicles.push(Vehicles);
+                }
+            });
+            if (CustomerVehicles.length > 0) {
+                $("#vehicles").val('');
+                var Json = JSON.stringify(CustomerVehicles);
+                $("#vehicles").val(Json);
+                if ($("#AddNewForm").valid()) {  //<<< I was missing this check
+                    $("#AddNewForm").submit();
+                    //$('#overlay').css("display", "block");
+                    //$('.loader').css("display", "block");
+                    $('#AddCustomerBtn').prop('disabled', true);
+                }
+                else {
+                    $("#AddNewForm").submit();
+                }
+                
+            }
+            else
+            {
+                alertR("PLease Add Atleast One Vehicles ")
+            }
+            
+
+        });
+        function validateServices() {
+            var type = $("#ServiceOrder_ServiceTypeId").val();
+            var charges = $("#ServiceCharges").val();
+            if (type == null || type == "") {
+                alertR("Please Enter service Type");
+                return false
+            }
+            if (charges == null || charges == "") {
+                alertR("Please Enter The charges");
+                return false
+            }
+            else {
+                return true;
+            }
+        }
+        function InvoiceSetup() {
+            var cost = 0;
+            $('#productTable tr').each(function () {
+                if (isNaN($(this).find(".productprice").html())) {
+                }
+                else {
+                    var tempPrice = parseFloat($(this).find(".productprice").html());
+                    cost = cost + tempPrice;
+                }
+
+            });
+            var TotalCharges = 0;
+            $('#serviceTable tr').each(function () {
+                if (isNaN($(this).find(".charges").html())) {
+                }
+                else {
+                   
+                    var tempPrice = parseFloat($(this).find(".charges").html());
+                    TotalCharges = TotalCharges + tempPrice;
+                }
+
+            });
+            $("#totalProductPrice").text(cost);
+            $("#totalServiceCharges").text(TotalCharges);
+            var Total = cost + TotalCharges;
+            $("#totalPrice").text(Total);
+            $("#TotalServices").val(Total);
+        }
+
+        function OnCustomerSuccess(data) {
+            
+            $.each(data.vehicleDropdown, function (index, Val) {
+
+                $('#ServiceOrder_VehicleId').append($('<option/>', {
+                    value: Val.value,
+                    text: Val.text
+                }));
+            });
+            $.each(data.vehicleDropdown, function (index, Val) {
+
+                $('#Quotation_VehicleId').append($('<option/>', {
+                    value: Val.value,
+                    text: Val.text
+                }));
+            }); 
+            
+
+            alertG("Customer added successfully");
+            $("#CustomerId").val(data.customerId);
+            $("#QCustomerId").val(data.customerId);
+            $("#vert-tabs-home-tab").removeClass("active");
+            $("#vert-tabs-profile-tab").addClass("active");
+            $("#vert-tabs-home").removeClass("active show");
+            $("#vert-tabs-profile").addClass("active show");
+            $("#vert-tabs-profile-tab").addClass("enabled");
+
+        }
+        function ServiceAdded() {
+            alertG("Service Order added successfully");
+            window.location.href = "../Customer/Customers";
+        }
+        function QuotationAdded()
+        {
+            alertG("Quotation added successfully");
+            window.location.href = "../Customer/Customers";
+        }
+        function EmailCheck() {
+            var Email = $("#Customer_User_Email").val();
+            $.ajax({
+                type: "POST",
+                url: '/login/EmailCheck',
+                data: { email: Email },
+                success: function (data) {
+                    if (data == true) {
+                        //$("#EmployeeRequestDto_User_Email-error").text("Email Already Exists");
+                        $("span[data-valmsg-for='Customer.User.Email']").text('Email Already Exists');
+                        $("#AddCustomerBtn").prop('disabled', true);
+                    }
+                    else {
+                        $("span[data-valmsg-for='Customer.User.Email']").text('');
+                        $("#AddCustomerBtn").prop('disabled', false);
+                    }
+                },
+                error: function () {
+                }
+            });
+        }
+
+        $(".addQuotationList").on('click', function () {
+            if (validateQuotation()) {
+                var type = $("#QuotationService").val();
+                var product = $("#QuotationProduct").val();
+                var charges = $("#QuotationCharges").val();
+                var ServiceName = $("#QuotationService option:selected").text();
+                var ProductName = $("#QuotationProduct option:selected").text();
+                $("#QuotationProduct option:selected").text();
+
+                var tableRow = "<tr><td class='qServiceId' style='display:none'>" + type + "</td><td class='qProductId'  style='display:none'>" + product + "</td><td class='serviceName'>" + ServiceName + "</td><td class='productName'>" + ProductName + "</td><td class='quotationCharges'>" + charges + "</td></tr>";
+                $("#QuotationTableBody").append(tableRow);
+                
+                $("#QuotationService").val("");
+                $("#QuotationProduct").val("");
+                $("#QuotationCharges").val("");
+                QuotationSetup()
+            }
+
+        });
+        function validateQuotation() {
+            var type = $("#QuotationService").val();
+            var product = $("#QuotationProduct").val();
+            var charges = $("#QuotationCharges").val();
+            if (type == null || type == "") {
+                alertR("Please Enter service Type");
+                return false
+            }
+            if (product == null || type == "") {
+                alertR("Please Enter service Type");
+                return false
+            }
+            if (charges == null || charges == "") {
+                alertR("Please Enter The charges");
+                return false
+            }
+            else {
+                return true;
+            }
+        }
+        function QuotationSetup() {
+            var TotalCharges = 0;
+            $('#QuotationTable tr').each(function () {
+                if (isNaN($(this).find(".quotationCharges").html())) {
+                }
+                else {
+                     var tempPrice = parseFloat($(this).find(".quotationCharges").html());
+                    TotalCharges = TotalCharges + tempPrice;
+                }
+            });
+            $("#totalQuotation").text(TotalCharges);
+            $("#QuotationTotal").val(TotalCharges)
+        }
+        $("#AddQuotation").on('click', function () {
+            
+            var quotation = {
+                ProductId: "",
+                ServiceId: "",
+                Price: "",
+            };
+            var Quotations = [];
+            $('#QuotationTable tr').each(function () {
+                if ($(this).find(".serviceName").html() == "" || $(this).find(".quotationCharges").html() == null) {
+                } else {
+                    quotation.ServiceId = $(this).find(".qServiceId").html();
+                    quotation.ProductId = $(this).find(".qProductId").html();
+                    quotation.Price = $(this).find(".quotationCharges").html();
+                    Quotations.push(quotation);
+                }
+            });
+            if (Quotations.length > 0) {
+                var Json = JSON.stringify(Quotations);
+                $("#Quotation_QuotationServices").val(Json);
+               
+                if ($("#AddQuotationForm").valid()) {  //<<< I was missing this check
+                    $("#AddQuotationForm").submit();
+                    //$('#overlay').css("display", "block");
+                    //$('.loader').css("display", "block");
+                    $('#AddQuotation').prop('disabled', true);
+                }
+                else {
+                    $("#AddQuotationForm").submit();
+                }
+            }
+            else
+            {
+                alertR("Please Add Services In Quotation");
+            }
+            
+        });
+
+        function ServiceSubmit() {
+            
+            var PRODUCTS = [];
+            var SERVICES = [];
+            $('#productTable tr').each(function () {
+                var Product = {
+                    ProductId: "",
+                    Quantity: "",
+                    Price: "",
+                };
+                if ($(this).find(".quantity").html() == "" || $(this).find(".quantity").html() == null) {
+                } else {
+                    Product.ProductId = $(this).find(".PId").html();
+                    Product.Quantity = $(this).find(".quantity").html();
+                    Product.Price = $(this).find(".productprice").html();
+                    PRODUCTS.push(Product);
+                }
+            });
+           
+            var Services = {
+                ServiceTypeId: "",
+                Price: "",
+            };
+            $('#serviceTable tr').each(function () {
+                if ($(this).find(".name").html() == "" || $(this).find(".charges").html() == null) {
+                } else {
+                    Services.ServiceTypeId = $(this).find(".SId").html();
+                    Services.Price = $(this).find(".charges").html();
+                    SERVICES.push(Services);
+                }
+            });
+            if (PRODUCTS.length == 0 && SERVICES.length == 0) {
+                alertR("Please add at least one service or product")
+            }
+            else
+            {
+                $("#ProductsList").val('');
+                var Json = JSON.stringify(PRODUCTS);
+                $("#ProductsList").val(Json);
+                $("#ServicesList").val('');
+                var Json = JSON.stringify(SERVICES);
+                $("#ServicesList").val(Json);
+                var selectedLong = $("#longitude").val();
+                var selectedLat = $("#latitude").val();
+                var Address = $('#pac-input').val();
+                
+                $("#ShippingAddress").val(Address);
+                $("#OrderLatitude").val(selectedLong);
+                $("#OrderLongitiude").val(selectedLat);
+
+                
+                if ($("#AddServiceForm").valid()) {  //<<< I was missing this check
+                    $("#AddServiceForm").submit();
+                    //$('#overlay').css("display", "block");
+                    //$('.loader').css("display", "block");
+                    $('#SSubmit').prop('disabled', true);
+                }
+                else {
+                    $("#AddServiceForm").submit();
+                }
+            }           
+        }
+        $(document).on('click', '#Del', function () {
+            $(this).closest('tr').remove();
+            InvoiceSetup();
+        });
+
+        $(document).on('click', '#Ed', function () {
+
+            var Id = $(this).closest('tr').find(".SId").text();
+            var name = $(this).closest('tr').find(".name").text();
+            var charges = $(this).closest('tr').find(".charges").text();
+
+            $("#ServiceOrder_ServiceTypeId").val(Id);
+            $("#ServiceCharges").val(charges);
+            $(this).closest('tr').remove();
+            InvoiceSetup();
+        });
+        $(document).on('click', '#DelP', function () {
+            $(this).closest('tr').remove();
+            InvoiceSetup();
+        });
+
+        $(document).on('click', '#EdP', function () {
+
+            var Id = $(this).closest('tr').find(".PId").text();
+            var name = $(this).closest('tr').find(".Pname").text();
+            var quantity = $(this).closest('tr').find(".quantity").text();
+            var charges = $(this).closest('tr').find(".productprice").text();
+
+            $("#ServiceOrder_Product").val(Id);
+            $("#ProductQuantity").val(quantity);
+            var unit = charges / quantity;
+            $("#ProductPrice").val(unit);
+            $(this).closest('tr').remove();
+            InvoiceSetup();
+        });
+
+    </script>
+
+}
+
+@section styles{
+    @*<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />*@
+    <style>
+        .genderLable {
+            display: block !important;
+        }
+
+        .femaleRadio {
+            float: left !important;
+            margin-left: 10px;
+        }
+
+        .maleRadio {
+            float: left !important;
+        }
+
+        .new-select2-class {
+            position: unset !important;
+        }
+
+        #vert-tabs-profile > form > section:nth-child(8) > div.row.mt-2 > div:nth-child(1) > div > span {
+            padding: .375rem .75rem !important;
+            padding-top: 0 !important;
+            padding-left: 0 !important;
+            width: 100% !important
+        }
+
+        .new-select2-class .select2-container--default .select2-selection--single {
+            height: calc(2.25rem + 2px) !important;
+            width: 100% !important;
+        }
+
+        #vert-tabs-profile > form > section:nth-child(8) > div.row.mt-2 > div:nth-child(1) > div > span > span.selection > span {
+            height: calc(2.25rem + 2px) !important;
+            border: 1px solid #ced4da;
+            border-radius: .25rem;
+            box-shadow: inset 0 0 0 transparent;
+            transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 26px;
+            position: absolute;
+            top: 5px !important;
+            right: 21px !important;
+            width: 20px;
+        }
+
+        .select2-container .select2-selection--single .select2-selection__rendered {
+            padding-left: 0 !important
+        }
+
+        .select2-container--default .select2-search--dropdown .select2-search__field {
+            border: 1px solid #aaa !important;
+            border-radius: 4px !important;
+        }
+    </style>
+}
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-8 col-md-10">
+                <h1>Add Customer Information</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card ">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-5 col-md-2">
+                                <div class="nav flex-column nav-tabs h-100" id="vert-tabs-tab" role="tablist" aria-orientation="vertical">
+                                    <a class="nav-link active" id="vert-tabs-home-tab" data-toggle="pill" href="#vert-tabs-home" role="tab" aria-controls="vert-tabs-home" aria-selected="true">Customer</a>
+                                    <a class="nav-link" id="vert-tabs-profile-tab" data-toggle="pill" href="#vert-tabs-profile" role="tab" aria-controls="vert-tabs-profile" aria-selected="false">Service Order</a>
+                                    <a class="nav-link" id="quotation-tab" data-toggle="pill" href="#quotations" role="tab" aria-controls="quotations" aria-selected="false">Quotation</a>
+                                </div>
+                            </div>
+                            <div class="col-7 col-md-10">
+                                <div class="tab-content" id="vert-tabs-tabContent">
+                                    @*CUSTOMER*@
+                                    <div class="tab-pane text-left fade active show" id="vert-tabs-home" role="tabpanel" aria-labelledby="vert-tabs-home-tab">
+                                        <form role="form" asp-action="AddNewCustomer" asp-controller="Customer" method="post" data-ajax="true" data-ajax-success="OnCustomerSuccess(data)" id="AddNewForm">
+                                            <h2>Customer</h2>
+                                            <input type="hidden" class="form-control" id="vehicles" asp-for="Vehicles" />
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Customer Type</label>
+                                                        <select class="form-control" asp-for="Customer.CustomerTypeId" asp-items="@Model.CustomerTypes">
+                                                            <option value="" disabled selected>Please Select Customer Type</option>
+                                                        </select>
+                                                        <span class="text-danger" asp-validation-for="Customer.CustomerTypeId"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="exampleInputEmail1">First Name</label>
+                                                        <input type="text" class="form-control" asp-for="Customer.User.FirstName" placeholder="Enter First Name">
+                                                        <span class="text-danger" asp-validation-for="Customer.User.FirstName"></span>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="exampleInputPassword1">Last Name</label>
+                                                        <input type="text" class="form-control" asp-for="Customer.User.LastName" placeholder="Enter Last Name">
+                                                        <span class="text-danger" asp-validation-for="Customer.User.LastName"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 individualAddress">
+                                                    <div class="form-group">
+                                                        <label for="exampleInputEmail1">Email</label>
+                                                        <input type="text" class="form-control" asp-for="Customer.User.Email" onblur="EmailCheck()" placeholder="Enter Email">
+                                                        <span class="text-danger" id="Email-Error" asp-validation-for="Customer.User.Email"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 individualAddress">
+                                                    <div class="form-group">
+                                                        <label for="exampleInputEmail1">Address</label>
+                                                        <input type="text" class="form-control" asp-for="Customer.User.Address" placeholder="Enter Address">
+                                                        <span class="text-danger" asp-validation-for="Customer.User.Address"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="exampleInputPassword1">Contact No</label>
+                                                        <input type="text" class="form-control" asp-for="Customer.User.PhoneNumber" placeholder="Enter Contact No">
+                                                        <span class="text-danger" asp-validation-for="Customer.User.PhoneNumber"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="exampleInputEmail1">No. of Vehicle</label>
+                                                        <input type="number" class="form-control" asp-for="Customer.NoOfVehicles" placeholder="Enter No. of Vehicle">
+                                                        <span class="text-danger" asp-validation-for="Customer.NoOfVehicles"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="genderLable">Gender</label>
+                                                        <select class="form-control" asp-for="Customer.User.GenderId" asp-items="@( new List<SelectListItem>{
+                                                                new SelectListItem() {Text = "Male", Value="4"},
+                                                                new SelectListItem() {Text = "Female", Value="5"},
+                                                                })">
+                                                            <option value="" disabled selected>Please Select Gender</option>
+                                                        </select>
+                                                        <span class="text-danger" asp-validation-for="Customer.User.GenderId"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr />
+                                            <h2>Vehicle</h2>
+                                            <div class="addVehicleForm">
+                                                <div class="row">
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="exampleInputEmail1">Licence Plate No.</label>
+                                                            <input type="text" class="form-control vehicleLicense" id="LicencePlateNo" placeholder="Enter Licence Plate No.">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="exampleInputPassword1">Make</label>
+                                                            <input type="text" class="form-control vehicleBrand" id="Make" placeholder="Enter Manufacturer">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="exampleInputEmail1">Model</label>
+                                                            <input type="text" class="form-control vehicleModel" id="Model" placeholder="Enter Model">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="exampleInputPassword1">Year</label>
+                                                            <input type="text" class="form-control vehicleYear" id="Year" placeholder="Enter Year">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="exampleInputEmail1">VIN No.</label>
+                                                            <input type="text" class="form-control vehicleVinNo" id="Vin" placeholder="Enter VIN No.">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="exampleInputEmail1">MULKia No.</label>
+                                                            <input type="text" class="form-control vehicleMulkia" id="Mulkia" placeholder="Enter VIN No.">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group mt-4 pt-2 float-left">
+                                                            <button type="button" class="btn btn-secondary addVehicle">
+                                                                Add Another Vehicle
+                                                                <i class="fas fa-plus"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="table-responsive">
+                                                        <table id="vehicleTable" class="table table-striped table-bordered">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Licence Plate No.</th>
+                                                                    <th>Make</th>
+                                                                    <th>Model</th>
+                                                                    <th>Year</th>
+                                                                    <th>VIN No.</th>
+                                                                    <th>Mulkia No.</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="vehicleTableBody">
+                                                            </tbody>
+                                                        </table>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row float-right mt-3">
+                                                <button type="button" class="btn btn-secondary" id="AddCustomerBtn">Add</button>
+                                            </div>
+                                            <!-- /.card-body -->
+                                        </form>
+                                    </div>
+                                    @*Service Order*@
+                                     <div class="tab-pane fade" id="vert-tabs-profile" role="tabpanel" aria-labelledby="vert-tabs-profile-tab">
+                                         <form role="form" asp-action="AddService" asp-controller="Customer" method="post" data-ajax="true" data-ajax-success="ServiceAdded()" id="AddServiceForm">
+                                             <input type="hidden" id="CustomerId" asp-for="ServiceOrder.CustomerId">
+                                             <input type="hidden" id="TotalCost" asp-for="ServiceOrder.TotalPrice">
+                                             <input type="hidden" asp-for="ServiceOrder.Id">
+                                             <input type="hidden" asp-for="ServiceOrder.ServiceOrderNo">
+                                             <input type="hidden" id="ShippingAddress" asp-for="ServiceOrder.ShippingAddress">
+                                             <input type="hidden" id="OrderLatitude" asp-for="ServiceOrder.Latitude">
+                                             <input type="hidden" id="OrderLongitude" asp-for="ServiceOrder.Longitude">
+                                             <section class="content mt-2">
+                                                 <h4>Service Order</h4>
+                                                 <div class="row">
+                                                     <input type="hidden" asp-for="ProductsList">
+                                                     <input type="hidden" asp-for="ServicesList">
+                                                     <div class="col-md-4 pt-2">
+                                                         <div class="form-group">
+                                                             <label for="exampleInputEmail1">Assign Technician</label>
+                                                             <select asp-for="ServiceOrder.AssignedToId" asp-items="Model.Technicians" class="form-control">
+                                                                 <option selected disabled>Please select Technician</option>
+                                                             </select>
+                                                             <span class="text-danger" asp-validation-for="ServiceOrder.AssignedToId"></span>
+                                                         </div>
+                                                     </div>
+                                                     <div class="col-md-4 pt-2">
+                                                         <div class="form-group">
+                                                             <label for="exampleInputEmail1">Agent</label>
+                                                             <select asp-for="ServiceOrder.AgentId" asp-items="Model.Agents" class="form-control">
+                                                                 <option selected disabled>Please select Agent</option>
+                                                             </select>
+                                                             <span class="text-danger" asp-validation-for="ServiceOrder.AgentId"></span>
+                                                         </div>
+                                                     </div>
+                                                     <div class="col-md-4 pt-2">
+                                                         <div class="form-group">
+                                                             <label for="exampleInputEmail1">Vehicle</label>
+                                                             <select asp-for="ServiceOrder.VehicleId" asp-items="Model.VehicleDropdown" class="form-control">
+                                                                 <option selected disabled>Please select Vehicles</option>
+                                                             </select>
+                                                             <span class="text-danger" asp-validation-for="ServiceOrder.VehicleId"></span>
+                                                         </div>
+                                                     </div>
+                                                 </div>
+                                                 <div class="row mt-2">
+                                                     <div class="col-md-4">
+                                                         <div class="form-group">
+                                                             <label for="exampleInputPassword1">Source</label>
+                                                             <select asp-for="ServiceOrder.SourceId" asp-items="Model.Sources" class="form-control">
+                                                                 <option selected disabled>Please select Source</option>
+                                                             </select>
+                                                             <span class="text-danger" asp-validation-for="ServiceOrder.SourceId"></span>
+                                                         </div>
+                                                     </div>
+                                                     <div class="col-md-4">
+                                                         <div class="form-group">
+                                                             <label for="exampleInputEmail1">Date Scheduled</label>
+                                                             <input type="date" asp-for="ServiceOrder.ScheduleDateTime" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask="" im-insert="false">
+                                                             <span class="text-danger" asp-validation-for="ServiceOrder.ScheduleDateTime"></span>
+                                                         </div>
+                                                     </div>
+                                                     <div class="col-md-4">
+                                                         <div class="md-form md-outline">
+                                                             <label for="default-picker">Time Scheduled</label>
+                                                             <input type="time" asp-for="ServiceOrder.SchaduledTime" id="default-picker" class="form-control" placeholder="Select time">
+                                                         </div>
+                                                     </div>
+                                                     <div class="col-md-4">
+                                                         <label for="default-picker">Address</label>
+                                                         <div class="input-group-append">
+                                                             <input id="pac-input" type="text" style="width: 330px;" placeholder="Search Address" class="form-control">
+                                                             <button type="button" class="input-group-text" onclick="getLocation()"><i class="fas fa-bullseye"></i></button>
+                                                         </div>
+                                                         <div id="GeoLocationErrorMsg"></div>
+                                                         <div id="map" style="display:none"></div>
+                                                         <input type="hidden" id="address" placeholder="Address" value="" required>
+                                                         <input type="hidden" id="latitude" placeholder="Latitude" value="@Latitude" required>
+                                                         <input type="hidden" id="longitude" placeholder="Longitude" value="@Longitude" required>
+                                                     </div>
+                                                     <div class="col-md-4">
+                                                         <div class="form-group">
+                                                             <label>Description:</label>
+                                                             <textarea class="form-control" asp-for="ServiceOrder.Description" rows="3" placeholder="Description"></textarea>
+                                                         </div>
+                                                     </div>
+                                                 </div>
+                                             </section>
+                                             <hr />
+
+                                             <section class="content mt-2">
+                                                 <h4>Services</h4>
+                                                 <div class="row mt-2">
+                                                     <div class="col-md-4 pt-2">
+                                                         <div class="form-group">
+                                                             <label for="exampleInputEmail1">Serivce Type</label>
+                                                             <select asp-for="@Model.ServiceOrder.ServiceTypeId" asp-items="Model.ServiceTypes" class="form-control">
+                                                                 <option class="hidden" selected disabled>Please select your service type</option>
+
+                                                             </select>
+                                                         </div>
+                                                     </div>
+                                                     <div class="col-md-4 pt-2">
+                                                         <div class="form-group ">
+                                                             <label for="exampleInputEmail1">Service Charges</label>
+                                                             <input type="number" class="form-control" id="ServiceCharges" placeholder="Enter Service Charges">
+                                                         </div>
+                                                     </div>
+                                                 </div>
+                                                 <div class="row">
+                                                     <div class="col-md-2">
+                                                         <div class="form-group mt-2 pt-4">
+                                                             <button type="button" class="btn btn-secondary addServiceList">Add in List</button>
+                                                         </div>
+                                                     </div>
+                                                 </div>
+                                             </section>
+                                             <hr />
+                                             <section class="content mt-2">
+                                                 <div class="order">
+                                                     <h4>Service Line</h4>
+                                                 </div>
+                                                 <div class="row">
+                                                     <div class="col-md-12">
+                                                         <div class="table-responsive">
+                                                             <table id="serviceTable" class="table table-striped table-bordered">
+                                                                 <thead>
+                                                                     <tr>
+                                                                         <th>Service</th>
+                                                                         <th>Price</th>
+                                                                         <th>Action</th>
+                                                                     </tr>
+                                                                 </thead>
+                                                                 <tbody id="serviceTableBody">
+                                                                     @if (Model.ServiceOrder.Services.Count > 0)
+                                                                     {
+                                                                         foreach (var item in Model.ServiceOrder.Services)
+                                                                         {
+                                                                             <tr>
+                                                                                 <td style="display:none" class="SId">@item.ServiceTypeId</td>
+                                                                                 <td class='name'>@item.Name</td>
+                                                                                 <td class='charges'>@item.Price</td>
+                                                                                 <td>
+                                                                                     <a><i class="fa fa-edit" id="Ed" style="color:#28a745"></i></a>
+                                                                                     <a><i class="fa fa-trash" id="Del" style="color:#28a745"></i></a>
+                                                                                 </td>
+                                                                             </tr>
+                                                                         }
+                                                                     }
+                                                                 </tbody>
+                                                             </table>
+                                                         </div>
+                                                     </div>
+                                                 </div>
+                                             </section>
+                                             <hr />
+                                             <section class="content mt-2">
+                                                 <h4>Products</h4>
+                                                 <div class="row mt-2">
+                                                     <div class="col-md-4">
+                                                         <div class="form-group">
+                                                             <label for="exampleInputEmail1">Product</label>
+                                                             <select class="form-control" id="ServiceOrder_Product" asp-items="Model.Products">
+                                                                 <option selected disabled>Please select Product</option>
+                                                             </select>
+                                                         </div>
+                                                     </div>
+                                                     <div class="col-md-4">
+                                                         <div class="form-group">
+                                                             <label for="exampleInputEmail1">Quantity</label>
+                                                             <input type="number" class="form-control" id="ProductQuantity" placeholder="Enter Product Quantity">
+                                                         </div>
+                                                     </div>
+                                                     <div class="col-md-4">
+                                                         <div class="form-group ">
+                                                             <label for="exampleInputEmail1">Price</label>
+                                                             <input type="number" class="form-control" id="ProductPrice" placeholder="Enter Product Price">
+                                                         </div>
+                                                     </div>
+                                                 </div>
+                                                 <div class="row">
+                                                     <div class="col-md-2">
+                                                         <div class="form-group mt-2 pt-4">
+                                                             <button type="button" class="btn btn-secondary addProductInList">Add in List</button>
+                                                         </div>
+                                                     </div>
+                                                 </div>
+                                             </section>
+                                             <hr />
+                                             <section class="content mt-2">
+                                                 <div class="order">
+                                                     <h4>Service Line</h4>
+                                                 </div>
+                                                 <div class="row">
+                                                     <div class="col-md-12">
+                                                         <div class="table-responsive">
+                                                             <table id="productTable" class="table table-striped table-bordered">
+                                                                 <thead>
+                                                                     <tr>
+                                                                         <th>Product</th>
+                                                                         <th>Quantity</th>
+                                                                         <th>Unit Price</th>
+                                                                         <th>Price</th>
+                                                                         <th>Action</th>
+                                                                     </tr>
+                                                                 </thead>
+                                                                 <tbody id="productTableBody">
+                                                                     @if (Model.ServiceOrder.Products.Count > 0)
+                                                                     {
+                                                                         foreach (var item in Model.ServiceOrder.Products)
+                                                                         {
+                                                                             var Unit = item.Price / item.Quantity;
+                                                                             <tr>
+
+                                                                                 <td class='PId' style="display:none">@item.ProductId</td>
+                                                                                 <td class='Pname'>@item.Name</td>
+                                                                                 <td class='quantity'>@item.Quantity</td>
+                                                                                 <td>
+                                                                                     @Unit
+                                                                                 </td>
+                                                                                 <td class='productprice'>@item.Price</td>
+                                                                                 <td>
+                                                                                     <a><i class="fa fa-edit" id="EdP" style="color:#28a745"></i></a>
+                                                                                     <a><i class="fa fa-trash" id="DelP" style="color:#28a745"></i></a>
+                                                                                 </td>
+                                                                             </tr>
+                                                                         }
+                                                                     }
+                                                                 </tbody>
+                                                             </table>
+                                                         </div>
+                                                         <div class="row">
+
+                                                             <div class="col-md-12">
+
+                                                                 <div class="row">
+                                                                     <div class="col-md-10">
+                                                                         <span class="float-right">Product Cost:</span>
+                                                                     </div>
+                                                                     <div class="col-md-2">
+                                                                         <span class="float-right" id="totalProductPrice">0</span>
+                                                                     </div>
+                                                                 </div>
+                                                                 <div class="row">
+                                                                     <div class="col-md-10">
+                                                                         <span class="float-right">Service Charges:</span>
+                                                                     </div>
+                                                                     <div class="col-md-2">
+                                                                         <span class="float-right" id="totalServiceCharges">0</span>
+                                                                     </div>
+                                                                 </div>
+                                                                 <div class="row">
+                                                                     <div class="col-md-10">
+                                                                         <span class="font-weight-bold float-right">Total Price:</span>
+                                                                     </div>
+                                                                     <div class="col-md-2">
+                                                                         <span class="float-right" id="totalPrice">0</span>
+                                                                     </div>
+                                                                 </div>
+                                                             </div>
+
+                                                         </div>
+                                                     </div>
+                                                 </div>
+                                                 <div class="row mt-2 float-right">
+                                                     <button type="button" class="btn btn-secondary" id="SSubmit" onclick="ServiceSubmit()">Add</button>
+                                                 </div>
+                                             </section>
+                                         </form>
+                                    </div>
+                                    @*QUOATION*@
+                                    <div class="tab-pane fade" id="quotations" role="tabpanel" aria-labelledby="quotation-tab">
+                                        <form role="form" id="AddQuotationForm" asp-action="AddQuotation" asp-controller="Customer" method="post" data-ajax="true" data-ajax-success="QuotationAdded()">
+                                            <input type="hidden" id="QCustomerId" asp-for="Quotation.CustomerId">
+                                            <input type="hidden" id="QuotationTotal" asp-for="Quotation.TotalPrice">
+                                            <input type="hidden" asp-for="Quotation.QuotationServices">
+                                            <section class="content mt-2">
+                                                <h4>Quotation</h4>
+                                                <div class="row">
+                                                    <div class="col-md-4 pt-2">
+                                                        <div class="form-group">
+                                                            <label for="exampleInputEmail1">Vehicle</label>
+                                                            <select asp-for="Quotation.VehicleId" asp-items="Model.VehicleDropdown" class="form-control">
+                                                                <option selected disabled>Please select Vehicles</option>
+                                                            </select>
+                                                            <span class="text-danger" asp-validation-for="Quotation.VehicleId"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 pt-2">
+                                                        <div class="form-group">
+                                                            <label for="exampleInputEmail1">Quotation Type</label>
+                                                            <input asp-for="Quotation.QutationType" class="form-control" placeholder="Enter Type">
+                                                        </div>
+                                                        <span class="text-danger" asp-validation-for="Quotation.QutationType"></span>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                            <hr />
+                                            <section class="content mt-2">
+                                                <h4>Services</h4>
+                                                <div class="row mt-2">
+                                                    <div class="col-md-4 pt-2">
+                                                        <div class="form-group">
+                                                            <label for="exampleInputEmail1">Serivce Type</label>
+                                                            <select id="QuotationService" asp-for="@Model.ServiceOrder.ServiceTypeId" asp-items="Model.ServiceTypes" class="form-control">
+                                                                <option class="hidden" selected disabled>Please select your service type</option>
+
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 pt-2">
+                                                        <div class="form-group">
+                                                            <label for="exampleInputEmail1">Product</label>
+                                                            <select id="QuotationProduct" class="form-control" asp-items="Model.Products">
+                                                                <option selected disabled>Please select Product</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 pt-2">
+                                                        <div class="form-group ">
+                                                            <label for="exampleInputEmail1">Service Charges</label>
+                                                            <input id="QuotationCharges" type="number" class="form-control" placeholder="Enter Service Charges">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-2">
+                                                        <div class="form-group mt-2 pt-4">
+                                                            <button type="button" class="btn btn-secondary addQuotationList">Add in List</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                            <hr />
+                                            <section class="content mt-2">
+                                                <div class="order">
+                                                    <h4>Services</h4>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="table-responsive">
+                                                            <table id="QuotationTable" class="table table-striped table-bordered">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Service</th>
+                                                                        <th>Product</th>
+                                                                        <th>Price</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="QuotationTableBody">
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        <div class="row">
+
+                                                            <div class="col-md-12">
+                                                                <div class="row">
+                                                                    <div class="col-md-10">
+                                                                        <span class="font-weight-bold float-right">Total Price:</span>
+                                                                    </div>
+                                                                    <div class="col-md-2">
+                                                                        <span class="float-right" id="totalQuotation">0</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row mt-2 float-right">
+                                                            <button type="button" id="AddQuotation" class="btn btn-secondary">Add</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                            <hr />
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

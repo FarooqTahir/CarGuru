@@ -1,0 +1,982 @@
+﻿@inject CarGuru.Services.Interfaces.ISessionManager x;
+@{
+    ViewData["Title"] = "_CustomerDetail";
+    Layout = CommonData.GetUserLayoutByRoleId(x.GetUserRoleId());//"~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-8 col-md-10">
+                <h1>Orders</h1>
+            </div>
+            <div class="col-sm-4 col-md-2">
+                <a href="@Url.Action("Customer", "Management")" class="btn float-right pt-0 pr-0" style="font-size: 20px;">
+                    <i class="fas fa-arrow-left"></i>
+
+                </a>
+
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card ">
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-5 col-md-2">
+                                <div class="nav flex-column nav-tabs h-100" id="vert-tabs-tab" role="tablist" aria-orientation="vertical">
+                                    <a class="nav-link active" id="vert-tabs-home-tab" data-toggle="pill" href="#vert-tabs-home" role="tab" aria-controls="vert-tabs-home" aria-selected="true">Service Order</a>
+                                    <a class="nav-link" id="vert-tabs-messages-tab" data-toggle="pill" href="#vert-tabs-messages" role="tab" aria-controls="vert-tabs-messages" aria-selected="false">Product Order</a>
+                                </div>
+                            </div>
+                            <div class="col-7 col-md-10">
+                                <div class="tab-content" id="vert-tabs-tabContent">
+                                    <div class="tab-pane text-left fade active show" id="vert-tabs-home" role="tabpanel" aria-labelledby="vert-tabs-home-tab">
+                                        <table class="table table-striped">
+                                            <thead class="bg-colorBlack">
+                                                <tr>
+                                                    <th>Order ID</th>
+                                                    <th>Customer Name</th>
+                                                    <th>Customer email</th>
+                                                    <th>Agent</th>
+                                                    <th>Source</th>
+                                                    <th>Assigned to</th>
+                                                    <th>Date Receive</th>
+                                                    <th>Status</th>
+
+
+                                                    <th>Total Price</th>
+                                                    <th class="actionColumn">Action</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody class="order">
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>John</td>
+                                                    <td>John@gmail.com</td>
+                                                    <td>John</td>
+                                                    <td>Kate</td>
+                                                    <td>Simon</td>
+                                                    <td>28 feb 2020</td>
+                                                    <td>Order complete</td>
+                                                    <td>100$</td>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-md-5">
+                                                                <button class="btn" type="button" data-toggle="modal" data-target="#modalView">
+                                                                    View
+                                                                </button>
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <div class="dropdown">
+                                                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                    </button>
+                                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton6">
+
+                                                                        <a class="dropdown-item" href="#"><i class="fas fa-print" aria-hidden="true" style="margin-right:8px;"></i>Print</a>
+
+
+                                                                        <a class="dropdown-item" href="#"><i class="fa fa-file" aria-hidden="true" style="margin-right:8px;"></i>Download</a>
+
+
+                                                                        <a class="dropdown-item" href="#"><i class="fas fa-archive" aria-hidden="true" style="margin-right:8px;"></i>Archive</a>
+
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2</td>
+                                                    <td>Smith</td>
+                                                    <td>Smith@gmail.com</td>
+                                                    <td>Kate</td>
+                                                    <td>John</td>
+                                                    <td>Berry</td>
+                                                    <td>28 feb 2020</td>
+                                                    <td>Order complete</td>
+                                                    <td>80$</td>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-md-5">
+                                                                <button class="btn" type="button" data-toggle="modal" data-target="#modalView">
+                                                                    View
+                                                                </button>
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <div class="dropdown">
+                                                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                    </button>
+                                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton6">
+                                                                        <ul style="display:block;list-style:none;">
+                                                                            <li>
+                                                                                <a class="dropdown-item" href="#"><i class="fas fa-print" aria-hidden="true" style="margin-right:8px;"></i>Print</a>
+                                                                            </li>
+                                                                            <li>
+
+                                                                                <a class="dropdown-item" href="#"><i class="fa fa-file" aria-hidden="true" style="margin-right:8px;"></i>Download</a>
+                                                                            </li>
+                                                                            <li>
+
+                                                                                <a class="dropdown-item" href="#"><i class="fas fa-archive" aria-hidden="true" style="margin-right:8px;"></i>Archive</a>
+                                                                            </li>
+                                                                        </ul>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>3</td>
+                                                    <td>John</td>
+                                                    <td>John@gmail.com</td>
+                                                    <td>Smith</td>
+                                                    <td>Kate</td>
+                                                    <td>Samon</td>
+                                                    <td>28 feb 2020</td>
+                                                    <td>Order late</td>
+                                                    <td>20$</td>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-md-5">
+                                                                <button class="btn" type="button" data-toggle="modal" data-target="#modalView">
+                                                                    View
+                                                                </button>
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <div class="dropdown">
+                                                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                    </button>
+                                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton6">
+                                                                        <ul style="display:block;list-style:none;">
+                                                                            <li>
+                                                                                <a class="dropdown-item" href="#"><i class="fas fa-print" aria-hidden="true" style="margin-right:8px;"></i>Print</a>
+                                                                            </li>
+                                                                            <li>
+
+                                                                                <a class="dropdown-item" href="#"><i class="fa fa-file" aria-hidden="true" style="margin-right:8px;"></i>Download</a>
+                                                                            </li>
+                                                                            <li>
+
+                                                                                <a class="dropdown-item" href="#"><i class="fas fa-archive" aria-hidden="true" style="margin-right:8px;"></i>Archive</a>
+                                                                            </li>
+                                                                        </ul>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>4</td>
+                                                    <td>Smith</td>
+                                                    <td>Smith@gmail.com</td>
+                                                    <td>John</td>
+                                                    <td>Kate</td>
+                                                    <td>Soothe</td>
+                                                    <td>28 feb 2020</td>
+                                                    <td>Order Pending</td>
+                                                    <td>50$</td>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-md-5">
+                                                                <button class="btn" type="button" data-toggle="modal" data-target="#modalView">
+                                                                    View
+                                                                </button>
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <div class="dropdown">
+                                                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                    </button>
+                                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton6">
+                                                                        <ul style="display:block;list-style:none;">
+                                                                            <li>
+                                                                                <a class="dropdown-item" href="#"><i class="fas fa-print" aria-hidden="true" style="margin-right:8px;"></i>Print</a>
+                                                                            </li>
+                                                                            <li>
+
+                                                                                <a class="dropdown-item" href="#"><i class="fa fa-file" aria-hidden="true" style="margin-right:8px;"></i>Download</a>
+                                                                            </li>
+                                                                            <li>
+
+                                                                                <a class="dropdown-item" href="#"><i class="fas fa-archive" aria-hidden="true" style="margin-right:8px;"></i>Archive</a>
+                                                                            </li>
+                                                                        </ul>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <div class="card-footer clearfix">
+                                            <ul class="pagination pagination-sm m-0 float-right">
+                                                <li class="page-item"><a class="page-link" href="#">«</a></li>
+                                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                                <li class="page-item"><a class="page-link" href="#">»</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="vert-tabs-messages" role="tabpanel" aria-labelledby="vert-tabs-messages-tab">
+                                        <div class="card-body leads table-responsive p-0">
+                                            <table class="table table-striped">
+                                                <thead class="bg-colorBlack">
+                                                    <tr>
+                                                        <th>Order ID</th>
+                                                        <th>Customer Name</th>
+                                                        <th>Customer email</th>
+                                                        <th>Agent</th>
+                                                        <th>Source</th>
+                                                        <th>Assigned to</th>
+                                                        <th>Date Receive</th>
+                                                        <th>Status</th>
+
+
+                                                        <th>Total Price</th>
+                                                        <th class="actionColumn">Action</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="order">
+                                                    <tr>
+                                                        <td>1</td>
+                                                        <td>John</td>
+                                                        <td>John@gmail.com</td>
+                                                        <td>John</td>
+                                                        <td>Kate</td>
+                                                        <td>Simon</td>
+                                                        <td>28 feb 2020</td>
+                                                        <td>Order complete</td>
+                                                        <td>100$</td>
+                                                        <td>
+                                                            <div class="row">
+                                                                <div class="col-md-5">
+                                                                    <button class="btn" type="button" data-toggle="modal" data-target="#modalView">
+                                                                        View
+                                                                    </button>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <div class="dropdown">
+                                                                        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                        </button>
+                                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton6">
+
+                                                                            <a class="dropdown-item" href="#"><i class="fas fa-print" aria-hidden="true" style="margin-right:8px;"></i>Print</a>
+
+
+                                                                            <a class="dropdown-item" href="#"><i class="fa fa-file" aria-hidden="true" style="margin-right:8px;"></i>Download</a>
+
+
+                                                                            <a class="dropdown-item" href="#"><i class="fas fa-archive" aria-hidden="true" style="margin-right:8px;"></i>Archive</a>
+
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>2</td>
+                                                        <td>Smith</td>
+                                                        <td>Smith@gmail.com</td>
+                                                        <td>Kate</td>
+                                                        <td>John</td>
+                                                        <td>Berry</td>
+                                                        <td>28 feb 2020</td>
+                                                        <td>Order complete</td>
+                                                        <td>80$</td>
+                                                        <td>
+                                                            <div class="row">
+                                                                <div class="col-md-5">
+                                                                    <button class="btn" type="button" data-toggle="modal" data-target="#modalView">
+                                                                        View
+                                                                    </button>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <div class="dropdown">
+                                                                        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                        </button>
+                                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton6">
+                                                                            <ul style="display:block;list-style:none;">
+                                                                                <li>
+                                                                                    <a class="dropdown-item" href="#"><i class="fas fa-print" aria-hidden="true" style="margin-right:8px;"></i>Print</a>
+                                                                                </li>
+                                                                                <li>
+
+                                                                                    <a class="dropdown-item" href="#"><i class="fa fa-file" aria-hidden="true" style="margin-right:8px;"></i>Download</a>
+                                                                                </li>
+                                                                                <li>
+
+                                                                                    <a class="dropdown-item" href="#"><i class="fas fa-archive" aria-hidden="true" style="margin-right:8px;"></i>Archive</a>
+                                                                                </li>
+                                                                            </ul>
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>3</td>
+                                                        <td>John</td>
+                                                        <td>John@gmail.com</td>
+                                                        <td>Smith</td>
+                                                        <td>Kate</td>
+                                                        <td>Samon</td>
+                                                        <td>28 feb 2020</td>
+                                                        <td>Order late</td>
+                                                        <td>20$</td>
+                                                        <td>
+                                                            <div class="row">
+                                                                <div class="col-md-5">
+                                                                    <button class="btn" type="button" data-toggle="modal" data-target="#modalView">
+                                                                        View
+                                                                    </button>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <div class="dropdown">
+                                                                        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                        </button>
+                                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton6">
+                                                                            <ul style="display:block;list-style:none;">
+                                                                                <li>
+                                                                                    <a class="dropdown-item" href="#"><i class="fas fa-print" aria-hidden="true" style="margin-right:8px;"></i>Print</a>
+                                                                                </li>
+                                                                                <li>
+
+                                                                                    <a class="dropdown-item" href="#"><i class="fa fa-file" aria-hidden="true" style="margin-right:8px;"></i>Download</a>
+                                                                                </li>
+                                                                                <li>
+
+                                                                                    <a class="dropdown-item" href="#"><i class="fas fa-archive" aria-hidden="true" style="margin-right:8px;"></i>Archive</a>
+                                                                                </li>
+                                                                            </ul>
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>4</td>
+                                                        <td>Smith</td>
+                                                        <td>Smith@gmail.com</td>
+                                                        <td>John</td>
+                                                        <td>Kate</td>
+                                                        <td>Soothe</td>
+                                                        <td>28 feb 2020</td>
+                                                        <td>Order Pending</td>
+                                                        <td>50$</td>
+                                                        <td>
+                                                            <div class="row">
+                                                                <div class="col-md-5">
+                                                                    <button class="btn" type="button" data-toggle="modal" data-target="#modalView">
+                                                                        View
+                                                                    </button>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <div class="dropdown">
+                                                                        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                        </button>
+                                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton6">
+                                                                            <ul style="display:block;list-style:none;">
+                                                                                <li>
+                                                                                    <a class="dropdown-item" href="#"><i class="fas fa-print" aria-hidden="true" style="margin-right:8px;"></i>Print</a>
+                                                                                </li>
+                                                                                <li>
+
+                                                                                    <a class="dropdown-item" href="#"><i class="fa fa-file" aria-hidden="true" style="margin-right:8px;"></i>Download</a>
+                                                                                </li>
+                                                                                <li>
+
+                                                                                    <a class="dropdown-item" href="#"><i class="fas fa-archive" aria-hidden="true" style="margin-right:8px;"></i>Archive</a>
+                                                                                </li>
+                                                                            </ul>
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                            <div class="card-footer clearfix">
+                                                <ul class="pagination pagination-sm m-0 float-right">
+                                                    <li class="page-item"><a class="page-link" href="#">«</a></li>
+                                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                                    <li class="page-item"><a class="page-link" href="#">»</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<div class="modal fade" id="modal-viewForm">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h4 class="modal-title">Service Order History</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <section class="content" style="width:100%;">
+
+                    <div class="tbl" style="padding-left:25px;padding-right:25px;">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div>
+                                    <table id="productTable" class="table table-striped table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Service Type</th>
+                                                <th>Type</th>
+                                                <th>Quantity</th>
+                                                <th>Price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="productTableBody">
+                                            <tr>
+                                                <td>Osaka</td>
+                                                <td>Battery</td>
+                                                <td>11</td>
+                                                <td>$11</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Havoline</td>
+                                                <td>Oil</td>
+                                                <td>22</td>
+                                                <td>$10</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <div class="row">
+                                        <div class="col-md-11">
+                                            <span class="float-right">Product Cost:</span>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <span class="float-right" id="totalProductPrice">$341</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-11">
+                                            <span class="float-right">Margin:</span>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <span class="float-right">10%</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-11">
+                                            <span class="float-right">Service Charges:</span>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <span class="float-right" id="totalServiceCharges">$10</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-11">
+                                            <span class="font-weight-bold float-right">Total Price:</span>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <span class="float-right">$317</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+
+@{
+    ViewData["Title"] = "Orders";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-md-2">
+                <h1>Orders</h1>
+            </div>
+            <div class="col-md-10">
+                <form class="form-inline float-right">
+                    <div class="input-group bg-white">
+                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-navbar " type="submit">
+                                <i class="fas fa-search "></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-striped">
+                            <thead class="bg-colorBlack">
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer Name</th>
+                                    <th>Customer email</th>
+                                    <th>Agent</th>
+                                    <th>Source</th>
+                                    <th>Assigned to</th>
+                                    <th>Date Receive</th>
+                                    <th>Status</th>
+
+
+                                    <th>Total Price</th>
+                                    <th class="actionColumn">Action</th>
+
+                                </tr>
+                            </thead>
+                            <tbody class="order">
+                                <tr>
+                                    <td>1</td>
+                                    <td>John</td>
+                                    <td>John@gmail.com</td>
+                                    <td>John</td>
+                                    <td>Kate</td>
+                                    <td>Simon</td>
+                                    <td>28 feb 2020</td>
+                                    <td>Order complete</td>
+                                    <td>100$</td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <button class="btn" type="button" data-toggle="modal" data-target="#modalView">
+                                                    View
+                                                </button>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <div class="dropdown">
+                                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton6">
+
+                                                        <a class="dropdown-item" href="#"><i class="fas fa-print" aria-hidden="true" style="margin-right:8px;"></i>Print</a>
+
+
+                                                        <a class="dropdown-item" href="#"><i class="fa fa-file" aria-hidden="true" style="margin-right:8px;"></i>Download</a>
+
+
+                                                        <a class="dropdown-item" href="#"><i class="fas fa-archive" aria-hidden="true" style="margin-right:8px;"></i>Archive</a>
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Smith</td>
+                                    <td>Smith@gmail.com</td>
+                                    <td>Kate</td>
+                                    <td>John</td>
+                                    <td>Berry</td>
+                                    <td>28 feb 2020</td>
+                                    <td>Order complete</td>
+                                    <td>80$</td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <button class="btn" type="button" data-toggle="modal" data-target="#modalView">
+                                                    View
+                                                </button>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <div class="dropdown">
+                                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton6">
+                                                        <ul style="display:block;list-style:none;">
+                                                            <li>
+                                                                <a class="dropdown-item" href="#"><i class="fas fa-print" aria-hidden="true" style="margin-right:8px;"></i>Print</a>
+                                                            </li>
+                                                            <li>
+
+                                                                <a class="dropdown-item" href="#"><i class="fa fa-file" aria-hidden="true" style="margin-right:8px;"></i>Download</a>
+                                                            </li>
+                                                            <li>
+
+                                                                <a class="dropdown-item" href="#"><i class="fas fa-archive" aria-hidden="true" style="margin-right:8px;"></i>Archive</a>
+                                                            </li>
+                                                        </ul>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>John</td>
+                                    <td>John@gmail.com</td>
+                                    <td>Smith</td>
+                                    <td>Kate</td>
+                                    <td>Samon</td>
+                                    <td>28 feb 2020</td>
+                                    <td>Order late</td>
+                                    <td>20$</td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <button class="btn" type="button" data-toggle="modal" data-target="#modalView">
+                                                    View
+                                                </button>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <div class="dropdown">
+                                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton6">
+                                                        <ul style="display:block;list-style:none;">
+                                                            <li>
+                                                                <a class="dropdown-item" href="#"><i class="fas fa-print" aria-hidden="true" style="margin-right:8px;"></i>Print</a>
+                                                            </li>
+                                                            <li>
+
+                                                                <a class="dropdown-item" href="#"><i class="fa fa-file" aria-hidden="true" style="margin-right:8px;"></i>Download</a>
+                                                            </li>
+                                                            <li>
+
+                                                                <a class="dropdown-item" href="#"><i class="fas fa-archive" aria-hidden="true" style="margin-right:8px;"></i>Archive</a>
+                                                            </li>
+                                                        </ul>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>Smith</td>
+                                    <td>Smith@gmail.com</td>
+                                    <td>John</td>
+                                    <td>Kate</td>
+                                    <td>Soothe</td>
+                                    <td>28 feb 2020</td>
+                                    <td>Order Pending</td>
+                                    <td>50$</td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <button class="btn" type="button" data-toggle="modal" data-target="#modalView">
+                                                    View
+                                                </button>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <div class="dropdown">
+                                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton6">
+                                                        <ul style="display:block;list-style:none;">
+                                                            <li>
+                                                                <a class="dropdown-item" href="#"><i class="fas fa-print" aria-hidden="true" style="margin-right:8px;"></i>Print</a>
+                                                            </li>
+                                                            <li>
+
+                                                                <a class="dropdown-item" href="#"><i class="fa fa-file" aria-hidden="true" style="margin-right:8px;"></i>Download</a>
+                                                            </li>
+                                                            <li>
+
+                                                                <a class="dropdown-item" href="#"><i class="fas fa-archive" aria-hidden="true" style="margin-right:8px;"></i>Archive</a>
+                                                            </li>
+                                                        </ul>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="card-footer clearfix">
+                            <ul class="pagination pagination-sm m-0 float-right">
+                                <li class="page-item"><a class="page-link" href="#">«</a></li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#">»</a></li>
+                            </ul>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade" id="modalView">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h4 class="modal-title">Order</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form role="form">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">OrderId</label>
+                                <input type="text" class="form-control" id="" placeholder="1">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Customer Name</label>
+                                <input type="text" class="form-control" id="" placeholder="John">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Customer Email</label>
+                                <input type="text" class="form-control" id="" placeholder="John@gmail.com">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Agent</label>
+                                <input type="text" class="form-control" id="" placeholder="Kate">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Source</label>
+                                <input type="text" class="form-control" id="" placeholder="Kate">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Assigned to</label>
+                                <input type="text" class="form-control" id="" placeholder=" Berren">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Date Receive</label>
+                                <input type="text" class="form-control" id="" placeholder="28 feb 2020">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Billing Address</label>
+                                <input type="text" class="form-control" id="" placeholder=" Pennsylvania United States.">
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Shipping Address</label>
+                                <input type="text" class="form-control" id="" placeholder=" 18301-9364, Pennsylvania United States.">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Alternate Address</label>
+                                <input type="text" class="form-control" id="" placeholder="169 Escoll Dr East Stroudsburg.">
+                            </div>
+                        </div>
+                    </div>
+                    <section class="content" style="width:100%;">
+
+                        <div class="order">
+                            <h2>Orders</h2>
+                        </div>
+                        <div class="tbl">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div>
+                                        <table id="employeeTable1" class="table table-striped table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Product</th>
+                                                    <th>Quantity</th>
+                                                    <th>Price</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Tyre</td>
+                                                    <td>2</td>
+                                                    <td>30$</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Dashboard Cover</td>
+                                                    <td>1</td>
+                                                    <td>40$</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Air fitter</td>
+                                                    <td>3</td>
+                                                    <td>30$</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="row">
+
+                                            <div class="col-sm-12">
+
+                                                <div class="row">
+                                                    <div class="col-sm-10">
+                                                        <span class="float-right">Product Cost:</span>
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <span class="float-right" id="totalProductPrice">$100</span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-10">
+                                                        <span class="float-right">Margin:</span>
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <span class="float-right" id="totalMargin">- $10</span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-10">
+                                                        <span class="float-right">Service Charges:</span>
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <span class="float-right" id="totalServiceCharges">0</span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-10">
+                                                        <span class="font-weight-bold float-right">Total Price:</span>
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <span class="float-right" id="totalPrice"> $90</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </form>
+            </div>
+            <div class="modal-footer ">
+                <button type="button" class="btn btn-secondary float-right" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

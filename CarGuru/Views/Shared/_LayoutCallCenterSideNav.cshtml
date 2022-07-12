@@ -1,0 +1,111 @@
+﻿@inject CarGuru.Services.Interfaces.ISessionManager x;
+@{
+    var UserName = x.GetUsername();
+    var ProfilePic = x.GetProfilePicture();
+}
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="javascript:void()" class="brand-link">
+        <img src="/dist/img/Logo-PNG.png" alt="AdminLTE Logo" class="levation-3" style="opacity: .8; height:65px">
+        <span class="brand-text font-weight-light">
+            <b>
+                Carguru
+            </b>
+        </span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Sidebar user panel (optional) -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="image">
+                @if (ProfilePic != "")
+                {
+                    <img src="@ProfilePic" class="img-circle elevation-2" alt="User Image">
+                }
+                else
+                {
+                    <img src="~/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                }
+            </div>
+            <div class="info">
+                <a href="#" class="d-block">@UserName</a>
+            </div>
+        </div>
+
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <!-- Add icons to the links using the .nav-icon class
+    with font-awesome or any other icon font library -->
+                <li class="nav-item ">
+                    <a href="@Url.Action("Dashboard", "Agent")" class="nav-link @ViewBag.Dashboard">
+                        <i class="nav-icon fas fa-chart-line"></i>
+                        <p>
+                            Dashboard
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="@Url.Action("Leads", "Agent")" class="nav-link @ViewBag.Leads">
+
+                        <i class="nav-icon fas fa-funnel-dollar"></i>
+                        <p>
+                            Leads
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a href="@Url.Action("Customers", "Customer")" class="nav-link @ViewBag.Customers">
+                        <i class="nav-icon fas fa-funnel-dollar"></i>
+                        <p>
+                            Customer
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a href="@Url.Action("CallRecords", "ManualCallRecord")" class="nav-link @ViewBag.Report">
+                        <i class="nav-icon fas fa-chart-bar"></i>
+                        <p>
+                            Call Records
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="@Url.Action("ProductDashboard","Agent")" class="nav-link @ViewBag.ProductDashboard">
+                        <i class="nav-icon fas fa-cubes"></i>
+                        <p>
+                            Products Dashboard
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="@Url.Action("Orders","Agent")" class="nav-link @ViewBag.Orders">
+                        <i class="nav-icon fas fa-tasks"></i>
+                        <p>
+                            Service Orders
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="@Url.Action("Scheduler","Agent")" class="nav-link @ViewBag.Scheduler">
+                        @*<i class="nav-icon far fa-calendar-alt"></i>*@
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>
+                            Scheduler
+                        </p>
+                    </a>
+                </li>
+                @*<li class="nav-item has-treeview">
+            <a href="@Url.Action("Notification","Agent")" class="nav-link @ViewBag.Notification">
+                <i class="nav-icon fas fa-book"></i>
+                <p>
+                    Notification
+                </p>
+            </a>
+        </li>*@
+            </ul>
+        </nav>
+    </div>
+</aside>
+

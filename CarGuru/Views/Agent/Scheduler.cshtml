@@ -1,0 +1,222 @@
+﻿@inject CarGuru.Services.Interfaces.ISessionManager x;
+@{
+    ViewData["Title"] = "Scheduler";
+    Layout = CommonData.GetUserLayoutByRoleId(x.GetUserRoleId());
+    //"~/Views/Shared/_LayoutCallCenter.cshtml";
+}
+
+
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+            $('.customerName').editableSelect();
+            $('.nearestTechnician').editableSelect();
+            GetCalander();
+        });
+
+        function GetCalander() {
+            $('#calendar').fullCalendar({
+                header: {
+                    left: 'title',
+                    center: '',
+                    right: 'prev,next today,month,agendaWeek,agendaDay'
+                },
+                defaultView: 'month',
+                navLinks: false, // can click day/week names to navigate views
+                selectable: false,
+                selectHelper: false,
+                displayEventTime: false,
+                displayEventEnd: false,
+                eventStartEditable: false,
+                weekends: true,
+                views: {
+                    agendaWeek: {
+                        displayEventEnd: false // adjust to 6 only for agendaWeek/agendaDay
+                    },
+                    month: {
+                        titleFormat: "MMMM YYYY",
+                    },
+                    week: {
+                        columnFormat: "ddd DD/MM",
+                    },
+                    day: {
+                        titleFormat: "dddd DD MMMM YYYY",
+                        columnFormat: "dddd DD/MM",
+                    }
+                },
+                editable: true,
+                eventLimit: true, // allow "more" link when too many events
+                events: function (start, end, timezone, callback) {
+                    $.ajax({
+                        url: "../Agent/GetAllServiceOrders",
+                        type: 'GET',
+                        success: function (eventInfo) {
+                            data = eventInfo;
+                            var events = [];
+                            $.each(data,
+                                function (index, data) {
+                                    var orderId = data.id;
+                                    var status = data.invoiceStatus;
+                                    var serviceOrderNo = data.serviceOrderNo;
+                                    var receivedDate = moment(data.receivedDate).format('YYYY-MM-DD');
+                                    var source = data.source;
+                                    var scheduleDateTime = moment(data.scheduleDateTime).format('YYYY-MM-DD');
+                                    var technician = data.technician;
+                                    var vehicleMake = data.vehicleMake;
+                                    var vehicleModel = data.vehicleModel;
+                                    var vehicleYear = data.vehicleYear;
+                                    var totalPrice = data.totalPrice;
+                                    var technician = data.technician;
+                                    var customerName = data.customerName;
+                                    var agent = data.agent;
+                                    var CustomerPhone = data.customerPhone;
+                                    var CustomerEmail = data.customerEmail;
+                                    var InvoiceStatus = data.invoiceStatus;
+                                    if (status == "Pending") {
+                                        eventObjBgColor = "#ff6c52";
+                                    }
+                                    if (status == "Completed") {
+                                        eventObjBgColor = "#28a745";
+                                    }
+                                    if (status == "In Progress") {
+                                        eventObjBgColor = "#ffcc00";
+                                    }
+                                    eventDetail = "";
+                                    eventTitle = serviceOrderNo + "-" + status + "-" + customerName;
+                                    events.push({
+                                        title: eventTitle,
+                                        start: scheduleDateTime,
+                                        end: scheduleDateTime,
+                                        backgroundColor: eventObjBgColor,
+                                        borderColor: "#ffffff",
+                                        textColor: "#ffffff",
+                                        Id: orderId,
+                                        EventTitle: eventTitle,
+                                        Date: scheduleDateTime,
+                                        fontSize: "12px",
+                                        Description: eventDetail,
+                                        StartDate: scheduleDateTime,
+                                        EndDate: scheduleDateTime,
+                                        Technician: technician,
+                                        TotalPrice: totalPrice,
+                                        VehicleMake: vehicleMake,
+                                        VehicleModel: vehicleModel,
+                                        VehicleYear: vehicleYear,
+                                        Agent: agent,
+                                        Phone: CustomerPhone,
+                                        Email: CustomerEmail,
+                                        Customer: customerName,
+                                        Status: InvoiceStatus,
+                                        allDay: true
+                                    });
+                                });
+                            callback(events);
+                        }
+                    });
+                },
+                textColor: '#ffffff',
+                eventClick: function (slot, jsEvent, view) {
+                    $("#IStatus").text(slot.Status);
+                    $("#ITotalPrice").text(slot.TotalPrice);
+                    $("#ICustomerPhone").text(slot.Phone);
+                    $("#ICustomerEmail").text(slot.Email);
+                    $("#ITitle").text(slot.title);
+                    $("#ITechnician").text(slot.Technician);
+                    $("#IVehicle").text(slot.VehicleMake + "-" + slot.VehicleModel + "-" + slot.VehicleYear);
+                    $("#ITotal").text(slot.TotalPrice);
+                    $("#IAgent").text(slot.Agent);
+                    $("#ICustomer").text(slot.Customer);
+                    $("#modalEvent").modal("show");
+                }
+            });
+        }
+
+
+    </script>
+
+
+}
+
+
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Appointment Schedule</h1>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- /.col -->
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-body p-0">
+                        <!-- THE CALENDAR -->
+                        <div id="calendar"></div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div><!-- /.container-fluid -->
+</section>
+<div class="modal fade" id="modalEvent">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h4 class="modal-title" id="ITitle">Appointment</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <address>
+                            <strong>Billed To:</strong><br>
+                            <span id="ICustomer"></span><br>
+                            <strong>Customer Phone:</strong><br>
+                            <span id="ICustomerPhone"></span><br>
+                            <strong>Customer Email:</strong><br>
+                            <span id="ICustomerEmail"></span><br>
+                        </address>
+                    </div>
+                    <div class="col-md-4">
+                        <address>
+                            <strong>Agent:</strong><br>
+                            <span id="IAgent"></span><br>
+                            <strong>Technician:</strong><br>
+                            <span id="ITechnician"></span><br>
+                            <strong>Vehicle:</strong><br>
+                            <span id="IVehicle"></span><br>
+                        </address>
+                    </div>
+                    <div class="col-md-4">
+                        <address>
+                            <strong>Status:</strong><br>
+                            <span id="IStatus"></span><br>
+                            <strong>Total:</strong><br>
+                            <span id="ITotal"></span><br>
+                        </address>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer ">
+                <button type="button" class="btn btn-secondary float-right" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+

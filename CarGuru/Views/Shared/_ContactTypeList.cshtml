@@ -1,0 +1,8 @@
+﻿@model List<SelectListItem>
+@using CarGuru.Utilities;
+@inject CarGuru.Services.Interfaces.ISessionManager x;
+<div class="form-group">
+    <select class="form-control" onchange="GetUserChat(@x.GetUserId(),this.value)" id="contact-user" asp-items="@Model">
+        <option>Please select Contact</option>
+    </select>
+</div>

@@ -1,0 +1,57 @@
+﻿@model List<CarGuru.Database.Dtos.ResponseDto.VendorResponseDto>
+<table class="table table-striped">
+    <thead class="bg-colorBlack">
+        <tr>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Business Address</th>
+            <th>Contact No</th>
+            <th>Crdit Card Limit</th>
+            <th class="actionColumn">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!(Model is null) && Model.Any())
+        {
+            foreach (var vendor in Model)
+            {
+                <tr>
+                    <td>@vendor.FirstName</td>
+                    <td>@vendor.LastName</td>
+                    <td>@vendor.BusinessAddress</td>
+                    <td>@vendor.PhoneNumber</td>
+                    <td>
+                        $@vendor.CreditCardLimit.ToString("0.##")
+
+                    </td>
+                    <th>
+                        <div class="row">
+                            <div class="col-md-3 viewModal">
+                                <button class="btn" type="button" onclick="ViewVendor(@vendor.Id)">
+                                    View
+                                </button>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="dropdown">
+                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" href="javascript:void(0);" onclick="EditVendor(@vendor.Id)"><i class="fas fa-print" aria-hidden="true" style="margin-right:8px;"></i>Edit</a>
+                                        <a class="dropdown-item" href="javascript:void(0);" onclick="ArchiveVendor(@vendor.Id)"><i class="fas fa-archive" aria-hidden="true" style="margin-right:8px;"></i>Archive</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </th>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr><h1 class="text-center">No Vendor's Available</h1></tr>
+        }
+
+
+
+    </tbody>
+</table>

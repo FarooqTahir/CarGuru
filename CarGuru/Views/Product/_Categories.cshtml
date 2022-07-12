@@ -1,0 +1,14 @@
+﻿@model CarGuru.ViewModels.ProductViewModel
+
+<ul class="list-group " style="list-style:none;">
+    <li onclick="GetProductListByCategory('0')" class="list-group-item productCategoryList">
+        <a href="#" class="productCategoryList">All</a>
+    </li>
+    @foreach (var item in Model.Categories)
+    {
+        <li onclick="GetProductListByCategory(@item.Id)" class="list-group-item productCategoryList">
+            <a href="#" class="productCategoryList">@item.Title</a>
+        </li>
+    }
+
+</ul>

@@ -1,0 +1,482 @@
+﻿@model CarGuru.ViewModels.ProductViewModel
+@inject CarGuru.Services.Interfaces.ISessionManager x;
+@{
+    ViewData["Title"] = "ProductDashboard";
+    var role = x.GetUserRoleId();
+    Layout = CommonData.GetUserLayoutByRoleId(role); //"~/Views/Shared/_Layout.cshtml";
+   
+
+}
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('.productDropDown').editableSelect();
+            $('.marginDropDown').editableSelect();
+            $('.serviceOrderDropDown').editableSelect();
+        });
+        $('#add-Product-Form').on('submit', function (e) {
+            e.preventDefault();
+            if ($(this).valid()) {
+                $(this).ajaxSubmit({
+                    success: function (response) {
+                        onAddProductSuccess(response);
+                    }
+                });
+            }
+        });
+        function showProductDetail(productId) {
+            
+            $.ajax({
+                type: "POST",
+                url: '/Product/GetProductById',
+                data: { productId: productId },
+                success: function (data) {
+                    if (data) {
+                        
+                        $("#mainImage").attr("src", data.imageUrl);
+                        $("#productName").text(data.name);
+                        $("#productManufacturer").text(data.manufacturer);
+                        $("#productSalingPrice").text(data.salePrice);
+                        $("#productLeastPrice").text(data.leastPrice);
+                        $("#productMargin").text(data.productMargin);
+                        $("#productqrCode").text(data.qrCode);
+                        $("#productRagular").text(data.regularPrice);
+                        $("#productSale").text(data.salePrice);
+                        $("#modalProduct").modal("show");
+                    }
+                },
+                error: function () {
+
+                }
+            });
+        }
+        function GetProductListByCategory(id) {
+           
+            $.ajax({
+                type: "POST",
+                url: '/Product/GetProductListByCategory',
+                data: { categoryId: id },
+                success: function (data) {
+                    
+                    if (data === "") {
+                        $("#productListing").html("");
+                        $("#productListing").html("<p class='alert alert-danger '>No Product Found!</p>");
+
+                    } else {
+                        $("#productListing").html("");
+                        $("#productListing").html(data);
+                    }
+
+                },
+
+                error: function () {
+
+                }
+            });
+        }
+        function SearchProduct() {
+            var text = $("#searchProduct").val();
+            $.ajax({
+                type: "POST",
+                url: '/Product/SearchProduct',
+                data: { ProductName: text },
+                success: function (data) {
+                    if (data === "") {
+                        $("#productListing").html("");
+                        $("#productListing").html("<p class='alert alert-danger '>No Product Found!</p>");
+
+                    }
+                    else {
+                        $("#productListing").html("");
+                        $("#productListing").html(data);
+                    }
+                },
+                error: function () {
+
+                }
+            });
+        }
+    </script>
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <h1>PRODUCTS</h1>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="card">
+                    <div class="card-body bg-colorBlack">
+                        <div class="row">
+                            <div class="col-md-3"></div>
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <input id="searchProduct" type="search" class="form-control" placeholder="Search">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text bg-colorBlack" onclick="SearchProduct()"><i class="fas fa-search"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <section class="Category">
+                    <div class="container">
+                        <h3>Category</h3>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <hr>
+                                
+                                <partial name="~/Views/Product/_Categories.cshtml" model="Model" />
+                            </div>
+                            <div class="col-md-9 pt-3">
+                                <div class="container">
+                                    <div class="row" id="productListing">
+                                        <partial name="~/Views/Product/_ProductList.cshtml" model="Model" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<div class="modal fade" id="AddProductModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h5 class="modal-title" id="exampleModalLabel">PRODUCTS</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="add-Product-Form" role="form" method="post" asp-action="AddProduct" asp-controller="Product" enctype="multipart/form-data">
+                <input asp-for="ProductRequestDto.Id" type="hidden" />
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>Name:</label>
+                                <input asp-for="ProductRequestDto.Name" type="text" class="form-control" placeholder="Name">
+                                <span class="text-danger" asp-validation-for="ProductRequestDto.Name"></span>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>SKU#:</label>
+                                <input type="text" asp-for="ProductRequestDto.SkuNo" class="form-control" placeholder="SKU#">
+                                <span class="text-danger" asp-validation-for="ProductRequestDto.SkuNo"></span>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>Sale Price:</label>
+                                <input type="text" asp-for="ProductRequestDto.SalePrice" class="form-control" placeholder="Sale Price">
+                                <span class="text-danger" asp-validation-for="ProductRequestDto.SalePrice"></span>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Regular Price:</label>
+                                <input type="text" asp-for="ProductRequestDto.RegularPrice" class="form-control" placeholder="Regular Price">
+                                <span class="text-danger" asp-validation-for="ProductRequestDto.RegularPrice"></span>
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Stock Status:</label>
+                                <input type="text" asp-for="ProductRequestDto.StockStatus" class="form-control" placeholder="Stock Status">
+                                <span class="text-danger" asp-validation-for="ProductRequestDto.StockStatus"></span>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Vendor</label>
+                                <select asp-for="ProductRequestDto.VendorId" asp-items="Model.Vendors" class=" form-control">
+                                    <option selected="">Select Vendor</option>
+                                </select>
+                            </div>
+                            <span class="text-danger" asp-validation-for="ProductRequestDto.VendorId"></span>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Product Margin</label>
+                                <select asp-for="ProductRequestDto.ProductMargin" class=" form-control">
+                                    <option selected="">Select Product Margin</option>
+                                    <option value="5">5%</option>
+                                    <option value="10">10%</option>
+                                    <option value="15">15%</option>
+                                    <option value="20">20%</option>
+                                    <option value="25">25%</option>
+                                    <option value="30">30%</option>
+                                    <option value="35">35%</option>
+                                    <option value="40">40%</option>
+                                    <option value="45">45%</option>
+                                    <option value="50">50%</option>
+                                </select>
+                            </div>
+                            <span class="text-danger" asp-validation-for="ProductRequestDto.ProductMargin"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Least Price:</label>
+                                <input type="text" asp-for="ProductRequestDto.LeastPrice" class="form-control" placeholder="80$">
+                                <span class="text-danger" asp-validation-for="ProductRequestDto.LeastPrice"></span>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Product Category</label>
+                                <select asp-for="ProductRequestDto.ProductCategoryId" asp-items="Model.ProductCategories" class=" form-control">
+                                    <option selected="">Select Product Category</option>
+
+                                </select>
+                            </div>
+                            <span class="text-danger" asp-validation-for="ProductRequestDto.ProductCategoryId"></span>
+
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Product Image:</label>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="btn btn-default btn-file">
+                                        Browse… <input asp-for="ProductRequestDto.ImageUrl" type="file" id="imgInp">
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Description:</label>
+                                <textarea class="form-control" asp-for="ProductRequestDto.Description" rows="3" placeholder="Description"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn btn-secondary" id="AddBtn">Add</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalProduct">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h4 class="modal-title">Product Detail</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <section class="contnt">
+                    <div class="card m-0">
+                        <div class="container">
+                            <div class="row">
+                                <div class="preview col-md-6">
+                                    <div class="preview-pic tab-content">
+                                        <div class="tab-pane active" id="pic-1"><img id="mainImage" src="" style=" height: 60%;width: 65%;"/></div>
+                                    </div>
+                                </div>
+                                <div class="details col-md-6">
+                                    <h3 class="product-title" id="productName"></h3>
+                                    <p class="product-description" id="productDescription"></p>
+                                    <h4 class="price">current price: <span id="productSalingPrice"></span></h4>
+                                    <h4 class="price">Least price: <span id="productLeastPrice"></span></h4>
+                                    <h4 class="price">Manufacturer: <span id="productManufacturer"></span></h4>
+                                    <h4 class="price">QrCode: <span id="productqrCode"></span></h4>
+                                    <h4 class="price">Ragular Price: <span id="productRagular"></span></h4>
+                                    <h4 class="price">Sale Price: <span id="productSale"></span></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<style>
+
+    .preview {
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    .preview-pic {
+        display: block;
+    }
+
+    .preview-thumbnail.nav-tabs {
+        border: none;
+        margin-top: 15px;
+    }
+
+    .preview-thumbnail.nav-tabs li {
+        width: 18%;
+        margin-right: 2.5%;
+    }
+
+    .preview-thumbnail.nav-tabs li img {
+        max-width: 100%;
+        display: block;
+    }
+
+    .preview-thumbnail.nav-tabs li a {
+        padding: 0;
+        margin: 0;
+    }
+
+    .preview-thumbnail.nav-tabs li:last-of-type {
+        margin-right: 0;
+    }
+
+    .tab-content {
+        overflow: hidden;
+    }
+
+    .tab-content > .active {
+        display: block;
+        visibility: visible;
+    }
+
+    .tab-content img {
+        width: 327px;
+        animation-name: opacity;
+    }
+
+    .img {
+        vertical-align: middle;
+        border: 0px;
+        box-sizing: border-box;
+    }
+
+    .tab-content > .tab-pane {
+        display: block;
+    }
+
+    .contnt .card {
+        margin-top: 50px;
+        background: #eee;
+        padding: 3em;
+        line-height: 1.5em;
+    }
+
+    .details {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .product-title, .price, .colors {
+        text-transform: UPPERCASE;
+        font-weight: bold;
+    }
+
+    .checked, .price span {
+        color: #ff9f1a;
+    }
+
+    .product-title, .rating, .product-description, .price, .vote {
+        margin-bottom: 15px;
+    }
+
+    .product-title {
+        margin-top: 0;
+    }
+
+    .color {
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 10px;
+        height: 2em;
+        width: 2em;
+        border-radius: 2px;
+    }
+
+    .color:first-of-type {
+        margin-left: 20px;
+    }
+
+    .add-to-cart, .like {
+        background: #ff9f1a;
+        padding: 1.2em 1.5em;
+        border: none;
+        text-transform: UPPERCASE;
+        font-weight: bold;
+        color: #fff;
+        transition: background .3s ease;
+    }
+
+    .add-to-cart:hover, .like:hover {
+        background: #b36800;
+        color: #fff;
+    }
+
+    .not-available {
+        text-align: center;
+        line-height: 2em;
+    }
+
+    .not-available:before {
+        font-family: fontawesome;
+        content: "\f00d";
+        color: #fff;
+    }
+
+    .orange {
+        background: #ff9f1a;
+    }
+
+    .green {
+        background: #85ad00;
+    }
+
+    .blue {
+        background: #0076ad;
+    }
+
+    .tooltip-inner {
+        padding: 1.3em;
+    }
+</style>

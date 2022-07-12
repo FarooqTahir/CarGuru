@@ -1,0 +1,11 @@
+﻿@model List<CarGuru.Database.Dtos.ResponseDto.ProductCategoryResponseDto>
+
+    <ul class="list-group " style="list-style:none;">
+        @foreach (var item in Model)
+        {
+            <li onclick="GetProductListByCategory(@item.Id)" class="list-group-item productCategoryList">
+                <a href="#"  class="productCategoryList">@item.Title</a>
+            </li>
+        }
+
+    </ul>

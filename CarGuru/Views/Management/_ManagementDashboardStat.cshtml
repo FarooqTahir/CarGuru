@@ -1,0 +1,1060 @@
+﻿@model CarGuru.ViewModels.ManagementViewModel
+
+<style>
+   .hide-content{
+       display:none;
+   }
+</style>
+<script>
+
+        $(function () {
+            /* ChartJS
+             * -------
+             * Here we will create a few charts using ChartJS
+             */
+            //-------------
+            //- DONUT CHART -
+            //-------------
+            // Get context with jQuery - using jQuery's .get() method.
+            var donutChartCanvas = $('#Services').get(0).getContext('2d')
+            var donutData = {
+                labels: [
+                    'Total Service Order',
+                    'Complete Service Order',
+                    'Incomplete Service Order',
+
+                ],
+                datasets: [
+                    {
+                        data: [@Convert.ToInt32(Model.ManagementStat.Data.ServiceOrder.TotalServiceOrder), @Convert.ToInt32(Model.ManagementStat.Data.ServiceOrder.CompleteServiceOrder), @Convert.ToInt32(Model.ManagementStat.Data.ServiceOrder.IncompleteServiceOrder)],
+                        backgroundColor: ['rgba(131, 230, 153,0.7)', 'rgba(117,209,218,0.7)', 'rgba(105,205,250,0.7)'],
+                    }
+                ]
+            }
+            var donutOptions = {
+
+                maintainAspectRatio: false,
+                responsive: true,
+            }
+
+            //Create pie or douhnut chart
+            // You can switch between pie and douhnut using the method below.
+            var donutChart = new Chart(donutChartCanvas, {
+                type: 'doughnut',
+                data: donutData,
+                options: donutOptions
+            })
+
+            //-------------
+            //- PIE CHART -
+            //-------------
+            // Get context with jQuery - using jQuery's .get() method.
+            var pieChartCanvas = $('#Revenue').get(0).getContext('2d')
+            var pieData = {
+                labels: [
+                    'Service',
+                    'Product'
+                ],
+                datasets: [
+                    {
+
+                        backgroundColor: ['rgba(111,205,152,0.7)', 'rgba(117,209,218,0.7)'],
+                        data: [5000, 10000],
+                    }
+                ]
+            }
+            var pieOptions = {
+                tooltips: {
+                    enabled: true,
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            var label = data.labels[tooltipItem.index];
+                            var val = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                            return '$' + val;
+                        }
+                    },
+                    plugins: {
+                        datalabels: {
+                            formatter: (value, ctx) => {
+
+                                let sum = ctx.dataset._meta[0].total;
+
+                                return sum;
+                            },
+                            color: '#fff',
+                        }
+                    }
+
+                },
+                maintainAspectRatio: false,
+                responsive: true,
+
+            }
+            //Create pie or douhnut chart
+            // You can switch between pie and douhnut using the method below.
+            var pieChart = new Chart(pieChartCanvas, {
+                type: 'pie',
+                data: pieData,
+                options: pieOptions
+            })
+
+            //-------------
+            //- BAR CHART -
+            //-------------
+
+            var barChartLeadData = {
+                labels: ['Total Lead'],
+                datasets: [
+                    {
+                        label: 'Quotation',
+                        backgroundColor: 'rgba(117,209,218,0.7)',
+                        borderColor: 'rgba(117,209,218,0.9)',
+                        pointRadius: false,
+                        pointColor: 'rgba(117,209,218,0.9)',
+                        pointStrokeColor: 'rgba(117,209,218,0.9)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(117,209,218,0.9)',
+                        data: [@Convert.ToInt32(Model.ManagementStat.Data.Customers.QuotationRequest)]
+                    },
+                    {
+                        label: 'Converted Lead',
+                        backgroundColor: 'rgba(117,209,218,0.7)',
+                        borderColor: 'rgba(117,209,218,0.9)',
+                        pointRadius: false,
+                        pointColor: 'rgba(117,209,218,0.9)',
+                        pointStrokeColor: 'rgba(117,209,218,0.9)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(117,209,218,0.9)',
+                        data: [@Convert.ToInt32(Model.ManagementStat.Data.Customers.ServiceRequest)]
+                    },
+                    {
+                        label: 'New Users',
+                        backgroundColor: 'rgba(117,209,218,0.7)',
+                        borderColor: 'rgba(117,209,218,0.9)',
+                        pointRadius: false,
+                        pointColor: 'rgba(117,209,218,0.9)',
+                        pointStrokeColor: 'rgba(117,209,218,0.9)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(117,209,218,0.9)',
+                        data: [@Convert.ToInt32(Model.ManagementStat.Data.Customers.NewLeads)]
+                    },
+                ]
+            }
+            var barChartCanvas = $('#Customers').get(0).getContext('2d')
+            var barChartData = jQuery.extend(true, {}, barChartLeadData)
+            var temp0 = barChartLeadData.datasets[0]
+            var temp1 = barChartLeadData.datasets[1]
+            var temp2 = barChartLeadData.datasets[2]
+            barChartData.datasets[0] = temp2
+            barChartData.datasets[1] = temp1
+            barChartData.datasets[2] = temp0
+
+            var barChartOptions = {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                datasetFill: false
+            }
+
+            var barChart = new Chart(barChartCanvas, {
+                type: 'bar',
+                data: barChartData,
+                options: barChartOptions
+            })
+
+            //---------------
+            var barChartLeadData = {
+                labels: ['Orders'],
+                datasets: [
+                    {
+                        label: '  Late Orders',
+                        backgroundColor: 'rgba(105,205,250,0.7)',
+                        borderColor: 'rgba(117,209,218,0.9)',
+                        pointRadius: false,
+                        pointColor: 'rgba(117,209,218,0.9)',
+                        pointStrokeColor: 'rgba(117,209,218,0.9)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(117,209,218,0.9)',
+                        data: [28]
+                    },
+                    {
+                        label: 'Pending Orders',
+                        backgroundColor: 'rgba(105,205,250,0.7)',
+                        borderColor: 'rgba(117,209,218,0.9)',
+                        pointRadius: false,
+                        pointColor: 'rgba(117,209,218,0.9)',
+                        pointStrokeColor: 'rgba(117,209,218,0.9)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(117,209,218,0.9)',
+                        data: [65]
+                    },
+                    {
+                        label: 'Delivered Orders',
+                        backgroundColor: 'rgba(105,205,250,0.7)',
+                        borderColor: 'rgba(117,209,218,0.9)',
+                        pointRadius: false,
+                        pointColor: 'rgba(117,209,218,0.9)',
+                        pointStrokeColor: 'rgba(117,209,218,0.9)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(117,209,218,0.9)',
+                        data: [70]
+                    },
+                ]
+            }
+            var barChartCanvas = $('#Orders').get(0).getContext('2d')
+            var barChartData = jQuery.extend(true, {}, barChartLeadData)
+            var temp0 = barChartLeadData.datasets[0]
+            var temp1 = barChartLeadData.datasets[1]
+            var temp2 = barChartLeadData.datasets[2]
+            barChartData.datasets[0] = temp2
+            barChartData.datasets[1] = temp1
+            barChartData.datasets[2] = temp0
+
+            var barChartOptions = {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                datasetFill: false
+            }
+
+            var barChart = new Chart(barChartCanvas, {
+                type: 'bar',
+                data: barChartData,
+                options: barChartOptions
+            })
+
+            var barChartProductData = {
+                labels: ['Product Order'],
+                datasets: [
+                    {
+                        label: 'Top Product',
+                        backgroundColor: 'rgba(111,205,152,0.7)',
+                        borderColor: 'rgba(117,209,218,0.9)',
+                        pointRadius: false,
+                        pointColor: 'rgba(117,209,218,0.9)',
+                        pointStrokeColor: 'rgba(117,209,218,0.9)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(117,209,218,0.9)',
+                        data: [50]
+                    },
+                    {
+                        label: 'Total Deliver',
+                        backgroundColor: 'rgba(111,205,152,0.7)',
+                        borderColor: 'rgba(117,209,218,0.9)',
+                        pointRadius: false,
+                        pointColor: 'rgba(117,209,218,0.9)',
+                        pointStrokeColor: 'rgba(117,209,218,0.9)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(117,209,218,0.9)',
+                        data: [120]
+                    },
+                    {
+                        label: 'Total Order',
+                        backgroundColor: 'rgba(111,205,152,0.7)',
+                        borderColor: 'rgba(117,209,218,0.9)',
+                        pointRadius: false,
+                        pointColor: 'rgba(117,209,218,0.9)',
+                        pointStrokeColor: 'rgba(117,209,218,0.9)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(117,209,218,0.9)',
+                        data: [200]
+                    },
+                ]
+            }
+            var barChartCanvas2 = $('#ProductOrders').get(0).getContext('2d')
+            var barChartData2 = jQuery.extend(true, {}, barChartProductData)
+            var temp0 = barChartProductData.datasets[0]
+            var temp1 = barChartProductData.datasets[1]
+            var temp2 = barChartProductData.datasets[2]
+            barChartData2.datasets[0] = temp2
+            barChartData2.datasets[1] = temp1
+            barChartData2.datasets[2] = temp0
+
+            var barChartOptions2 = {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                datasetFill: false
+            }
+
+            var barChart2 = new Chart(barChartCanvas2, {
+                type: 'bar',
+                data: barChartData2,
+                options: barChartOptions2
+            })
+
+            //----------------------------------
+
+
+            var barChartInventoryData = {
+                labels: ['Inventory'],
+                datasets: [
+                    {
+                        label: 'Stock Products',
+                        backgroundColor: 'rgba(117,209,218,0.7)',
+                        borderColor: 'rgba(117,209,218,0.9)',
+                        pointRadius: false,
+                        pointColor: 'rgba(117,209,218,0.9)',
+                        pointStrokeColor: 'rgba(117,209,218,0.9)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(117,209,218,0.9)',
+                        data: [@Convert.ToInt32(Model.ManagementStat.Data.Inventory.StockProducts)]
+
+
+                    },
+                    {
+                        label: 'Sold Stock',
+                        backgroundColor: 'rgba(117,209,218,0.7)',
+                        borderColor: 'rgba(117,209,218,0.9)',
+                        pointRadius: false,
+                        pointColor: 'rgba(117,209,218,0.9)',
+                        pointStrokeColor: 'rgba(117,209,218,0.9)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(117,209,218,0.9)',
+                        data: [@Convert.ToInt32(Model.ManagementStat.Data.Inventory.SoldProducts)]
+                    },
+                    {
+                        label: 'Dead Stock Products',
+                        backgroundColor: 'rgba(117,209,218,0.7)',
+                        borderColor: 'rgba(117,209,218,0.9)',
+                        pointRadius: false,
+                        pointColor: 'rgba(117,209,218,0.9)',
+                        pointStrokeColor: 'rgba(117,209,218,0.9)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(117,209,218,0.9)',
+                        data: [@Convert.ToInt32(Model.ManagementStat.Data.Inventory.DeadStockProducts)]
+                    },
+                ]
+            }
+            var InventoryChartCanvas2 = $('#inventoryChart').get(0).getContext('2d')
+            var InventoryChartData2 = jQuery.extend(true, {}, barChartInventoryData)
+            var temp0 = barChartInventoryData.datasets[0]
+            var temp1 = barChartInventoryData.datasets[1]
+            var temp2 = barChartInventoryData.datasets[2]
+            InventoryChartData2.datasets[0] = temp2
+            InventoryChartData2.datasets[1] = temp1
+            InventoryChartData2.datasets[2] = temp0
+
+            var InventoryChartOptions2 = {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                datasetFill: false
+            }
+
+            var barChart2 = new Chart(InventoryChartCanvas2, {
+                type: 'bar',
+                data: InventoryChartData2,
+                options: InventoryChartOptions2
+            })
+
+            //----------------------------------
+
+            var MohammedManar = [8, 3, 4];
+            var MustaphaMaryam = [10, 2, 3];
+            var JackTaif = [9, 2, 4];
+
+            $("select.reportDropDown").change(function () {
+                var selectedValue = $(this).children("option:selected").val();
+                if (selectedValue === "Mohammed Manar") {
+                    addData(barChart2, MohammedManar);
+
+                } else if (selectedValue === "Mustapha Maryam") {
+
+                } else if (selectedValue === "Jack Taif") {
+
+                }
+
+            });
+
+
+            var barChartTechData = {
+                labels: ['Technician'],
+                datasets: [
+                    {
+                        label: 'Job Failed',
+                        backgroundColor: 'rgba(111,205,152,0.7)',
+                        borderColor: 'rgba(117,209,218,0.9)',
+                        pointRadius: false,
+                        pointColor: 'rgba(117,209,218,0.9)',
+                        pointStrokeColor: 'rgba(117,209,218,0.9)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(117,209,218,0.9)',
+                        data: [@Convert.ToInt32(Model.ManagementStat.Data.Technicians.JobFailed)]
+
+
+                    },
+                    {
+                        label: 'Late Job',
+                        backgroundColor: 'rgba(111,205,152,0.7)',
+                        borderColor: 'rgba(117,209,218,0.9)',
+                        pointRadius: false,
+                        pointColor: 'rgba(117,209,218,0.9)',
+                        pointStrokeColor: 'rgba(117,209,218,0.9)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(117,209,218,0.9)',
+                        data: [@Convert.ToInt32(Model.ManagementStat.Data.Technicians.LateJob)]
+                    },
+                    {
+                        label: 'Complete Job',
+                        backgroundColor: 'rgba(111,205,152,0.7)',
+                        borderColor: 'rgba(117,209,218,0.9)',
+                        pointRadius: false,
+                        pointColor: 'rgba(117,209,218,0.9)',
+                        pointStrokeColor: 'rgba(117,209,218,0.9)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(117,209,218,0.9)',
+                        data: [@Convert.ToInt32(Model.ManagementStat.Data.Technicians.CompleteJobs)]
+                    },
+                ]
+            }
+            var barChartCanvas3 = $('#Technician').get(0).getContext('2d')
+            var barChartData3 = jQuery.extend(true, {}, barChartTechData)
+            var temp0 = barChartTechData.datasets[0]
+            var temp1 = barChartTechData.datasets[1]
+            var temp2 = barChartTechData.datasets[2]
+            barChartData3.datasets[0] = temp2
+            barChartData3.datasets[1] = temp1
+            barChartData3.datasets[2] = temp0
+
+            var barChartOptions3 = {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                datasetFill: false
+            }
+
+            var barChart2 = new Chart(barChartCanvas3, {
+                type: 'bar',
+                data: barChartData3,
+                options: barChartOptions3
+            });
+
+            function addData(barChart2, data) {
+                chart.data.datasets.forEach((dataset) => {
+                    dataset.data.push(data);
+                });
+                chart.update();
+            }
+        })
+</script>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-colorBlack">
+                        <div class="row">
+                            <div class="col-6">
+                                <select class="reportDropDown form-control">
+                                    <option disabled>Select Report</option>
+                                    <option selected>Sales Report</option>
+                                    <option>Technician Report</option>
+                                    <option>Product Report</option>
+                                    <option>Lead Efficiency</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="reportCard card-body" style="display: block; background:#f4f6f9;">
+                        <div class="row sales">
+                            <div class="col-md-3 col-4">
+                                <div class="info-box pl-3 pr-3">
+                                    <div class="row">
+                                        <span class="info-box-icon info-box-iconBgGreen mt-1"><i class="fas fa-dollar-sign"></i></span>
+
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">TOTAL REVENUE</span>
+                                            <span class="info-box-number">$@Model.ManagementStat.Data.SaleReport.TotalRevenue</span>
+                                            <span class="info-box-number">@*17%*@</span>
+
+                                        </div>
+                                    </div>
+                                    @*<div class="row">
+                                            <div class="progress-group ml-1 mr-2 mb-0 mt-2" >
+                                                Revenue
+                                                <span class="float-right">
+                                                    <b>
+                                                        17
+                                                    %
+                                                </span>
+                                                <div class="progress progress-sm m-0">
+                                                    <div class="progress-bar info-box-iconBgGreen" style="width: 17%;"></div>
+                                                </div>
+                                            </div>
+                                        </div>*@
+
+
+                                    <!-- /.info-box-content -->
+                                </div>
+
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-md-3 col-4">
+                                <div class="info-box pl-3 pr-3">
+                                    <div class="row">
+                                        <span class="info-box-icon info-box-iconBgBlue mt-1"><i class="fas fa-coins"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">TOTAL COST</span>
+                                            <span class="info-box-number">$@Model.ManagementStat.Data.SaleReport.TotalCost</span>
+                                            <span class="info-box-number">@*10%*@</></span>
+                                        </div>
+                                    </div>
+                                    @*<div class="row">
+                                            <div class="progress-group ml-1 mr-2 mb-0 mt-2">
+                                                Cost
+                                                <span class="float-right">
+                                                    <b>
+                                                        10
+                                                    %
+                                                </span>
+                                                <div class="progress progress-sm m-0">
+                                                    <div class="progress-bar info-box-iconBgBlue" style="width: 10%;"></div>
+                                                </div>
+                                            </div>
+                                        </div>*@
+
+
+                                    <!-- /.info-box-content -->
+                                </div>
+
+                                <!-- /.description-block -->
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-md-3 col-4 ">
+                                <div class="info-box pl-3 pr-3">
+                                    <div class="row">
+                                        <span class="info-box-icon info-box-iconBgGreen mt-1"><i class="fas fa-hand-holding-usd"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">TOTAL PROFIT</span>
+                                            <span class="info-box-number">$@Model.ManagementStat.Data.SaleReport.TotatProfit</span>
+                                            <span class="info-box-number">@*20%*@</span>
+                                        </div>
+                                    </div>
+                                    @*<div class="row">
+                                            <div class="progress-group ml-1 mr-2 mb-0 mt-2">
+                                                Profit
+                                                <span class="float-right">
+                                                    <b>
+                                                        20
+                                                    %
+                                                </span>
+                                                <div class="progress progress-sm m-0">
+                                                    <div class="progress-bar info-box-iconBgGreen" style="width: 20%;"></div>
+                                                </div>
+                                            </div>
+                                        </div>*@
+
+
+                                    <!-- /.info-box-content -->
+                                </div>
+
+                                <!-- /.description-block -->
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-md-3 col-4 ">
+                                <div class="info-box pl-3 pr-3">
+                                    <div class="row">
+                                        <span class="info-box-icon info-box-iconBgBlue mt-1"><i class="fas fa-funnel-dollar"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">GOAL COMPLETIONS</span>
+                                            <span class="info-box-number">$@Model.ManagementStat.Data.SaleReport.GoalCompletion</span>
+                                            <span class="info-box-number">@*18%*@</span>
+                                        </div>
+                                    </div>
+                                    @*<div class="row">
+                                            <div class="progress-group ml-1 mr-2 mb-0 mt-2">
+                                                Goal
+                                                <span class="float-right">
+                                                    <b>
+                                                        18
+                                                    %
+                                                </span>
+                                                <div class="progress progress-sm m-0">
+                                                    <div class="progress-bar info-box-iconBgBlue" style="width: 18%;"></div>
+                                                </div>
+                                            </div>
+                                        </div>*@
+
+
+                                    <!-- /.info-box-content -->
+                                </div>
+
+                                <!-- /.description-block -->
+                            </div>
+                        </div>
+                        <div class="row tech">
+                            <div class="col-12-md">
+<div class="hide-content tech">
+    <div class="row">
+        <div class="col-md-3 col-4">
+
+            <div class="info-box pl-3 pr-3">
+                <div class="row">
+                    <span class="info-box-icon info-box-iconBgGreen mt-1"><i class="fas fa-users"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">No of Technicians</span>
+                        <span class="info-box-number">@Model.ManagementStat.Data.TechnicianReport.NoOfTechnician</span>
+                        <span class="info-box-number">@*100%*@</span>
+
+                    </div>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+        </div>
+        <div class="col-md-3 col-4">
+            <div class="info-box pl-3 pr-3">
+                <div class="row">
+                    <span class="info-box-icon info-box-iconBgBlue mt-1"><i class="fas fa-globe"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">UNASSIGNED TASK@*Online Technicians*@</span>
+                        <span class="info-box-number">@Model.ManagementStat.Data.TechnicianReport.UnassignedTask</span>
+                        <span class="info-box-number">@*69%*@</span>
+
+                    </div>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+
+        </div>
+        <!-- /.col -->
+        <div class="col-md-3 col-4">
+            <div class="info-box pl-3 pr-3">
+                <div class="row">
+                    <span class="info-box-icon info-box-iconBgGreen mt-1"><i class="fas fa-tasks"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">ASSIGNED TASK</span>
+                        <span class="info-box-number">@Model.ManagementStat.Data.TechnicianReport.AssignedTask</span>
+                        <span class="info-box-number">@*100%*@</span>
+
+                    </div>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+
+            <!-- /.description-block -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-3 col-4 ">
+            <div class="info-box pl-3 pr-3">
+                <div class="row">
+                    <span class="info-box-icon info-box-iconBgBlue mt-1"><i class="fas fa-user-check"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">COMPLETED TASK</span>
+                        <span class="info-box-number">@Model.ManagementStat.Data.TechnicianReport.CompletedTask</span>
+                        <span class="info-box-number">@*69%*@</span>
+
+                    </div>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+
+
+            <!-- /.description-block -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-3 col-4 ">
+            <div class="info-box pl-3 pr-3">
+                <div class="row">
+                    <span class="info-box-icon info-box-iconBgBlue mt-1"><i class="fas fa-user-clock"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">TOTAL PENDING TASK</span>
+                        <span class="info-box-number">@Model.ManagementStat.Data.TechnicianReport.PendingTask</span>
+                        <span class="info-box-number">@*31%*@</span>
+
+                    </div>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+
+            <!-- /.description-block -->
+        </div>
+    </div>
+</div>
+                            </div>
+                            
+                        </div>
+
+                        <div class="row product">
+                            <div class="col-md-12">
+                                <div class="hide-content product">
+                                    <div class="row">
+                                        <div class="col-md-3 col-4">
+                                            <div class="info-box pl-3 pr-3">
+                                                <div class="row">
+                                                    <span class="info-box-icon info-box-iconBgBlue mt-1"><i class="fas fa-cubes"></i></span>
+
+                                                    <div class="info-box-content">
+                                                        <span class="info-box-text">TOTAL PRODUCTS</span>
+                                                        <span class="info-box-number">@Model.ManagementStat.Data.ProductReport.TotalProducts</span>
+                                                        <span class="info-box-number">@*100%*@</span>
+
+                                                    </div>
+                                                </div>
+                                                <!-- /.info-box-content -->
+                                            </div>
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-md-3 col-4">
+                                            <div class="info-box pl-3 pr-3">
+                                                <div class="row">
+                                                    <span class="info-box-icon info-box-iconBgGreen mt-1"><i class="fas fa-shipping-fast"></i></span>
+
+                                                    <div class="info-box-content">
+                                                        <span class="info-box-text">PRODUCT SOLD</span>
+                                                        <span class="info-box-number">@Model.ManagementStat.Data.ProductReport.SoldProducts</span>
+                                                        <span class="info-box-number">@*60%*@</span>
+
+                                                    </div>
+                                                </div>
+                                                <!-- /.info-box-content -->
+                                            </div>
+                                            <!-- /.description-block -->
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-md-3 col-4 ">
+
+                                            <div class="info-box pl-3 pr-3">
+                                                <div class="row">
+                                                    <span class="info-box-icon info-box-iconBgBlue mt-1"><i class="fas fa-cubes"></i></span>
+                                                    <div class="info-box-content">
+                                                        <span class="info-box-text">PRODUCT IN STOCK</span>
+                                                        <span class="info-box-number">@Model.ManagementStat.Data.ProductReport.StockProducts</span>
+                                                        <span class="info-box-number">@*40%*@</span>
+
+                                                    </div>
+
+                                                </div>
+                                                <!-- /.info-box-content -->
+                                            </div>
+
+
+                                            <!-- /.description-block -->
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-md-3 col-4 ">
+
+                                            <div class="info-box pl-3 pr-3">
+                                                <div class="row">
+                                                    <span class="info-box-icon info-box-iconBgGreen mt-1"><i class="fas fa-chart-line"></i></span>
+
+                                                    <div class="info-box-content">
+                                                        <span class="info-box-text">Dead Stock Product</span>
+                                                        <span class="info-box-number">@Model.ManagementStat.Data.ProductReport.DeadStockProducts</span>
+                                                        <span class="info-box-number">@*18%*@</span>
+
+                                                    </div>
+                                                </div>
+                                                <!-- /.info-box-content -->
+                                            </div>
+
+
+                                            <!-- /.description-block -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                           
+                        </div>
+                        <div class="row jobs">
+                            <div class="col-md-12">
+                                <div class="hide-content jobs">
+                                    <div class="row">
+                                        <div class="col-md-3 col-4">
+                                            <div class="small-box bg-info p-1">
+                                                <div class="description-block">
+                                                    <span class="description-percentage"><i class="fas fa-caret-up"></i> 100%</span>
+                                                    <h5 class="description-header">450</h5>
+                                                    <span class="description-text">Total Leads</span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-md-3 col-4">
+                                            <div class="small-box bg-success p-1">
+                                                <div class="description-block">
+                                                    <span class="description-percentage"><i class="fas fa-caret-left"></i> 81%</span>
+                                                    <h5 class="description-header">365</h5>
+                                                    <span class="description-text">Complete Leads</span>
+                                                </div>
+                                            </div>
+                                            <!-- /.description-block -->
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-md-3 col-4 ">
+                                            <div class="small-box bg-info p-1">
+                                                <div class="description-block">
+                                                    <span class="description-percentage"><i class="fas fa-caret-down"></i> 11%</span>
+                                                    <h5 class="description-header">53</h5>
+                                                    <span class="description-text">Incomplete Leads</span>
+                                                </div>
+                                            </div>
+                                            <!-- /.description-block -->
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-md-3 col-4 ">
+                                            <div class="small-box bg-success p-1">
+                                                <div class="description-block">
+                                                    <span class="description-percentage"><i class="fas fa-caret-down"></i> 8%</span>
+                                                    <h5 class="description-header">32</h5>
+                                                    <span class="description-text">Failed Leads</span>
+                                                </div>
+                                            </div>
+                                            <!-- /.description-block -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="row leadsEfficiency">
+                            <div class="col-md-12">
+                                <div class="hide-content leadsEfficiency">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="info-box pl-3 pr-3">
+                                                <div class="row">
+                                                    <span class="info-box-icon info-box-iconBgGreen mt-1"><i class="fas fa-users"></i></span>
+
+                                                    <div class="info-box-content">
+                                                        <span class="info-box-text">Total Technician</span>
+                                                        <span class="info-box-number">@Model.ManagementStat.Data.LeadReport.NoOfTechnician</span>
+
+
+                                                    </div>
+                                                </div>
+                                                <!-- /.info-box-content -->
+                                            </div>
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-sm-4">
+                                            <div class="info-box pl-3 pr-3">
+                                                <div class="row">
+                                                    <span class="info-box-icon info-box-iconBgBlue mt-1"><i class="fas fa-clock"></i></span>
+
+                                                    <div class="info-box-content">
+                                                        <span class="info-box-text">Daily Average Leads Time</span>
+                                                        <span class="info-box-number">@Model.ManagementStat.Data.LeadReport.AverageLeadTime</span>
+
+
+                                                    </div>
+                                                </div>
+                                                <!-- /.info-box-content -->
+                                            </div>
+
+                                            <!-- /.description-block -->
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-sm-4 ">
+                                            <div class="info-box pl-3 pr-3">
+                                                <div class="row">
+                                                    <span class="info-box-icon info-box-iconBgGreen mt-1 alig"><i class="fas fa-user-check"></i></span>
+
+                                                    <div class="info-box-content">
+                                                        <span class="info-box-text">Daily Average Leads Complete</span>
+                                                        <span class="info-box-number">@Model.ManagementStat.Data.LeadReport.AverageLeadCompleted</span>
+
+
+                                                    </div>
+                                                </div>
+                                                <!-- /.info-box-content -->
+                                            </div>
+
+
+                                            <!-- /.description-block -->
+                                        </div>
+                                        <!-- /.col -->
+                                    </div>
+                                </div>
+                            </div>
+                          
+                        </div>
+                        <!-- /.row -->
+                    </div>
+
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+    </div>
+</section>
+@if (Model.ManagementStat.Data != null)
+{
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- BAR CHART -->
+                <div class="col-md-6">
+                    <div class="card card-success">
+                        <div class="card-header bg-colorBlack">
+                            <h3 class="card-title">Customer</h3>
+
+
+                        </div>
+                        <div class="card-body">
+                            <div class="chart">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="Customers" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 487px;" width="487" height="250" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </div>
+                <!-- /.card -->
+                <div class="col-md-6">
+                    <div class="card card-danger">
+                        <div class="card-header bg-colorBlack">
+                            <h3 class="card-title">Service Order</h3>
+
+                        </div>
+                        <div class="card-body">
+                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                            <canvas id="Services" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 487px;" width="487" height="250" class="chartjs-render-monitor"></canvas>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </div>
+                <div class="col-md-6" style="display:none;">
+                    <div class="card card-success">
+                        <div class="card-header bg-colorBlack">
+                            <h3 class="card-title">Product Orders</h3>
+
+                        </div>
+                        <div class="card-body">
+                            <div class="chart">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="ProductOrders" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 487px;" width="487" height="250" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- BAR CHART -->
+                <div class="col-md-6" style="display:none;">
+                    <!-- PIE CHART -->
+                    <div class="card card-danger ">
+                        <div class="card-header bg-colorBlack">
+                            <h3 class="card-title">Revenue</h3>
+
+
+                        </div>
+                        <div class="card-body">
+                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                            <canvas id="Revenue" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 487px;" width="487" height="250" class="chartjs-render-monitor"></canvas>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <div class="col-md-6" style="display:none;">
+                    <div class="card card-success">
+                        <div class="card-header bg-colorBlack">
+                            <h3 class="card-title"> Orders</h3>
+
+
+                        </div>
+                        <div class="card-body">
+                            <div class="chart">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="Orders" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 487px;" width="487" height="250" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- /.card -->
+
+            </div>
+            <div class="row">
+                <!-- BAR CHART -->
+                <div class="col-md-6">
+                    <div class="card card-success mb-0 technicianCardInDashboard">
+                        <div class="card-header bg-colorBlack p-0">
+                            <h3 class="card-title mt-2 ml-3 pt-1">Technician</h3>
+                            <select class="reportDropDown form-control float-right mt-1 mb-1 mr-1" onchange="SelectTechnician(this.value)" style="width: 190px;" asp-items="@Model.TechnicianList">
+                                <option value="">Select Technician</option>
+                                @*<option>Mohammed Manar</option>
+                                <option>Mustapha Maryam</option>
+                                <option>Jack Taif</option>*@
+                            </select>
+
+                        </div>
+                        <div class="card-body">
+                            <div class="chart" id="technician-content">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="Technician" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 487px;" width="487" height="250" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </div>
+                <!-- /.card -->
+                <div class="col-md-6">
+                    <!-- PIE CHART -->
+                    <div class="card card-danger ">
+                        <div class="card-header bg-colorBlack">
+                            <h3 class="card-title">Inventory</h3>
+
+
+                        </div>
+                        <div class="card-body">
+                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                            <canvas id="inventoryChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 487px;" width="487" height="250" class="chartjs-render-monitor"></canvas>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+        <!-- BAR CHART -->
+        <div class="row">
+
+        </div>
+    </section>
+}
+

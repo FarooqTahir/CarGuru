@@ -1,0 +1,8 @@
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Database\bin\Release\netcoreapp3.1\CarGuru.Database.deps.json
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Database\bin\Release\netcoreapp3.1\CarGuru.Database.dll
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Database\bin\Release\netcoreapp3.1\CarGuru.Database.pdb
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Database\obj\Release\netcoreapp3.1\CarGuru.Database.AssemblyInfoInputs.cache
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Database\obj\Release\netcoreapp3.1\CarGuru.Database.AssemblyInfo.cs
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Database\obj\Release\netcoreapp3.1\CarGuru.Database.dll
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Database\obj\Release\netcoreapp3.1\CarGuru.Database.pdb
+C:\Users\Zahid\source\repos\CarGuru\CarGuru.Database\obj\Release\netcoreapp3.1\CarGuru.Database.csprojAssemblyReference.cache

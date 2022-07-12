@@ -1,0 +1,57 @@
+﻿@model CarGuru.ViewModels.EmployeeViewModel
+@if (!(Model.EmployeesList == null))
+{
+    <table class="table table-striped" id="EmployeeTable" width="100%">
+        <thead class="bg-colorBlack">
+            <tr>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Address</th>
+                <th>Contact No</th>
+                <th>Email</th>
+                <th class="actionColumn">Action</th>
+            </tr>
+        </thead>
+        <tbody id="employeeTableBody">
+
+
+            @foreach (var item in Model.EmployeesList)
+            {
+                <tr>
+                    <td>@item.User.FirstName</td>
+                    <td>@item.User.LastName</td>
+                    <td>
+                        @item.User.Address
+                    </td>
+                    <td>@item.User.PhoneNumber</td>
+                    <td>@item.User.Email</td>
+                    <td>
+                        <div class="row">
+                            <div class="col-sm-3 viewModal">
+                                <button class="btn" type="button" onclick="ViewEmployee(@item.User.UserId)">
+                                    View
+                                </button>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="dropdown">
+                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" href="javascript:void()" onclick="GetEmployeeById(@item.User.UserId)"><i class="fas fa-print" aria-hidden="true" style="margin-right:8px;"></i>Edit</a>
+                                        <a class="dropdown-item" href="javascript:void()" onclick="DeleteEmployee(@item.User.UserId)"><i class="fas fa-archive" aria-hidden="true" style="margin-right:8px;"></i>Archive</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+
+
+        </tbody>
+    </table>
+}
+else
+{
+    <h3>No Record Found</h3>
+}

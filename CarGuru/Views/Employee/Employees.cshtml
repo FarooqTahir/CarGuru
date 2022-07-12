@@ -1,0 +1,410 @@
+﻿@model CarGuru.ViewModels.EmployeeViewModel
+@inject CarGuru.Services.Interfaces.ISessionManager x;
+@{
+    ViewData["Title"] = "Employee";
+    Layout = CommonData.GetUserLayoutByRoleId(x.GetUserRoleId());
+    //"~/Views/Shared/_Layout.cshtml";
+}
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#EmployeeTable').DataTable({
+                "bSort": false,
+                "searching": false,
+                "responsive": true,
+                dom: 'Bfrtip',
+                buttons: []
+            });
+        });
+        function onAddEditEmployeeSuccess(data) {
+            if (!(data==null)) {
+                $("#modal-addForm").modal("hide");
+                $("#AddEmployeeBtn").text("Save");
+                $(".EmployeeList").html('');
+                $(".EmployeeList").html(data);
+                alertG("Employee Added Successfully!");
+            }
+            else {
+                alertR("Something went wrong!");
+            }
+        }
+        function DeleteEmployee(Id) {
+            $.ajax({
+                url: "../Employee/DeleteEmployee",
+                type: 'Post',
+                data: {
+                    Id: Id
+                },
+                success: function (data) {
+                    
+                    $(".EmployeeList").html('');
+                    $(".EmployeeList").html(data);
+                    alertG("Employee Archived Successfully!");
+                },
+                error: function (request, error) {
+
+                }
+            });
+        }
+        function GetEmployeeById(employeeId) {
+            if (employeeId != null && employeeId > 0) {
+                 $.ajax({
+                     type: "GET",
+                     data: {employeeId :employeeId},
+                     url: '@Url.Action("GetEmployeeById", "Employee")',
+                     beforeSend: function () {
+                     },
+                    success: function (data) {
+                        
+                        $("#EmployeeRequestDto_User_UserId").val(data.data.userId);
+                        $("#EmployeeRequestDto_User_FirstName").val(data.data.user.firstName);
+                        $("#EmployeeRequestDto_User_LastName").val(data.data.user.lastName);
+                        $("#EmployeeRequestDto_User_Email").val(data.data.user.email);
+                        $("#EmployeeRequestDto_User_PhoneNumber").val(data.data.user.phoneNumber);
+                        $("#EmployeeRequestDto_User_Address").val(data.data.user.address);
+                        $("#EmployeeRequestDto_User_RoleId").val(data.data.user.roleId);
+                        //$('#addEmployeeForm')[0].reset();
+
+                        $("span[data-valmsg-for='EmployeeRequestDto.User.Email']").text('');
+                        $("#EmployeeRequestDto_User_FirstName-error").text("");
+                        $("#EmployeeRequestDto_User_LastName-error").text("");
+                        $("#EmployeeRequestDto_User_PhoneNumber-error").text("");
+                        $("#EmployeeRequestDto_User_Email-error").text("");
+                        $("#EmployeeRequestDto_User_Address-error").text("");
+                        $("#EmployeeRequestDto_User_RoleId-error").text("");
+
+                        $("#Heading").text("Update Employee");
+                        $("#AddEmployeeBtn").text("Update");
+                        $("#modal-addForm").modal('show');
+
+                    },
+                        error: function (res) {
+                    }
+                });
+            }
+        }
+        function ShowModal()
+        {
+            $("#EmployeeRequestDto_User_UserId").val('');
+            $("#EmployeeRequestDto_User_FirstName").val('');
+            $("#EmployeeRequestDto_User_LastName").val('');
+            $("#EmployeeRequestDto_User_PhoneNumber").val('');
+            $("#EmployeeRequestDto_User_Email").val('');
+            $("#EmployeeRequestDto_User_Address").val('');
+            $("#EmployeeRequestDto_User_RoleId").val('');
+            //$('#addEmployeeForm')[0].reset();
+
+            $("#EmployeeRequestDto_User_FirstName-error").text("");
+            $("#EmployeeRequestDto_User_LastName-error").text("");
+            $("#EmployeeRequestDto_User_PhoneNumber-error").text("");
+            $("#EmployeeRequestDto_User_Email-error").text("");
+            $("#EmployeeRequestDto_User_Address-error").text("");
+            $("#EmployeeRequestDto_User_RoleId-error").text("");
+            $("span[data-valmsg-for='EmployeeRequestDto.User.Email']").text('');
+
+            $("#AddEmployeeBtn").prop('disabled', false);
+            $("#Heading").text("Add Employee");
+            $("#AddEmployeeBtn").text("Add");
+
+            $("#modal-addForm").modal('show');
+        }
+        function ViewEmployee(employeeId) {
+            if (employeeId != null && employeeId > 0) {
+                 $.ajax({
+                     type: "GET",
+                     data: {employeeId :employeeId},
+                    url: '@Url.Action("GetEmployeeById", "Employee")',
+                    beforeSend: function () {
+                    },
+                         success: function (data) {
+                             
+                                $("#FName").val(data.data.user.firstName);
+                                $("#LName").val(data.data.user.lastName);
+                                $("#EmployeeRequestDto_User_PhoneNumber").val(data.data.user.phoneNumber);
+                                $("#EPhone").val(data.data.user.phoneNumber);
+                                $("#EAddress").val(data.data.user.address);
+                                $("#ETypeId").val(data.data.user.roleId);
+
+
+                                $("#modalView").modal('show');
+
+                    },
+                        error: function (res) {
+                    }
+                });
+            }
+        }
+        function EmailCheck() {
+            var Email = $("#EmployeeRequestDto_User_Email").val();
+            $.ajax({
+                type: "POST",
+                url: '/login/EmailCheck',
+                data: { email: Email },
+                success: function (data) {
+                    if (data == true) {
+                        //$("#EmployeeRequestDto_User_Email-error").text("Email Already Exists");
+                        $("span[data-valmsg-for='EmployeeRequestDto.User.Email']").text('Email Already Exists');
+                        $("#AddEmployeeBtn").prop('disabled', true);
+                    }
+                    else {
+                        $("span[data-valmsg-for='EmployeeRequestDto.User.Email']").text('');
+                        $("#AddEmployeeBtn").prop('disabled', false);
+                    }
+                },
+                error: function () {
+                }
+            });
+        }
+        function SearchEmployee() {
+            
+            var Name = $("#Name").val();
+            $.ajax({
+                url: "../Employee/SearchEmployee",
+                type: 'Post',
+                data: {
+                    name: Name
+                },
+                success: function (data) {
+                    $(".EmployeeList").html(data)
+                    $('#EmployeeTable').DataTable({
+                        "bSort": false,
+                        "searching": false,
+                        "responsive": true,
+                        dom: 'Bfrtip',
+                        buttons: [
+
+                        ]
+                    });
+                },
+                error: function (request, error) {
+
+                }
+            });
+        }
+    </script>
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-2">
+                <h1>Employee</h1>
+            </div>
+            <div class="col-sm-8">
+                <form class="form-inline float-right">
+                    <div class="input-group bg-white">
+                        <input class="form-control" type="search" id="Name" placeholder="Search" aria-label="Search">
+                        <div class="input-group-append">
+                            <button  type="button" class="btn btn-navbar" onclick="SearchEmployee()">
+                                <i class="fas fa-search "></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-2">
+                <button type="submit" class="btn bg-colorBlack float-right" data-toggle="modal" onclick="ShowModal()">Add Employee</button>
+
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+
+                    <!-- /.card-header -->
+                    <div class="card-body call table-responsive p-0">
+                        <div class="EmployeeList">
+                            <partial name="~/Views/Employee/PartialViews/_EmployeeList.cshtml" model="Model" />
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer clearfix">
+                        <ul class="pagination pagination-sm m-0 float-right">
+                        </ul>
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+
+<div class="modal fade" id="modal-addForm">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h4 class="modal-title" id="Heading">Add New Employee</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" id="addEmployeeForm" asp-action="EmployeeAddOrEdit" asp-controller="Employee" data-ajax="true" data-ajax-success="onAddEditEmployeeSuccess(data)">
+                <input type="hidden" asp-for="EmployeeRequestDto.User.UserId" />
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label asp-for="EmployeeRequestDto.User.FirstName">First Name</label>
+                                <input asp-for="EmployeeRequestDto.User.FirstName" type="text" class="form-control" placeholder="Enter First Name">
+                                <span class="text-danger" asp-validation-for="EmployeeRequestDto.User.FirstName"></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label asp-for="EmployeeRequestDto.User.LastName">Last Name</label>
+                                <input type="text" asp-for="EmployeeRequestDto.User.LastName" class="form-control" placeholder="Enter Last Name">
+                                <span class="text-danger" asp-validation-for="EmployeeRequestDto.User.LastName"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label asp-for="EmployeeRequestDto.User.PhoneNumber">Contact No</label>
+                                <input type="text" asp-for="EmployeeRequestDto.User.PhoneNumber" class="form-control" placeholder="Enter Phone Number">
+                                <span class="text-danger" asp-validation-for="EmployeeRequestDto.User.PhoneNumber"></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label asp-for="EmployeeRequestDto.User.LastName">Email</label>
+                                <input type="email" asp-for="EmployeeRequestDto.User.Email" onblur="EmailCheck()" class="form-control" placeholder="Your Email *" />
+                                <span class="text-danger" asp-validation-for="EmployeeRequestDto.User.Email"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label asp-for="EmployeeRequestDto.User.Address">Address</label>
+                                <input type="text" asp-for="EmployeeRequestDto.User.Address" class="form-control" placeholder="Enter Address">
+                                <span class="text-danger" asp-validation-for="EmployeeRequestDto.User.Address"></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label asp-for="EmployeeRequestDto.User.RoleId">Employee Type</label>
+                                <select asp-for="EmployeeRequestDto.User.RoleId" asp-items="Model.EmployeeTypes" class="form-control">
+                                    <option>Select Employee Type</option>
+
+                                </select>
+                                <span class="text-danger" asp-validation-for="EmployeeRequestDto.User.RoleId"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="radio inline">
+                                    <input type="radio" asp-for="EmployeeRequestDto.User.GenderId" value="4" checked>
+                                    <span> Male </span>
+                                </label>
+                                <label class="radio inline">
+                                    <input type="radio" asp-for="EmployeeRequestDto.User.GenderId" value="5">
+                                    <span>Female </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-secondary" id="AddEmployeeBtn">Save</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="modalView">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h4 class="modal-title">View Employee Information</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form role="form">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">First Name</label>
+                                <input type="text" class="form-control" id="FName" value="Jack" disabled>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Last Name</label>
+                                <input type="text" class="form-control" id="LName" value="Taif" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Address</label>
+                                <input type="text" class="form-control" id="EAddress" value="Fujairah" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Contact No</label>
+                                <input type="text" class="form-control" id="EPhone" value="+0 326232 9021" disabled>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Employee Type</label>
+                                <select asp-items="Model.EmployeeTypes" id="ETypeId" class="reportDropDown form-control" disabled>
+                                    <option>Select Employee Type</option>
+                                </select>
+                            </div>
+                        </div>
+                        @*<div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Checkin</label>
+                                    <input type="text" class="form-control" id="" value="31-3-2020 1.30pm" disabled>
+                                </div>
+                            </div>*@
+                    </div>
+                    @*<div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">checkout</label>
+                                    <input type="text" class="form-control" id="" value="31-3-2020 3.30pm" disabled />
+
+                                </div>
+                            </div>
+                        </div>*@
+                    <!-- /.card-body -->
+                </form>
+            </div>
+            <div class="modal-footer float-right">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+

@@ -1,0 +1,196 @@
+﻿
+@{
+    ViewData["Title"] = "Notification";
+    Layout = "~/Views/Shared/_LayoutSupervisor.cshtml";
+}
+
+
+
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-2">
+                <h1>Notifications</h1>
+            </div>
+            <div class="col-sm-10">
+                <form class="form-inline float-right">
+                    <div class="input-group bg-white">
+                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-navbar " type="submit">
+                                <i class="fas fa-search "></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header bg-colorBlack">
+                        <h3>Select Notification Option.</h3>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div>
+                                    <p>Select notification for Customer and Technician below.(Leave blank to not send any notification).</p>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <a class="dropdown-item" href="#" style="margin-left:-15px;"><i class="fas fa-user" aria-hidden="true" style="margin-right:8px;"></i>Call Center(Optional)</a>
+
+                                        <div class="custom-control custom-switch" style="margin-top:10px;">
+                                            <input type="checkbox" class="custom-control-input" id="customSwitch17" unchecked>
+                                            <label class="custom-control-label" for="customSwitch17">Email</label>
+                                        </div>
+                                        <div class="custom-control custom-switch" style="margin-top:10px;">
+                                            <input type="checkbox" class="custom-control-input" id="customSwitch18" unchecked>
+                                            <label class="custom-control-label" for="customSwitch18">SMS</label>
+                                        </div>
+                                        <div class="custom-control custom-switch" style="margin-top:10px;">
+                                            <input type="checkbox" class="custom-control-input" id="customSwitch23" unchecked>
+                                            <label class="custom-control-label" for="customSwitch23">InApp</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="Content1" style="margin-top:10px; padding-left:10px; padding-right:10px;">
+    <div class="card">
+        <div class="card-header">
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div>
+                        <p>*Note:You must have a notification option selected above to schedule appointment notification.</p>
+                    </div>
+
+                    <div class="row">
+                        @*<div class="col-md-4">
+                                <a class="dropdown-item" href="#" style="margin-left:-15px;"><i class="fas fa-user" aria-hidden="true" style="margin-right:8px;"></i>Customer</a>
+
+
+                                <div class="custom-control custom-switch" style="margin-top:10px;">
+                                    <input type="checkbox" class="custom-control-input" id="customSwitch6" unchecked>
+                                    <label class="custom-control-label" for="customSwitch6">Technician Late</label>
+                                </div>
+                                <div class="custom-control custom-switch" style="margin-top:10px;">
+                                    <input type="checkbox" class="custom-control-input" id="customSwitch7" unchecked>
+                                    <label class="custom-control-label" for="customSwitch7">Technician Canceled</label>
+                                </div>
+                                <div class="custom-control custom-switch" style="margin-top:10px;">
+                                    <input type="checkbox" class="custom-control-input" id="customSwitch8" unchecked>
+                                    <label class="custom-control-label" for="customSwitch8">Order Placed</label>
+                                </div>
+                                <div class="custom-control custom-switch" style="margin-top:10px;">
+                                    <input type="checkbox" class="custom-control-input" id="customSwitch11" unchecked>
+                                    <label class="custom-control-label" for="customSwitch11">Quotation Received</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <a class="dropdown-item" href="#" style="margin-left:-15px;"><i class="fas fa-user" aria-hidden="true" style="margin-right:8px;"></i>Technician</a>
+
+
+
+                                <div class="custom-control custom-switch" style="margin-top:10px;">
+                                    <input type="checkbox" class="custom-control-input" id="customSwitch12" unchecked>
+                                    <label class="custom-control-label" for="customSwitch12">
+                                        Technician Late
+                                    </label>
+                                </div>
+                                <div class="dropdown" style="margin-top:-29px; margin-left:130px;">
+                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledb="customSwitch12">
+                                        <ul style="list-style:none; padding:0px;margin:0px;">
+
+
+                                            <li>
+                                                <a class="dropdown-item" href="#">5 mint</a>
+                                            </li>
+                                            <li>
+
+                                                <a class="dropdown-item" href="#">10 min</a>
+                                            </li>
+                                            <li>
+
+                                                <a class="dropdown-item" href="#">15 min</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="#">20 min</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="#">25 min</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="#">30 min</a>
+                                            </li>
+
+                                        </ul>
+
+                                    </div>
+                                </div>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="customSwitch9" unchecked>
+                                    <label class="custom-control-label" for="customSwitch9">Service Request</label>
+                                </div>
+                                <div class="custom-control custom-switch" style="margin-top:10px;">
+                                    <input type="checkbox" class="custom-control-input" id="customSwitch0" unchecked>
+                                    <label class="custom-control-label" for="customSwitch0">Quotation Request</label>
+                                </div>
+                                <div class="custom-control custom-switch" style="margin-top:10px;">
+                                    <input type="checkbox" class="custom-control-input" id="customSwitch" unchecked>
+                                    <label class="custom-control-label" for="customSwitch">Follow Up</label>
+                                </div>
+                            </div>*@
+                        <div class="col-md-4">
+                            <a class="dropdown-item" href="#" style="margin-left:-15px;"><i class="fas fa-user" aria-hidden="true" style="margin-right:8px;"></i>Call Center</a>
+
+                            <div class="custom-control custom-switch" style="margin-top:10px;">
+                                <input type="checkbox" class="custom-control-input" id="customSwitch13" unchecked>
+                                <label class="custom-control-label" for="customSwitch13">Service Request</label>
+                            </div>
+                            <div class="custom-control custom-switch" style="margin-top:10px;">
+                                <input type="checkbox" class="custom-control-input" id="customSwitch14" unchecked>
+                                <label class="custom-control-label" for="customSwitch14">Quotation Request</label>
+                            </div>
+                            <div class="custom-control custom-switch" style="margin-top:10px;">
+                                <input type="checkbox" class="custom-control-input" id="customSwitch15" unchecked>
+                                <label class="custom-control-label" for="customSwitch15">Follow Up</label>
+                            </div>
+                            <div class="custom-control custom-switch" style="margin-top:10px;">
+                                <input type="checkbox" class="custom-control-input" id="customSwitch15" unchecked>
+                                <label class="custom-control-label" for="customSwitch15">Late Technician</label>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="card-footer clearfix" style="margin-top:10px;">
+    <button type="button" class="btn btn-secondary" style="float:right;">Save</button>
+</div>
+
+
+
+

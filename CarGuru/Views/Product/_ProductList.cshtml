@@ -1,0 +1,31 @@
+﻿@model CarGuru.ViewModels.ProductViewModel
+@if (Model != null && Model.Products.Count > 0)
+{
+
+    @foreach (var item in Model.Products)
+    {
+        <div class="col-md-3 col-sm-6">
+            <div class="product-grid">
+                <div class="product-image">
+                    <a href="#">
+                        <img class="pic-1" src="@item.ImageUrl">
+                        <img class="pic-2" src="@item.ImageUrl">
+                    </a>
+                    <ul class="social">
+                        <li onclick="showProductDetail(@item.Id)"><a href="#modalProduct" data-tip="View" data-toggle="modal"><i class="fa fa-eye"></i></a></li>
+                    </ul>
+
+                </div>
+
+                <div class="product-content">
+                    <h3 class="title"><a href="#">@item.Name</a></h3>
+                    <div class="price">
+                        $@Convert.ToInt32(@item.SalePrice)
+                        <span>$@Convert.ToInt32(@item.RegularPrice)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+}

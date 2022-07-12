@@ -1,0 +1,193 @@
+﻿@model CarGuru.ViewModels.CustomerViewModel
+@inject CarGuru.Services.Interfaces.ISessionManager x;
+@{
+    ViewData["Title"] = "ServiceOrderList";
+    var role = x.GetUserRoleId();
+    Layout = CommonData.GetUserLayoutByRoleId(role);// "~/Views/Shared/_LayoutCallCenter.cshtml";
+}
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#OrderList').DataTable({
+                "bSort": false,
+                "searching": false,
+                "responsive": true,
+                dom: 'Bfrtip',
+                buttons: [
+
+                ]
+            });
+        });
+        function ShowInvoice(cId, Id) {
+            $.ajax({
+                url: "../Customer/Invoice",
+                type: 'Post',
+                data: {
+                    CustomerId: cId, ServiceOrderId: Id
+                },
+                success: function (data) {
+                    $("#modal-Invoice").modal('show');
+                    $(".Tables").html(data);
+                }
+            });
+        }
+    </script>
+}
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-8 col-md-8">
+                @if (!(Model.CustomerUpdate == null))
+                {
+                    var Name = Model.CustomerUpdate.User.FirstName + " " + Model.CustomerUpdate.User.LastName;
+                    <h1>@Name - Service Orders</h1>
+                }
+                else
+                {
+                    <h1>Service Orders</h1>
+                }
+
+            </div>
+            <div class="col-sm-2 col-md-2">
+
+            </div>
+            <div class="col-sm-4 col-md-2">
+                <a href="@Url.Action("ServiceOrders", "Customer",new { CustomerId = Model.CustomerId })" class="btn bg-colorBlack float-right">Add Order</a>
+
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+
+                    <!-- /.card-header -->
+                    <div class="card-body leads table-responsive p-0">
+                        <table class="table table-striped" id="OrderList" width="100%">
+                            <thead class="bg-colorBlack">
+                                <tr>
+                                    <th>Order No</th>
+                                    <th>Agent</th>
+                                    <th>Technician</th>
+                                    <th>Source</th>
+                                    <th>Schedule Date</th>
+                                    <th>Total Price</th>
+                                    <th class="actionColumn">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in @Model.CustomerOrders)
+                                {
+                                <tr>
+                                    @if (item.ServiceOrderNo >0)
+                                    {
+                                        <td>@item.ServiceOrderNo</td>
+                                    }
+                                    else
+                                    {
+                                        <td>N/A</td>
+                                    }
+                                    @if (item.Agent != null)
+                                    {
+                                        <td>@item.Agent</td>
+                                    }
+                                    else
+                                    {
+                                        <td>N/A</td>
+                                    }
+                                    @if (item.Technician != null)
+                                    {
+                                        <td>@item.Technician</td>
+                                    }
+                                    else
+                                    {
+                                        <td>N/A</td>
+                                    }
+                                    <td>@item.Source</td>
+                                    <td>@item.ScheduleDateTime.ToShortDateString()</td>
+                                    <td id="status">@item.TotalPrice</td>
+                                    <th>
+
+                                        <div class="row">
+                                            <div class="col-sm-3 viewModal">
+                                                <a class="btn" href="javascript:void(0)" onclick="ShowInvoice(@item.CustomerId,@item.Id)">
+                                                    View
+                                                </a>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="dropdown">
+                                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        <a href="@Url.Action("ServiceOrders","Customer",new { CustomerId = item.CustomerId,ServiceOrderId = item.Id,})" class="dropdown-item"><i class="fas fa-car">Edit</i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer clearfix">
+                        @*<ul class="pagination pagination-sm m-0 float-right">
+                            <li class="page-item"><a class="page-link" href="#">«</a></li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">»</a></li>
+                        </ul>*@
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<div class="modal fade" id="modal-Invoice">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-colorBlack">
+                <h4 class="modal-title">Invoices</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row invoice-info">
+                    <div class="col-sm-2"></div>
+                    @*@if (!(Model.CustomerUpdate == null))
+                    {
+                        var Name = Model.CustomerUpdate.User.FirstName + " " + Model.CustomerUpdate.User.LastName;
+                        <div class="col-sm-4 invoice-col">
+                            <strong>Customer: @Name</strong><br>
+                        </div>
+                        <div class="col-sm-4 invoice-col">
+                            <strong>Phone: @Model.CustomerUpdate.User.PhoneNumber</strong><br>
+
+                        </div>
+                        <div class="col-sm-4 invoice-col">
+                            <strong>Email: @Model.CustomerUpdate.User.Email</strong><br>
+                        </div>
+                    }
+                    else
+                    {
+                        <h1>Service Orders</h1>
+                    }*@
+                </div>
+
+                <div class="Tables"></div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,53 @@
+﻿@model CarGuru.ViewModels.ProductViewModel
+
+@if (Model.Products != null && Model.Products.Count > 0)
+{
+    <table class="table table-striped" id="inventTable" width="100%">
+        <thead class="bg-colorBlack">
+            <tr>
+                <th>Product Name</th>
+                <th>Stock</th>
+                <th>QR Code</th>
+                <th>Dead Stock</th>
+                <th>Sale Price</th>
+                <th class="actionColumn">Action</th>
+            </tr>
+        </thead>
+        <tbody class="inventoryTable">
+            @foreach (var item in Model.Products)
+            {
+                <tr>
+
+                    <td>@item.Name</td>
+                    <td>@item.StockStatus</td>
+                    <td>@item.QrCode</td>
+                    <td>@item.DeadStock</td>
+                    <td>@item.SalePrice</td>
+                    <th>
+
+                        <div class="row">
+                            <div class="col-sm-3 viewModal">
+                                <button class="btn" type="button" onclick="showProductDetail(@item.Id)">
+                                    View
+                                </button>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="dropdown">
+                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a href="javascript:void(0);" class="dropdown-item" onclick="editProductDetail(@item.Id)"><i class="fas fa-edit">Edit</i></a>
+                                        <a href="javascript:void(0);" class="dropdown-item" onclick="deleteProduct(@item.Id)"><i class="fa fa-trash">Archive</i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </th>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+
+}
