@@ -4,14 +4,13 @@ namespace CarGuru.Utilities
 {
     public static class Fire
     {
-        public static string firebaseServerKey = "AAAAkICGU7g:APA91bG5xP_WEYQ9RYrGZvXDIIEqW4tC5ppHtniNqKWoRuao2Yi72HHLS2SWV-bxb3gqtDZutQMiRa0pAeG-igClbzyAyd8b9WQyViek3LW9eWXmnWW1XrrHdKnDM-4ssY1Em72AdASm";
-        public static string firebaseSenderId = "620631577528";
-        //public static string firebaseServerKey = "AAAAt1R9MEs:APA91bEQjUwC9qajp4TZKlXsQcrk-k06gBt1U2qDO0Trz6VI8SK5oZkMo0RWY5Pqiwb0KPgY5P4wgoZEVyMCWyypZA2nbVg-jfDBAanWcLXzafzJBO1dMKtPQDrH7Yk8-jx5jYQ6V2qD";
-        //public static string firebaseSenderId = "787396505675";
+        public static string firebaseServerKey = "";
+        public static string firebaseSenderId = "";
+        
     }
     public static class ConnectionString
     {
-        public static readonly string CarGuruApp = "Server=162.220.51.67;Database=CarGuru;User Id=carguruadmin; Password=admin@123;Persist Security Info=True;";
+        public static readonly string CarGuruApp = "ConnectionStrings";
     }
     public static class ResponseStrings
     {

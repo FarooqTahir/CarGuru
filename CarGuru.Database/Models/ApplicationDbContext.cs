@@ -53,7 +53,7 @@ namespace CarGuru.Database.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=162.220.51.67;Database=CarGuru;User Id=carguruadmin; Password=admin@123;Persist Security Info=True;");
+                optionsBuilder.UseSqlServer("ConnectionStrings");
             }
         }
 
